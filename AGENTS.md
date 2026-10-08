@@ -40,3 +40,27 @@ Consult these guides before working on related tasks:
 - [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
 - [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
 - [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+
+## Owner and working style
+
+Owner: Shreyans. Learning web development through this project. Explain
+changes and the reasoning, not just the result. Ask before adding dependencies.
+
+## Git workflow
+
+Vercel is connected to the GitHub repo: pushing `main` deploys production, and
+pushing any other branch gets a preview URL.
+
+- Commit directly on `main`: blog posts, text edits, docs (`AGENTS.md`, `docs/`).
+- Use one branch per roadmap step or other risky change (theme, layout, new
+  pages, the Three.js homepage). Push it so the owner can check the Vercel
+  preview on a phone, then merge into `main` once approved.
+- Never push without being asked.
+
+## Plan and roadmap
+
+Design decisions, site structure, the homepage plan and the roadmap live in
+`docs/plan.md`; read it before starting feature work. The owner discusses
+design in a separate claude.ai chat that reads the same file, so keep it
+current: tick off roadmap steps when done, and add a short entry under
+"Build notes" when the implementation departs from the plan.
