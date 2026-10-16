@@ -23,9 +23,11 @@ not transcripts.
 
 ## Roadmap (in order)
 - [ ] 0. Setup checks:
-  - [ ] Vercel: Node.js version 22.x or newer (package.json needs >= 22.12).
-  - [ ] Vercel: production branch is `main`; previews viewable on the phone
-    (log in there or relax Deployment Protection).
+  - [x] Vercel: Node.js version 22.x or newer (package.json needs >= 22.12).
+    Set to 24.x.
+  - [x] Vercel: production branch is `main`; previews viewable on the phone.
+    Previews use Vercel Authentication: log in to vercel.com on the phone.
+    The production URL stays public.
   - [ ] Claude Code: allow `git add` / `git commit` in `.claude/settings.json`
     (push stays on "ask").
   - [ ] Optional, needs approval for dev deps: `@astrojs/check` + `typescript`
