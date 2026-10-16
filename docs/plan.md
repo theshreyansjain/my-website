@@ -35,7 +35,7 @@ not transcripts.
 - [x] 1. Replace template homepage text and footer. Also clear the other
   template leftovers: Astro's social links in Header/Footer, lorem ipsum on
   the About page, Astro favicon.
-- [ ] 2. Dark theme, including swapping Atkinson for a self-hosted monospace
+- [x] 2. Dark theme, including swapping Atkinson for a self-hosted monospace
   font.
 - [ ] 3. Topic field, /topics pages.
 - [ ] 4. Homepage skeleton with scroll sections and navigation, placeholder figure.
@@ -45,6 +45,13 @@ not transcripts.
 
 ## Build notes
 What changed from the plan while building, and why. Newest first.
+
+- Step 2: font is JetBrains Mono (self-hosted woff2, regular + bold, OFL
+  license in `src/assets/fonts/`); Atkinson removed. Accent is green
+  `#39f58c`, with a faint green glow on h1 and link hover. Color variables in
+  `global.css` were renamed by role (`--bg`, `--surface`, `--border`,
+  `--text`, `--text-heading`, `--text-muted`, `--accent`) instead of shade.
+  Type scale shrunk (body 17px, 16px on mobile) because monospace is wide.
 
 - Step 1: Astro's social links were removed, not replaced, since no accounts
   were chosen yet; add them back in Header/Footer when decided. The favicon is
