@@ -157,7 +157,7 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 	main.home {
 		/* Where the pinned text panel sits: below the figure on phones,
 		   beside it on desktop. */
-		--label-top: 64svh;
+		--label-top: 71svh;
 		display: grid;
 		grid-template-columns: 1fr;
 		width: auto;
@@ -309,6 +309,9 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 
 	/* Short screens: keep the figure inside the screen and clear of the text. */
 	@media (max-width: 699px) and (max-height: 700px) {
+		main.home {
+			--label-top: 64svh;
+		}
 		.figure-scale {
 			--figure-scale: 1.1;
 		}

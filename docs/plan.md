@@ -110,7 +110,9 @@ What changed from the plan while building, and why. Newest first.
   on its own line ("Scroll" in green); no button. All homepage text lives in
   one pinned panel (40% down on desktop, below the figure on phones): the
   intro fades out as you scroll, then a white "I write about" heading and
-  the scene's topic button(s) fade in, in the same spot. Between scenes the buttons cross-fade (scrubbed by
+  the scene's topic button(s) fade in, in the same spot. On phones the
+  panel sits 71% down the screen (64% on short phones) to leave a clear gap
+  below the figure. Between scenes the buttons cross-fade (scrubbed by
   scroll) instead of scrolling past. Each topic group shows its button(s)
   with the topic description underneath; topic scenes have no title
   ("Productivity" is only the desk group's screen-reader label). "I write
