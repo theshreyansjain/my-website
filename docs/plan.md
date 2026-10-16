@@ -112,7 +112,9 @@ What changed from the plan while building, and why. Newest first.
   intro fades out as you scroll, then a white "I write about" heading and
   the scene's topic button(s) fade in, in the same spot. On phones the
   panel sits 71% down the screen (64% on short phones) to leave a clear gap
-  below the figure. Between scenes the buttons cross-fade (scrubbed by
+  below the figure.
+- The homepage has no footer (other pages keep it): the page ends with the
+  last scene, so the pinned figure doesn't get pushed up at the end. Between scenes the buttons cross-fade (scrubbed by
   scroll) instead of scrolling past. Each topic group shows its button(s)
   with the topic description underneath; topic scenes have no title
   ("Productivity" is only the desk group's screen-reader label). "I write

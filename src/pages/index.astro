@@ -1,6 +1,5 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE, TOPICS, type Topic } from '../consts';
 
@@ -145,7 +144,8 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 				<div class="scene" data-scene={scene.id} style={`grid-row: ${i + 1}`}></div>
 			))}
 		</main>
-		<Footer />
+		<!-- No footer here: the page ends with the last scene, so the pinned
+		     figure stays in place right to the end. -->
 		<script>
 			import '../scripts/homepage.ts';
 		</script>
