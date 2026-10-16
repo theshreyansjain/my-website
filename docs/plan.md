@@ -45,13 +45,23 @@ not transcripts.
 - [x] 2. Dark theme, including swapping Atkinson for a self-hosted monospace
   font.
 - [x] 3. Topic field, /topics pages.
-- [ ] 4. Homepage skeleton with scroll sections and navigation, placeholder figure.
+- [x] 4. Homepage skeleton with scroll sections and navigation, placeholder figure.
 - [ ] 5. Figure prototype at /lab/figure: stand + run, then desk, bike, read.
 - [ ] 6. Polish: portrait layout, performance, reduced motion.
 - [ ] 7. Later: custom domain, analytics, newsletter.
 
 ## Build notes
 What changed from the plan while building, and why. Newest first.
+
+- Step 4: added `gsap` (3.15, free "standard no charge" license); `three`
+  comes in step 5. The stage is pinned with CSS `position: sticky`, not GSAP
+  pinning (simpler, no layout jumps on phones); GSAP only scrubs one timeline
+  across the page from scroll. The placeholder figure is CSS blocks with
+  per-scene poses in `src/scripts/homepage.ts`; props (bike wheels, desk,
+  book) fade in. Keys: → opens the scene's topic; on the desk scene 1/2/3
+  pick a topic. Key hints hide on touch screens. Reduced motion: poses
+  switch per scene with no animation. Scene copy lives in the `scenes` array
+  in `src/pages/index.astro` and is a draft.
 
 - Step 3: `topic` is optional, not required: posts without one (like
   hello-world) are general and only listed in `/blog`, so no catch-all

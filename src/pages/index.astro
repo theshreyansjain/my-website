@@ -2,7 +2,42 @@
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { SITE_DESCRIPTION, SITE_TITLE, TOPICS, type Topic } from '../consts';
+
+// The homepage scenes, in scroll order (see "Homepage plan" in docs/plan.md).
+// `id` must match a pose in src/scripts/homepage.ts.
+const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
+	{
+		id: 'stand',
+		title: "Hi, I'm Shreyans.",
+		text: 'This is where I write down what I learn. Scroll to look around.',
+		topics: [],
+	},
+	{
+		id: 'run',
+		title: 'Running',
+		text: 'Training logs, races and what I learn about building endurance.',
+		topics: ['running'],
+	},
+	{
+		id: 'bike',
+		title: 'Biking',
+		text: 'Rides, routes and gear.',
+		topics: ['biking'],
+	},
+	{
+		id: 'desk',
+		title: 'At the desk',
+		text: 'Code and AI, quant trading, and personal finance.',
+		topics: ['programming-ai', 'quant', 'finance'],
+	},
+	{
+		id: 'read',
+		title: 'Psychology',
+		text: 'Notes on how minds work, mostly from books.',
+		topics: ['psychology'],
+	},
+];
 ---
 
 <!doctype html>
@@ -12,16 +47,234 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 	</head>
 	<body>
 		<Header />
-		<main>
-			<h1>Hi, I'm Shreyans.</h1>
-			<p>
-				This is where I write down what I learn: psychology, running, biking, programming, AI,
-				quant trading and finance.
-			</p>
-			<p>
-				Start with the <a href="/blog">blog</a>, or read more <a href="/about">about me</a>.
-			</p>
+		<main class="home">
+			<!-- Placeholder figure; replaced by the Three.js figure in step 5. -->
+			<div class="stage" aria-hidden="true">
+				<div class="figure">
+					<div class="prop prop-bike"><span></span><span></span></div>
+					<div class="prop prop-desk"></div>
+					<div class="prop prop-book"></div>
+					<div class="part head"></div>
+					<div class="part torso"></div>
+					<div class="part arm arm-l"></div>
+					<div class="part arm arm-r"></div>
+					<div class="part leg leg-l"></div>
+					<div class="part leg leg-r"></div>
+				</div>
+			</div>
+
+			{scenes.map((scene, i) => (
+				<section class="scene" data-scene={scene.id} style={`grid-row: ${i + 1}`}>
+					<div class="scene-text">
+						{i === 0 ? <h1>{scene.title}</h1> : <h2>{scene.title}</h2>}
+						<p>{scene.text}</p>
+						{scene.topics.length > 0 ? (
+							<p class="links">
+								{scene.topics.map((topic) => (
+									<a class="button" href={`/topics/${topic}/`}>
+										{TOPICS[topic]} →
+									</a>
+								))}
+							</p>
+						) : (
+							<p class="links">
+								<a class="button" href="/blog/">All posts →</a>
+							</p>
+						)}
+						<p class="key-hint">
+							{scene.topics.length > 1
+								? `press ${scene.topics.map((_, n) => n + 1).join(' · ')}`
+								: 'press →'}
+						</p>
+						{i === 0 && <p class="scroll-hint">scroll ↓</p>}
+					</div>
+				</section>
+			))}
 		</main>
 		<Footer />
+		<script>
+			import '../scripts/homepage.ts';
+		</script>
 	</body>
 </html>
+
+<style>
+	/* Full-width page: undo the narrow column that global.css gives <main>. */
+	main.home {
+		display: grid;
+		grid-template-columns: 1fr;
+		width: auto;
+		max-width: none;
+		padding: 0;
+	}
+
+	/* The stage spans every scene's row and sticks to the top of the screen,
+	   so the figure stays put while the scene text scrolls past it. */
+	.stage {
+		grid-column: 1;
+		grid-row: 1 / span 5;
+		position: sticky;
+		top: 0;
+		align-self: start;
+		height: 100svh;
+		display: flex;
+		align-items: flex-start;
+		justify-content: center;
+		padding-top: 12svh;
+		box-sizing: border-box;
+		pointer-events: none;
+	}
+
+	.scene {
+		grid-column: 1;
+		position: relative;
+		z-index: 1;
+		min-height: 100svh;
+		display: flex;
+		align-items: flex-end;
+		padding: 0 1em 3em;
+		box-sizing: border-box;
+	}
+	.scene-text {
+		width: 100%;
+		max-width: 32em;
+		/* Fades out the figure behind the text on small screens. */
+		background: linear-gradient(to bottom, transparent, var(--bg) 2em);
+		padding-top: 2em;
+	}
+	.scene h1,
+	.scene h2 {
+		font-size: 2em;
+	}
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5em;
+	}
+	.button {
+		padding: 0.4em 0.9em;
+		border: 1px solid var(--accent);
+		border-radius: 4px;
+		text-decoration: none;
+	}
+	.button:hover {
+		background: var(--accent);
+		color: var(--bg);
+		text-shadow: none;
+	}
+	.key-hint,
+	.scroll-hint {
+		color: var(--text-muted);
+		font-size: 0.85em;
+	}
+	/* Keyboard hints only make sense with a keyboard and mouse. */
+	@media (hover: none) {
+		.key-hint {
+			display: none;
+		}
+	}
+
+	/* Desktop: text on the left, figure on the right. */
+	@media (min-width: 900px) {
+		main.home {
+			grid-template-columns: 1fr 1fr;
+		}
+		.stage {
+			grid-column: 2;
+			align-items: center;
+			padding-top: 0;
+		}
+		.scene {
+			align-items: center;
+			padding: 0 2em 0 8vw;
+		}
+		.scene-text {
+			background: none;
+		}
+	}
+
+	/* --- Placeholder figure: simple blocks GSAP can rotate per pose. --- */
+	.figure {
+		position: relative;
+		width: 200px;
+		height: 260px;
+		--limb: var(--text-heading);
+	}
+	.part,
+	.prop {
+		position: absolute;
+	}
+	.part {
+		background: var(--limb);
+		border-radius: 999px;
+	}
+	.head {
+		width: 36px;
+		height: 36px;
+		left: 82px;
+		top: 20px;
+	}
+	.torso {
+		width: 26px;
+		height: 80px;
+		left: 87px;
+		top: 62px;
+		transform-origin: 50% 100%;
+	}
+	.arm {
+		width: 12px;
+		height: 64px;
+		left: 94px;
+		top: 68px;
+		transform-origin: 50% 6px;
+		background: var(--text-muted);
+	}
+	.arm-r {
+		background: var(--limb);
+	}
+	.leg {
+		width: 14px;
+		height: 86px;
+		left: 93px;
+		top: 136px;
+		transform-origin: 50% 7px;
+		background: var(--text-muted);
+	}
+	.leg-r {
+		background: var(--limb);
+	}
+	.prop {
+		opacity: 0;
+		border: 2px solid var(--accent);
+	}
+	.prop-bike {
+		inset: auto 10px 0 10px;
+		height: 60px;
+		border: none;
+	}
+	.prop-bike span {
+		position: absolute;
+		bottom: 0;
+		width: 56px;
+		height: 56px;
+		border: 2px solid var(--accent);
+		border-radius: 50%;
+	}
+	.prop-bike span:last-child {
+		right: 0;
+	}
+	.prop-desk {
+		left: 120px;
+		top: 120px;
+		width: 80px;
+		height: 50px;
+		border-radius: 4px;
+	}
+	.prop-book {
+		left: 112px;
+		top: 92px;
+		width: 34px;
+		height: 44px;
+		border-radius: 2px;
+	}
+</style>
