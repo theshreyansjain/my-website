@@ -535,12 +535,15 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 	/* Brain: an SVG drawn over the head (so it reads like an X-ray). Each
 	   part starts hidden; the psychology scene's loop shows it assembled,
 	   explodes it outward and brings it back (src/scripts/homepage.ts). */
+	/* Drawn at 85% and shifted up so the lobes fill the top of the skull
+	   (brain top just under the crown) and only the brainstem reaches down
+	   toward the neck, instead of sitting over the face. */
 	.brain-art {
 		position: absolute;
-		left: -10px;
+		left: -6px;
 		top: -10px;
-		width: 56px;
-		height: 56px;
+		width: 47.6px;
+		height: 47.6px;
 		overflow: visible;
 		pointer-events: none;
 	}
