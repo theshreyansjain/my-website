@@ -104,47 +104,45 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 				</div>
 			</div>
 
-			<!-- Pinned in one place for the whole homepage. Scrolling fades it in
-			     after the intro and cross-fades between each scene's buttons
-			     (src/scripts/homepage.ts), instead of them scrolling past. -->
-			<div class="topic-panel" style="grid-row: 1 / span 5">
-				<h2 class="write-about">
-					I write about<span class="dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span>
-				</h2>
-				<div class="topic-groups">
-					{scenes.slice(1).map((scene) => (
-						<div class="topic-group" data-scene={scene.id} aria-label={scene.title}>
-							<p class="links">
-								{scene.topics.map((topic) => (
-									<a class="button" href={`/topics/${topic}/`}>
-										{TOPICS[topic]}
-									</a>
-								))}
-							</p>
-							<p class="topic-text">{scene.text}</p>
-						</div>
-					))}
+			<!-- All the homepage text, pinned in one place. The intro and the
+			     "I write about" block share the same spot: scrolling fades the
+			     intro out and the topics in, then cross-fades between each
+			     scene's buttons (src/scripts/homepage.ts). -->
+			<div class="text-panel" style="grid-row: 1 / span 5">
+				<div class="intro-block">
+					<h1>Hi, I'm <span class="highlight">Shreyans</span>.</h1>
+					<p>
+						This is where I write down what I learn.
+						<br />
+						<span class="highlight">Scroll</span> to look around.
+					</p>
+				</div>
+				<div class="topics-block">
+					<h2 class="write-about">
+						I write about<span class="dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span>
+					</h2>
+					<div class="topic-groups">
+						{scenes.slice(1).map((scene) => (
+							<div class="topic-group" data-scene={scene.id} aria-label={scene.title}>
+								<p class="links">
+									{scene.topics.map((topic) => (
+										<a class="button" href={`/topics/${topic}/`}>
+											{TOPICS[topic]}
+										</a>
+									))}
+								</p>
+								<p class="topic-text">{scene.text}</p>
+							</div>
+						))}
+					</div>
 				</div>
 			</div>
 
-			<!-- One full-screen section per scene. Only the intro has visible
-			     content; the rest are scroll distance for the figure and fades. -->
-			{scenes.map((scene, i) =>
-				i === 0 ? (
-					<section class="scene" data-scene={scene.id} style="grid-row: 1">
-						<div class="scene-text">
-							<h1>Hi, I'm <span class="highlight">Shreyans</span>.</h1>
-							<p>
-								This is where I write down what I learn.
-								<br />
-								<span class="highlight">Scroll</span> to look around.
-							</p>
-						</div>
-					</section>
-				) : (
-					<div class="scene" data-scene={scene.id} style={`grid-row: ${i + 1}`}></div>
-				),
-			)}
+			<!-- One full-screen block per scene: the scroll distance that drives
+			     the figure and the text fades. -->
+			{scenes.map((scene, i) => (
+				<div class="scene" data-scene={scene.id} style={`grid-row: ${i + 1}`}></div>
+			))}
 		</main>
 		<Footer />
 		<script>
@@ -156,8 +154,8 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 <style>
 	/* Full-width page: undo the narrow column that global.css gives <main>. */
 	main.home {
-		/* Where the sticky "I write about" heading sits; topic buttons line up
-		   under it. Below the figure on phones, beside it on desktop. */
+		/* Where the pinned text panel sits: below the figure on phones,
+		   beside it on desktop. */
 		--label-top: 64svh;
 		display: grid;
 		grid-template-columns: 1fr;
@@ -167,7 +165,7 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 	}
 
 	/* The stage spans every scene's row and sticks to the top of the screen,
-	   so the figure stays put while the scene text scrolls past it. */
+	   so the figure stays put while you scroll. */
 	.stage {
 		grid-column: 1;
 		grid-row: 1 / span 5;
@@ -178,41 +176,36 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		display: flex;
 		align-items: flex-start;
 		justify-content: center;
-		padding-top: 12svh;
+		padding-top: 7svh;
 		box-sizing: border-box;
 		pointer-events: none;
 	}
 
 	.scene {
 		grid-column: 1;
-		position: relative;
-		z-index: 1;
 		min-height: 100svh;
-		display: flex;
-		align-items: flex-end;
-		padding: 0 1em 3em;
-		box-sizing: border-box;
 	}
-	.scene-text {
-		width: 100%;
-		max-width: 32em;
-		/* Fades out the figure behind the text on small screens. */
-		background: linear-gradient(to bottom, transparent, var(--bg) 2em);
-		padding-top: 2em;
-	}
-	.scene h1 {
-		font-size: 2em;
-	}
-	.highlight {
-		color: var(--accent);
-	}
-	.topic-panel {
+	.text-panel {
 		grid-column: 1;
 		position: sticky;
 		top: var(--label-top);
 		align-self: start;
 		z-index: 2;
+		display: grid;
 		padding: 0 1em;
+	}
+	/* The intro and the topics share one grid cell and cross-fade. */
+	.intro-block,
+	.topics-block {
+		grid-area: 1 / 1;
+		align-self: start;
+		max-width: 32em;
+	}
+	.intro-block h1 {
+		font-size: 2em;
+	}
+	.highlight {
+		color: var(--accent);
 	}
 	.write-about {
 		margin: 0 0 0.8em;
@@ -295,7 +288,7 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 			grid-template-columns: 1fr 1fr;
 			--label-top: 40svh;
 		}
-		.topic-panel {
+		.text-panel {
 			grid-column: 2;
 			padding: 0 8vw 0 2em;
 		}
@@ -306,23 +299,17 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		}
 		.scene {
 			grid-column: 2;
-			align-items: center;
-			padding: 0 8vw 0 2em;
 		}
 		.figure-scale {
 			--figure-scale: 2.3;
 			transform-origin: center;
 		}
-		.scene-text {
-			background: none;
-		}
-
 	}
 
 	/* Short screens: keep the figure inside the screen and clear of the text. */
 	@media (max-width: 699px) and (max-height: 700px) {
 		.figure-scale {
-			--figure-scale: 1.25;
+			--figure-scale: 1.1;
 		}
 	}
 	@media (min-width: 700px) and (max-height: 700px) {

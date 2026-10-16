@@ -93,9 +93,10 @@ What changed from the plan while building, and why. Newest first.
   fight the scroll pose. None of them run with reduced motion.
 - Homepage text: the intro shows "Hi, I'm Shreyans." (name in green) and
   "This is where I write down what I learn." with "Scroll to look around."
-  on its own line ("Scroll" in green); no button. After the intro, a pinned
-  panel with a white "I write about" heading and the scene's topic
-  button(s) fades in. Between scenes the buttons cross-fade (scrubbed by
+  on its own line ("Scroll" in green); no button. All homepage text lives in
+  one pinned panel (40% down on desktop, below the figure on phones): the
+  intro fades out as you scroll, then a white "I write about" heading and
+  the scene's topic button(s) fade in, in the same spot. Between scenes the buttons cross-fade (scrubbed by
   scroll) instead of scrolling past. Each topic group shows its button(s)
   with the topic description underneath; topic scenes have no title
   ("Productivity" is only the desk group's screen-reader label). "I write

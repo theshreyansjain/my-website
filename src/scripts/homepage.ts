@@ -143,16 +143,18 @@ function poseVars(p: Pose) {
 	] as const;
 }
 
-// Text panel: hidden on the intro, then shows the active scene's buttons.
-// On the intro the first topic's buttons are already selected, so the panel
-// fades in with them.
-const panel = document.querySelector('.topic-panel');
+// Text panel: the intro on the first scene, then "I write about" with the
+// active scene's buttons. On the intro the first topic's buttons are already
+// selected, so they fade in with the heading.
+const intro = document.querySelector('.intro-block');
+const topics = document.querySelector('.topics-block');
 const groups = gsap.utils.toArray<HTMLElement>('.topic-group');
 const group = (id: string) => groups.find((g) => g.dataset.scene === id);
 
 function setText(id: string) {
 	const shown = id === 'stand' ? groups[0] : group(id);
-	gsap.set(panel, { autoAlpha: id === 'stand' ? 0 : 1 });
+	gsap.set(intro, { autoAlpha: id === 'stand' ? 1 : 0 });
+	gsap.set(topics, { autoAlpha: id === 'stand' ? 0 : 1 });
 	gsap.set(groups, { autoAlpha: 0 });
 	gsap.set(shown ?? [], { autoAlpha: 1 });
 }
@@ -184,11 +186,12 @@ if (figure && scenes.length) {
 			const id = scene.dataset.scene ?? '';
 			const p = poses[id] ?? rest;
 			const at = tl.duration();
-			// Text: fade the panel in after the intro; after that, fade the
-			// previous scene's buttons out, then this scene's in. autoAlpha also
-			// hides faded-out buttons from clicks and the keyboard.
+			// Text: fade the intro out, then "I write about" in; after that, fade
+			// the previous scene's buttons out, then this scene's in. autoAlpha
+			// also hides faded-out text from clicks and the keyboard.
 			if (i === 0) {
-				tl.to(panel, { autoAlpha: 1, duration: 0.5 }, at + 0.5);
+				tl.to(intro, { autoAlpha: 0, duration: 0.5 }, at);
+				tl.to(topics, { autoAlpha: 1, duration: 0.5 }, at + 0.5);
 			} else {
 				tl.to(group(scenes[i].dataset.scene ?? '') ?? [], { autoAlpha: 0, duration: 0.5 }, at);
 				tl.to(group(id) ?? [], { autoAlpha: 1, duration: 0.5 }, at + 0.5);
