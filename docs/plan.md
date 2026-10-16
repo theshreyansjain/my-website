@@ -49,9 +49,11 @@ What changed from the plan while building, and why. Newest first.
 - Step 3: `topic` is optional, not required: posts without one (like
   hello-world) are general and only listed in `/blog`, so the six topics stay
   matched to the six homepage scenes. A misspelled topic still fails the
-  build. Topic list lives in `TOPICS` in `src/consts.ts`. Added a `/topics`
-  index page. The nav's "Home" link was replaced by "Topics" (the site name
-  already links home), to keep the nav on one line on 360px phones.
+  build. Topic list lives in `TOPICS` in `src/consts.ts`. Topics are part of
+  the blog, so they are not in the header (which stays Home | Blog | About,
+  with Blog highlighted on topic pages too); instead a row of `#topic` chips
+  sits above the post list on `/blog` and every topic page. No `/topics`
+  index page. A hover dropdown was rejected because phones have no hover.
 
 - Step 2: font is JetBrains Mono (self-hosted woff2, regular + bold, OFL
   license in `src/assets/fonts/`); Atkinson removed. Accent is green

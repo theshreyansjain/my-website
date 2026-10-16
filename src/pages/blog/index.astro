@@ -4,6 +4,7 @@ import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 import PostList from '../../components/PostList.astro';
+import TopicNav from '../../components/TopicNav.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
 const posts = await getCollection('blog');
@@ -22,6 +23,8 @@ const posts = await getCollection('blog');
 	<body>
 		<Header />
 		<main>
+			<h1 class="sr-only">Blog</h1>
+			<TopicNav />
 			<section>
 				<PostList posts={posts} />
 			</section>

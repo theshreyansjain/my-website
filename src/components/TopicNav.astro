@@ -1,0 +1,52 @@
+---
+import { TOPICS, type Topic } from '../consts';
+
+interface Props {
+	// The topic being viewed; leave out on /blog to highlight "all".
+	current?: Topic;
+}
+
+const { current } = Astro.props;
+const topics = Object.keys(TOPICS) as Topic[];
+---
+
+<nav class="topic-nav" aria-label="Topics">
+	<a href="/blog/" class:list={{ active: !current }} aria-current={!current ? 'page' : undefined}>
+		all
+	</a>
+	{topics.map((topic) => (
+		<a
+			href={`/topics/${topic}/`}
+			class:list={{ active: topic === current }}
+			aria-current={topic === current ? 'page' : undefined}
+		>
+			#{topic}
+		</a>
+	))}
+</nav>
+<style>
+	.topic-nav {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5em;
+		margin-bottom: 2.5em;
+	}
+	a {
+		padding: 0.2em 0.7em;
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		color: var(--text-muted);
+		font-size: 0.85em;
+		text-decoration: none;
+	}
+	a:hover {
+		border-color: var(--accent);
+		color: var(--accent);
+		text-shadow: none;
+	}
+	a.active {
+		border-color: var(--accent);
+		background: var(--accent);
+		color: var(--bg);
+	}
+</style>
