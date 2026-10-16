@@ -310,10 +310,7 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 	   Defined before the media queries below so their sizes win. */
 	.figure-scale {
 		--figure-scale: 1.6;
-		/* On phones the props stick out to the figure's right (desk, bike),
-		   so nudge the whole scene left to look centred. */
-		--figure-shift: -6vw;
-		transform: translateX(var(--figure-shift)) scale(var(--figure-scale));
+		transform: scale(var(--figure-scale));
 		transform-origin: top center;
 	}
 
@@ -337,7 +334,6 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		}
 		.figure-scale {
 			--figure-scale: 2.3;
-			--figure-shift: 0;
 			transform-origin: center;
 		}
 	}

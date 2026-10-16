@@ -115,8 +115,11 @@ What changed from the plan while building, and why. Newest first.
   below the figure.
 - The homepage has no footer (other pages keep it): the page ends with the
   last scene, so the pinned figure doesn't get pushed up at the end.
-- Figure tweaks: on phones the figure is nudged left (props stick out to its
-  right). The desk monitor's code lines type themselves out, hold and clear
+- Figure tweaks: each scene has its own horizontal offset (`bodyX`) so the
+  whole scene, props included, is centred on screen; the figure slides
+  between them while scrolling. (Replaced a single phone-only nudge, which
+  couldn't suit every scene and let the bike's front wheel run off a 390px
+  screen.) The desk monitor's code lines type themselves out, hold and clear
   on a 4s loop (still with reduced motion). Running torso lean cut to 4°.
   Limbs have an explicit draw order: far arm/leg behind the torso and head,
   near ones in front.

@@ -19,6 +19,7 @@ type Pose = {
 	kneeR: number;
 	headX: number;
 	headY: number;
+	bodyX: number; // slide the whole figure sideways so the scene is centred
 	bodyY: number;
 	bike: number;
 	desk: number;
@@ -35,15 +36,18 @@ type Pose = {
 
 const rest: Pose = {
 	torso: 0, armL: 8, armR: -8, legL: 4, legR: -4, kneeL: 0, kneeR: 0,
-	headX: 0, headY: 0, bodyY: 0, bike: 0, desk: 0, book: 0, gear: 0,
+	headX: 0, headY: 0, bodyX: 0, bodyY: 0, bike: 0, desk: 0, book: 0, gear: 0,
 	armLX: 0, armRX: 0, legLX: 0, legRX: 0, torsoW: 1, headTilt: 0, front: 0,
 };
 
+// bodyX centres each whole scene (body plus props) in the stage: the bike,
+// desk and book stick out to the figure's right, so those scenes slide left.
 const poses: Record<string, Pose> = {
 	// Facing forward, waving with the figure's right hand (on the viewer's left).
 	stand: {
 		...rest,
 		front: 1,
+		bodyX: 8,
 		torsoW: 1.5,
 		headTilt: -8,
 		armRX: -20, armR: 145,
@@ -51,13 +55,13 @@ const poses: Record<string, Pose> = {
 		legRX: -9, legR: 4,
 		legLX: 9, legL: -4,
 	},
-	run: { ...rest, torso: 4, armL: 40, armR: -45, legL: 30, legR: -35, kneeL: 35, kneeR: 10, gear: 1 },
+	run: { ...rest, bodyX: 4, torso: 4, armL: 40, armR: -45, legL: 30, legR: -35, kneeL: 35, kneeR: 10, gear: 1 },
 	// Hands on the handlebar grips; legs are set from the pedals below.
 	// Race position: back nearly flat, head up, hands on the drops.
-	bike: { ...rest, torso: 72, armL: -32, armR: -34, headY: -4, bike: 1 },
+	bike: { ...rest, bodyX: -32, torso: 72, armL: -32, armR: -34, headY: -4, bike: 1 },
 	// Seated on the stool: thighs forward, shins hanging down to the floor.
-	desk: { ...rest, armL: -65, armR: -75, legL: -85, legR: -80, kneeL: 85, kneeR: 80, bodyY: 34, desk: 1 },
-	read: { ...rest, armL: -70, armR: -78, headX: 4, headY: 6, book: 1 },
+	desk: { ...rest, bodyX: -40, armL: -65, armR: -75, legL: -85, legR: -80, kneeL: 85, kneeR: 80, bodyY: 34, desk: 1 },
+	read: { ...rest, bodyX: -36, armL: -70, armR: -78, headX: 4, headY: 6, book: 1 },
 };
 
 // Pedalling: two-bone inverse kinematics. Given where a foot must be (on a
@@ -162,7 +166,7 @@ function setText(id: string) {
 
 function setPose(p: Pose) {
 	for (const [sel, vars] of poseVars(p)) gsap.set(figure!.querySelectorAll(sel), vars);
-	gsap.set(figure, { y: p.bodyY });
+	gsap.set(figure, { x: p.bodyX, y: p.bodyY });
 }
 
 if (figure && scenes.length) {
@@ -200,7 +204,7 @@ if (figure && scenes.length) {
 			for (const [sel, vars] of poseVars(p)) {
 				tl.to(figure.querySelectorAll(sel), vars, at);
 			}
-			tl.to(figure, { y: p.bodyY }, at);
+			tl.to(figure, { x: p.bodyX, y: p.bodyY }, at);
 			tl.to({}, { duration: 0.5 }); // hold the pose
 		});
 	});
