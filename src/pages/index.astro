@@ -49,17 +49,20 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 					<div class="prop prop-bike">
 						<!-- Race bike in the figure's own coordinates (200 x 260), built
 						     around a flat-backed rider: saddle under the hip (100,143)
-						     and well behind the crank (122,208), drop bars out front
-						     where the hands land (~193,180), fork raking forward from
+						     and well behind the crank (122,208), drop bars out front with
+						     their top level with the saddle and the hands on the drops
+						     (~193,178), fork raking forward from
 						     the head tube to the front hub. Hubs at 46,212 and 186,212.
 						     The crank's numbers are mirrored in src/scripts/homepage.ts. -->
 						<svg class="bike-frame" viewBox="0 0 200 260">
 							<!-- Chainstay, seat tube (sloping back to the saddle), seat stay. -->
 							<path d="M46 212 L122 208 L99 152 M46 212 L101 157" />
 							<!-- Top tube, down tube. -->
-							<path d="M101 157 L174 168 M122 208 L177 180" />
-							<!-- Head tube and fork raking forward to the hub; stem; drop bar. -->
-							<path d="M172 162 L180 186 L186 212 M172 162 L184 160 L192 161 C199 162 199 177 193 181" />
+							<path d="M101 157 L174 153 M122 208 L178 173" />
+							<!-- Head tube and fork raking forward to the hub; stem; drop bar
+							     with its top level with the saddle (y 149), curving down to
+							     the drops where the hands rest. -->
+							<path d="M174 153 L186 212 M174 153 L184 149 L192 149 C200 149 200 172 193 178" />
 							<path class="saddle" d="M86 149 L110 149" />
 							<circle cx="122" cy="208" r="8" />
 							<path class="crank" d="M111 208 L133 208" />

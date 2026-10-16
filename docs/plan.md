@@ -121,7 +121,8 @@ What changed from the plan while building, and why. Newest first.
   Limbs have an explicit draw order: far arm/leg behind the torso and head,
   near ones in front.
 - Bike scene is a race position: back nearly flat (80° lean), saddle well
-  behind the crank, fork raking forward to the front hub, drop bars.
+  behind the crank, fork raking forward to the front hub, drop bars with
+  their top level with the saddle.
 - Brain: an SVG side view (frontal, parietal, occipital and temporal lobes,
   cerebellum, brainstem, each with fold lines). It appears over the head
   like an X-ray, bursts apart, holds, snaps back together and fades. Between scenes the buttons cross-fade (scrubbed by
