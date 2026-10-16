@@ -1,5 +1,5 @@
-// Homepage scroll behaviour: poses the placeholder figure from scroll position.
-// Step 5 swaps the placeholder for the Three.js figure but keeps this setup.
+// Homepage scroll behaviour: poses the figure from scroll position, plays each
+// scene's motion loop, and fades the text panel.
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 

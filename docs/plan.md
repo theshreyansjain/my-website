@@ -46,12 +46,21 @@ not transcripts.
   font.
 - [x] 3. Topic field, /topics pages.
 - [x] 4. Homepage skeleton with scroll sections and navigation, placeholder figure.
-- [ ] 5. Figure prototype at /lab/figure: stand + run, then desk, bike, read.
+- [x] 5. Figure prototype at /lab/figure: stand + run, then desk, bike, read.
+  Done, then rejected: the 2D homepage figure is the final figure.
 - [ ] 6. Polish: portrait layout, performance, reduced motion.
 - [ ] 7. Later: custom domain, analytics, newsletter.
 
 ## Build notes
 What changed from the plan while building, and why. Newest first.
+
+- Step 5 (2026-10-16): a Three.js version of the figure was built at
+  /lab/figure (elbows, IK hands and feet, real turn and lighting, all five
+  scenes with motion) and the owner preferred the 2D figure. It was not
+  merged; the code is kept on the `step-5-figure-3d` branch for reference.
+  The 2D homepage figure (CSS shapes + SVG props, GSAP poses and motion
+  loops) is final, `three` is not a dependency, and the "Homepage plan"
+  bullets about a procedural Three.js humanoid are superseded.
 
 - Homepage: keyboard shortcuts (→, 1/2/3) and their "press …" hints were
   removed at the owner's request, along with the → in button labels.

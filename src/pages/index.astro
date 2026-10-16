@@ -42,7 +42,8 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 	<body>
 		<Header />
 		<main class="home">
-			<!-- Placeholder figure; replaced by the Three.js figure in step 5. -->
+			<!-- The figure: CSS shapes and SVG props, posed and animated by
+			     src/scripts/homepage.ts. -->
 			<div class="stage" aria-hidden="true">
 				<div class="figure-scale">
 				<div class="figure">
@@ -324,7 +325,7 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		}
 	}
 
-	/* --- Placeholder figure: simple blocks GSAP can rotate per pose. --- */
+	/* --- The figure: simple blocks GSAP can rotate per pose. --- */
 	.figure {
 		position: relative;
 		width: 200px;
