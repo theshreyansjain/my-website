@@ -67,7 +67,7 @@ const HIP_TO_SHOULDER = 68;
 const HIP_TO_HEAD = 104;
 
 // Side-on, the far arm and leg are drawn in a darker shade; facing the
-// viewer, both sides are the same colour.
+// viewer (`front`), both sides are the same colour and the cape shows.
 const css = getComputedStyle(document.documentElement);
 const NEAR = css.getPropertyValue('--text-heading').trim();
 const FAR = css.getPropertyValue('--text-muted').trim();
@@ -85,7 +85,7 @@ function poseVars(p: Pose) {
 		['.leg-l', { rotation: p.legL, x: p.legLX }],
 		['.leg-r', { rotation: p.legR, x: p.legRX }],
 		['.head', { x: p.headX + forward(HIP_TO_HEAD), y: p.headY + down(HIP_TO_HEAD), rotation: p.headTilt }],
-		['.face', { opacity: p.front }],
+		['.cape', { opacity: p.front }],
 		['.arm-l .seg, .leg-l .seg', { backgroundColor: p.front ? NEAR : FAR }],
 		['.prop-bike', { opacity: p.bike }],
 		['.bike-gear', { opacity: p.bike }],
@@ -172,7 +172,10 @@ if (figure && scenes.length) {
 		const wave = loop()
 			.to(seg('arm-r'), { rotation: 14, duration: 0.225 })
 			.to(seg('arm-r'), { rotation: -14, duration: 0.45 })
-			.to(seg('arm-r'), { rotation: 0, duration: 0.225 });
+			.to(seg('arm-r'), { rotation: 0, duration: 0.225 })
+			// The cape billows along with the wave.
+			.to('.cape', { skewX: 5, duration: 0.45 }, 0)
+			.to('.cape', { skewX: -5, duration: 0.45 }, 0.45);
 
 		// The run pose is mid-stride; each limb swings to the opposite extreme.
 		const stride = loop();
@@ -219,7 +222,7 @@ if (figure && scenes.length) {
 
 		const limbSegs = (...limbs: string[]) => limbs.map(seg);
 		const sceneLoops: { id: string; tl: gsap.core.Timeline; start: string; end: string; reset: () => void }[] = [
-			{ id: 'stand', tl: wave, start: 'top bottom', end: 'bottom 60%', reset: () => gsap.to(seg('arm-r'), { rotation: 0, duration: 0.3 }) },
+			{ id: 'stand', tl: wave, start: 'top bottom', end: 'bottom 60%', reset: () => gsap.to([seg('arm-r'), '.cape'], { rotation: 0, skewX: 0, duration: 0.3 }) },
 			{ id: 'run', tl: stride, start: 'top 50%', end: 'bottom 50%', reset: () => gsap.to(limbSegs('leg-l', 'leg-r', 'arm-l', 'arm-r'), { rotation: 0, duration: 0.3 }) },
 			{ id: 'bike', tl: pedal, start: 'top 50%', end: 'bottom 50%', reset: () => gsap.to(limbSegs('leg-l', 'leg-r'), { rotation: 0, duration: 0.3 }) },
 			{ id: 'desk', tl: typing, start: 'top 50%', end: 'bottom 50%', reset: () => gsap.to(limbSegs('arm-l', 'arm-r'), { rotation: 0, duration: 0.3 }) },

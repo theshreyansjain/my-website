@@ -71,12 +71,9 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 						<span class="stool-base"></span>
 					</div>
 					<div class="prop prop-book"><span class="page page-l"></span><span class="page page-r"></span></div>
+					<!-- Superhero cape, behind the body; shown on the intro only. -->
+					<div class="cape"></div>
 					<div class="part head">
-						<span class="face">
-							<span class="eye"></span>
-							<span class="eye"></span>
-							<span class="smile"></span>
-						</span>
 						<span class="gear headband"></span>
 						<span class="bike-gear helmet"></span>
 						<!-- Brain parts that burst out of the head in the psychology scene. -->
@@ -414,34 +411,18 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		transform: rotate(25deg);
 		transform-origin: right center;
 	}
-	/* Face, only shown while the figure faces the viewer (intro). */
-	.face {
+	/* Cape: hangs from the shoulders and flares out toward the bottom, with
+	   a slightly uneven hem. Billows with the wave (homepage.ts). */
+	.cape {
 		position: absolute;
-		inset: 0;
+		left: 62px;
+		top: 64px;
+		width: 76px;
+		height: 124px;
 		opacity: 0;
-	}
-	.eye {
-		position: absolute;
-		top: 13px;
-		left: 11px;
-		width: 4px;
-		height: 5px;
-		border-radius: 50%;
-		background: var(--bg);
-	}
-	.eye + .eye {
-		left: 21px;
-	}
-	.smile {
-		position: absolute;
-		left: 12px;
-		top: 19px;
-		width: 12px;
-		height: 6px;
-		box-sizing: border-box;
-		border: 2px solid var(--bg);
-		border-top: none;
-		border-radius: 0 0 8px 8px;
+		background: var(--accent);
+		clip-path: polygon(30% 0, 70% 0, 100% 96%, 82% 100%, 64% 95%, 46% 100%, 28% 95%, 12% 100%, 0 96%);
+		transform-origin: 50% 0;
 	}
 	/* Bike helmet: a dome over the top of the head with a short visor at
 	   the front (the figure faces right). */

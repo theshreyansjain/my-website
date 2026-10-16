@@ -69,8 +69,10 @@ What changed from the plan while building, and why. Newest first.
   shoulder/neck, computed from the lean angle). Bike scene: SVG frame with
   saddle, chainring, fork and drop handlebar, hands on the bar, feet pedal
   around the chainring, plus a helmet. Desk scene: a stool. Intro (facing
-  the viewer): a smiling face, slight head tilt, and both arms and legs the
-  same colour; side-on, the far limbs are darker.
+  the viewer): a green superhero cape that billows with the wave (a smiley
+  face was tried and rejected), slight head tilt, and both arms and legs the
+  same colour; side-on, the far limbs are darker. The cape fades out as the
+  figure turns to run.
 - Intro pose faces the viewer, with the figure's right hand (viewer's left)
   raised and waving, then turns side-on while scrolling to Running. The wave
   is a small loop that plays only while the intro is on screen: the one
