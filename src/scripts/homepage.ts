@@ -70,6 +70,20 @@ function poseVars(p: Pose) {
 	] as const;
 }
 
+// Text panel: hidden on the intro, then shows the active scene's buttons.
+// On the intro the first topic's buttons are already selected, so the panel
+// fades in with them.
+const panel = document.querySelector('.topic-panel');
+const groups = gsap.utils.toArray<HTMLElement>('.topic-group');
+const group = (id: string) => groups.find((g) => g.dataset.scene === id);
+
+function setText(id: string) {
+	const shown = id === 'stand' ? groups[0] : group(id);
+	gsap.set(panel, { autoAlpha: id === 'stand' ? 0 : 1 });
+	gsap.set(groups, { autoAlpha: 0 });
+	gsap.set(shown ?? [], { autoAlpha: 1 });
+}
+
 function setPose(p: Pose) {
 	for (const [sel, vars] of poseVars(p)) gsap.set(figure!.querySelectorAll(sel), vars);
 	gsap.set(figure, { y: p.bodyY });
@@ -77,6 +91,7 @@ function setPose(p: Pose) {
 
 if (figure && scenes.length) {
 	setPose(poses.stand);
+	setText('stand');
 	const mm = gsap.matchMedia();
 
 	// Normal motion: one timeline across the whole homepage, scrubbed by
@@ -92,9 +107,19 @@ if (figure && scenes.length) {
 			},
 		});
 		tl.to({}, { duration: 0.5 }); // hold on the intro
-		scenes.slice(1).forEach((scene) => {
-			const p = poses[scene.dataset.scene ?? ''] ?? rest;
+		scenes.slice(1).forEach((scene, i) => {
+			const id = scene.dataset.scene ?? '';
+			const p = poses[id] ?? rest;
 			const at = tl.duration();
+			// Text: fade the panel in after the intro; after that, fade the
+			// previous scene's buttons out, then this scene's in. autoAlpha also
+			// hides faded-out buttons from clicks and the keyboard.
+			if (i === 0) {
+				tl.to(panel, { autoAlpha: 1, duration: 0.5 }, at + 0.5);
+			} else {
+				tl.to(group(scenes[i].dataset.scene ?? '') ?? [], { autoAlpha: 0, duration: 0.5 }, at);
+				tl.to(group(id) ?? [], { autoAlpha: 1, duration: 0.5 }, at + 0.5);
+			}
 			for (const [sel, vars] of poseVars(p)) {
 				tl.to(figure.querySelectorAll(sel), vars, at);
 			}
@@ -201,7 +226,11 @@ if (figure && scenes.length) {
 				trigger: scene,
 				start: 'top center',
 				end: 'bottom center',
-				onToggle: (self) => self.isActive && setPose(poses[scene.dataset.scene ?? ''] ?? rest),
+				onToggle: (self) => {
+					if (!self.isActive) return;
+					setPose(poses[scene.dataset.scene ?? ''] ?? rest);
+					setText(scene.dataset.scene ?? '');
+				},
 			});
 		});
 	});

@@ -78,11 +78,13 @@ What changed from the plan while building, and why. Newest first.
   parietal, temporal and occipital lobes, cerebellum, brainstem), then
   collapses back in. Limb loops rotate an inner `.seg` element so they don't
   fight the scroll pose. None of them run with reduced motion.
-- Homepage text: the intro shows only "Hi, I'm Shreyans." and one line (no
-  button). After it, a white "I write about" heading sticks in place while
-  the topic scenes scroll by, and each topic scene shows only its button(s)
-  under it (no title or description; the desk scene's "Productivity" title
-  is now just its screen-reader label).
+- Homepage text: the intro shows "Hi, I'm Shreyans." (name in green) and
+  "This is where I write down what I learn." with "Scroll to look around."
+  on its own line ("Scroll" in green); no button. After the intro, a pinned
+  panel with a white "I write about" heading and the scene's topic
+  button(s) fades in. Between scenes the buttons cross-fade (scrubbed by
+  scroll) instead of scrolling past. Topic scenes have no title or
+  description; "Productivity" is only the desk group's screen-reader label.
 
 - Step 4: added `gsap` (3.15, free "standard no charge" license); `three`
   comes in step 5. The stage is pinned with CSS `position: sticky`, not GSAP

@@ -8,13 +8,10 @@ import { SITE_DESCRIPTION, SITE_TITLE, TOPICS, type Topic } from '../consts';
 // `id` must match a pose in src/scripts/homepage.ts.
 // Topic scenes show only their buttons under the sticky "I write about"
 // heading; `title` labels the section for screen readers.
-const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = [
-	{
-		id: 'stand',
-		title: "Hi, I'm Shreyans.",
-		text: 'This is where I write down what I learn. Scroll to look around.',
-		topics: [],
-	},
+// The intro's text is written out in the markup below, since parts of it are
+// highlighted.
+const scenes: { id: string; title: string; topics: Topic[] }[] = [
+	{ id: 'stand', title: 'Intro', topics: [] },
 	{ id: 'run', title: 'Running', topics: ['running'] },
 	{ id: 'bike', title: 'Biking', topics: ['biking'] },
 	{ id: 'desk', title: 'Productivity', topics: ['programming-ai', 'quant', 'finance'] },
@@ -61,34 +58,40 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 				</div>
 			</div>
 
-			<!-- Sticks while the topic scenes scroll past (rows 2 to 5). -->
-			<h2 class="write-about">I write about</h2>
+			<!-- Pinned in one place for the whole homepage. Scrolling fades it in
+			     after the intro and cross-fades between each scene's buttons
+			     (src/scripts/homepage.ts), instead of them scrolling past. -->
+			<div class="topic-panel" style="grid-row: 1 / span 5">
+				<h2 class="write-about">I write about</h2>
+				<div class="topic-groups">
+					{scenes.slice(1).map((scene) => (
+						<p class="links topic-group" data-scene={scene.id} aria-label={scene.title}>
+							{scene.topics.map((topic) => (
+								<a class="button" href={`/topics/${topic}/`}>
+									{TOPICS[topic]}
+								</a>
+							))}
+						</p>
+					))}
+				</div>
+			</div>
 
+			<!-- One full-screen section per scene. Only the intro has visible
+			     content; the rest are scroll distance for the figure and fades. -->
 			{scenes.map((scene, i) =>
 				i === 0 ? (
 					<section class="scene" data-scene={scene.id} style="grid-row: 1">
 						<div class="scene-text">
-							<h1>{scene.title}</h1>
-							<p>{scene.text}</p>
-						</div>
-					</section>
-				) : (
-					<section
-						class="scene topic-scene"
-						data-scene={scene.id}
-						aria-label={scene.title}
-						style={`grid-row: ${i + 1}`}
-					>
-						<div class="scene-text">
-							<p class="links">
-								{scene.topics.map((topic) => (
-									<a class="button" href={`/topics/${topic}/`}>
-										{TOPICS[topic]}
-									</a>
-								))}
+							<h1>Hi, I'm <span class="highlight">Shreyans</span>.</h1>
+							<p>
+								This is where I write down what I learn.
+								<br />
+								<span class="highlight">Scroll</span> to look around.
 							</p>
 						</div>
 					</section>
+				) : (
+					<div class="scene" data-scene={scene.id} style={`grid-row: ${i + 1}`}></div>
 				),
 			)}
 		</main>
@@ -149,22 +152,34 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 	.scene h1 {
 		font-size: 2em;
 	}
-	.write-about {
+	.highlight {
+		color: var(--accent);
+	}
+	.topic-panel {
 		grid-column: 1;
-		grid-row: 2 / span 4;
 		position: sticky;
 		top: var(--label-top);
 		align-self: start;
 		z-index: 2;
-		margin: 0;
 		padding: 0 1em;
+	}
+	.write-about {
+		margin: 0 0 0.8em;
 		color: var(--text-heading);
 		font-size: 1.6em;
-		pointer-events: none;
 	}
-	.topic-scene {
+	/* All groups share one grid cell, so they sit on top of each other and
+	   only the visible one shows. */
+	.topic-groups {
+		display: grid;
+	}
+	.topic-group {
+		grid-area: 1 / 1;
+		align-self: start;
+		/* Don't stretch buttons to the height of the tallest group. */
+		align-content: flex-start;
 		align-items: flex-start;
-		padding-top: calc(var(--label-top) + 3.4em);
+		margin: 0;
 	}
 	.links {
 		display: flex;
@@ -198,9 +213,9 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 			grid-template-columns: 1fr 1fr;
 			--label-top: 40svh;
 		}
-		.write-about {
+		.topic-panel {
 			grid-column: 2;
-			padding: 0 8vw 0 1.25em;
+			padding: 0 8vw 0 2em;
 		}
 		.stage {
 			grid-column: 1;
@@ -219,10 +234,7 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		.scene-text {
 			background: none;
 		}
-		.topic-scene {
-			align-items: flex-start;
-			padding-top: calc(var(--label-top) + 3.4em);
-		}
+
 	}
 
 	/* Short screens: keep the figure inside the screen and clear of the text. */
