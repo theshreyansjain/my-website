@@ -56,6 +56,10 @@ What changed from the plan while building, and why. Newest first.
 - Homepage: keyboard shortcuts (→, 1/2/3) and their "press …" hints were
   removed at the owner's request, along with the → in button labels.
   Buttons are the only way to open a topic from the homepage.
+- Homepage layout: from 700px wide the figure is on the left and text on
+  the right; phones stack figure above text (too narrow for side by side).
+  Figure scaled up (1.3x phone, 1.8x desktop, 1.4x on short windows) via a
+  `.figure-scale` wrapper. The "scroll ↓" hint was removed.
 
 - Step 4: added `gsap` (3.15, free "standard no charge" license); `three`
   comes in step 5. The stage is pinned with CSS `position: sticky`, not GSAP
