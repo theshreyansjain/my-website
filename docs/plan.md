@@ -59,6 +59,15 @@ not transcripts.
 ## Build notes
 What changed from the plan while building, and why. Newest first.
 
+- Step 6 review: figure size now depends on width as well as height
+  (tablets in portrait got the desktop size in half the width and cut the
+  desk scene off; landscape phones cut the intro figure's legs off). Blog
+  list is a simple left-aligned list (date + topic, title, description)
+  in the normal 720px column; About has no date (`pubDate` is optional in
+  the post layout). Reduced motion: one page-wide trigger shows the scene
+  nearest the scroll position, fixing the intro pose showing when the page
+  opened exactly between two scenes.
+
 - Step 5 (2026-10-16): a Three.js version of the figure was built at
   /lab/figure (elbows, IK hands and feet, real turn and lighting, all five
   scenes with motion) and the owner preferred the 2D figure. It was not

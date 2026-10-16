@@ -23,9 +23,6 @@ const posts = await getCollection('blog', (post) => post.data.topic === topic);
 	<head>
 		<BaseHead title={`${label} | ${SITE_TITLE}`} description={`Posts about ${label.toLowerCase()}.`} />
 		<style>
-			main {
-				width: 960px;
-			}
 			.muted {
 				color: var(--text-muted);
 			}

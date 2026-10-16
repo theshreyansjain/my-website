@@ -364,19 +364,26 @@ if (figure && scenes.length) {
 		}
 	});
 
-	// Reduced motion: no animation, just switch poses when a scene is active.
+	// Reduced motion: no animation, just show the scene nearest the current
+	// scroll position. One trigger over the whole page (rather than one per
+	// scene) so there's always a nearest scene, including exactly between
+	// two and when the page opens mid-way (e.g. after a reload).
 	mm.add('(prefers-reduced-motion: reduce)', () => {
-		scenes.forEach((scene) => {
-			ScrollTrigger.create({
-				trigger: scene,
-				start: 'top center',
-				end: 'bottom center',
-				onToggle: (self) => {
-					if (!self.isActive) return;
-					setPose(poses[scene.dataset.scene ?? ''] ?? rest);
-					setText(scene.dataset.scene ?? '');
-				},
-			});
+		let shown = -1;
+		const show = (progress: number) => {
+			const i = Math.round(progress * (scenes.length - 1));
+			if (i === shown) return;
+			shown = i;
+			const id = scenes[i].dataset.scene ?? '';
+			setPose(poses[id] ?? rest);
+			setText(id);
+		};
+		ScrollTrigger.create({
+			trigger: '.home',
+			start: 'top top',
+			end: 'bottom bottom',
+			onUpdate: (self) => show(self.progress),
+			onRefresh: (self) => show(self.progress),
 		});
 	});
 }

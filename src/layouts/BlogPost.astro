@@ -7,7 +7,9 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import TopicTag from '../components/TopicTag.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+// Post frontmatter; the date is optional so non-post pages (About) can use
+// this layout without one.
+type Props = Omit<CollectionEntry<'blog'>['data'], 'pubDate'> & { pubDate?: Date };
 
 const { title, description, pubDate, updatedDate, heroImage, topic } = Astro.props;
 ---
@@ -66,7 +68,7 @@ const { title, description, pubDate, updatedDate, heroImage, topic } = Astro.pro
 				<div class="prose">
 					<div class="title">
 						<div class="date">
-							<FormattedDate date={pubDate} />
+							{pubDate && <FormattedDate date={pubDate} />}
 							{updatedDate && (
 								<div class="last-updated-on">
 									Last updated on <FormattedDate date={updatedDate} />
