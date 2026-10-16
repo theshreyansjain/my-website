@@ -56,6 +56,9 @@ pushing any other branch gets a preview URL.
   pages, the Three.js homepage). Push it so the owner can check the Vercel
   preview on a phone, then merge into `main` once approved.
 - Never push without being asked.
+- When asking the owner to look at a Vercel preview (or any other link), open
+  it in their browser with `open <url>` instead of only printing it, and
+  still include the URL in the reply.
 
 ## Plan and roadmap
 
