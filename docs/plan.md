@@ -59,6 +59,16 @@ not transcripts.
 ## Build notes
 What changed from the plan while building, and why. Newest first.
 
+- Step 7 (2026-10-17): Vercel Web Analytics added as a plain
+  `<script defer src="/_vercel/insights/script.js">` in `BaseHead.astro`
+  (every page), no npm package. Cookie-free, no consent banner. It records
+  nothing until the owner enables it: Vercel dashboard → project
+  my-website → Analytics → Enable, then redeploy (the `/_vercel/insights/`
+  route is only added on the next deployment). Data appears for production
+  only. Vercel's docs now also offer a per-project `/<unique-path>/script.js`
+  (shown after enabling; harder for ad blockers to spot); switch to it later
+  if counts look low. Tick step 7 once visits show up.
+
 - Step 5 (2026-10-16): a Three.js version of the figure was built at
   /lab/figure (elbows, IK hands and feet, real turn and lighting, all five
   scenes with motion) and the owner preferred the 2D figure. It was not
