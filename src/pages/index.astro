@@ -47,21 +47,22 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 				<div class="figure-scale">
 				<div class="figure">
 					<div class="prop prop-bike">
-						<!-- Frame in the figure's own coordinates (200 x 260), built
-						     around the rider: saddle under the hip (100,143), crank at
-						     106,212 within leg reach, grips where the hands land
-						     (~186,132), hubs at 38,232 and 162,232. The crank's numbers
-						     are mirrored in src/scripts/homepage.ts. -->
+						<!-- Race bike in the figure's own coordinates (200 x 260), built
+						     around a flat-backed rider: saddle under the hip (100,143)
+						     and well behind the crank (122,208), drop bars out front
+						     where the hands land (~193,180), fork raking forward from
+						     the head tube to the front hub. Hubs at 46,212 and 186,212.
+						     The crank's numbers are mirrored in src/scripts/homepage.ts. -->
 						<svg class="bike-frame" viewBox="0 0 200 260">
-							<!-- Chainstay, seat tube, seat stay. -->
-							<path d="M38 232 L106 212 L96 150 M38 232 L97 156" />
+							<!-- Chainstay, seat tube (sloping back to the saddle), seat stay. -->
+							<path d="M46 212 L122 208 L99 152 M46 212 L101 157" />
 							<!-- Top tube, down tube. -->
-							<path d="M97 156 L171 144 M106 212 L170 156" />
-							<!-- Head tube and fork, stem, drop handlebar. -->
-							<path d="M172 138 L162 232 M172 138 L180 132 L189 132 C196 132 197 142 191 145" />
-							<path class="saddle" d="M86 148 L108 148" />
-							<circle cx="106" cy="212" r="8" />
-							<path class="crank" d="M95 212 L117 212" />
+							<path d="M101 157 L174 168 M122 208 L177 180" />
+							<!-- Head tube and fork raking forward to the hub; stem; drop bar. -->
+							<path d="M172 162 L180 186 L186 212 M172 162 L184 160 L192 161 C199 162 199 177 193 181" />
+							<path class="saddle" d="M86 149 L110 149" />
+							<circle cx="122" cy="208" r="8" />
+							<path class="crank" d="M111 208 L133 208" />
 						</svg>
 						<span class="wheel"></span>
 						<span class="wheel"></span>
@@ -92,12 +93,33 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 							<path class="strap" d="M4 14 L22 34 L30 30" />
 						</svg>
 						<!-- Brain parts that burst out of the head in the psychology scene. -->
-						<span class="brain frontal"></span>
-						<span class="brain parietal"></span>
-						<span class="brain occipital"></span>
-						<span class="brain temporal"></span>
-						<span class="brain cerebellum"></span>
-						<span class="brain stem"></span>
+						<!-- The brain in side view (facing right), drawn in the head's
+						     coordinates: each part is an outline plus its folds. -->
+						<svg class="brain-art" viewBox="-10 -10 56 56">
+							<g class="brain frontal">
+								<path d="M20 7 C27 5 33 10 34 17 C34.5 20.5 32.5 22 30 22 L24.5 21.2 C22.5 17 21.2 12 20 7 Z" />
+								<path class="fold" d="M23.5 9.5 C25.5 11.5 27 13.5 30.5 14.5 M25.5 17 C27.5 18 30 18 32.5 18.8 M27.5 8.5 C29 10 30.5 11 32 11.5" />
+							</g>
+							<g class="brain parietal">
+								<path d="M8.5 9.5 C11.5 6 16.5 5.5 20 7 C21.2 12 22.5 17 24.5 21.2 L16.5 20.2 C14.5 16 12 12.5 8.5 9.5 Z" />
+								<path class="fold" d="M12.5 8.5 C14.5 11.5 16 14 19.5 16.5 M16 7 C17.5 9.5 18.5 11 21 13" />
+							</g>
+							<g class="brain occipital">
+								<path d="M3 17.5 C2.5 13 5.5 9.5 8.5 9.5 C12 12.5 14.5 16 16.5 20.2 L8 22.5 C5 22.5 3.2 20.5 3 17.5 Z" />
+								<path class="fold" d="M5.5 13 C7.5 15 10 16.5 12.5 18.5 M5 18.5 C7 19 9 19.5 11 20.5" />
+							</g>
+							<g class="brain temporal">
+								<path d="M14 22.5 C18 20.5 25 21 30.5 22.2 C31 25.5 28 28.5 22.5 28.5 C18 28.5 15 26.5 14 22.5 Z" />
+								<path class="fold" d="M17 24.5 C20.5 25.5 24.5 25.5 28 24.2" />
+							</g>
+							<g class="brain cerebellum">
+								<path d="M5.5 24.5 C7.5 22 12.5 22 14 25 C14.5 28 11.5 30.5 8.5 29.8 C6 29.2 4.8 26.8 5.5 24.5 Z" />
+								<path class="fold" d="M6.5 24.8 L13 24.8 M6 26.6 L13.6 26.6 M6.6 28.4 L12.6 28.4" />
+							</g>
+							<g class="brain stem">
+								<path d="M15.5 27 C16.8 26.6 18.4 26.8 19.5 27.8 L18.6 35 L16.2 35 Z" />
+							</g>
+						</svg>
 					</div>
 					<div class="part torso"></div>
 					<div class="part arm arm-l"><span class="seg"></span></div>
@@ -507,56 +529,29 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		height: 10px;
 		border-radius: 3px 8px 4px 4px;
 	}
-	/* Brain structures: hidden inside the head until the psychology scene's
-	   loop explodes them outward (positions in src/scripts/homepage.ts). */
-	.brain {
+	/* Brain: an SVG drawn over the head (so it reads like an X-ray). Each
+	   part starts hidden; the psychology scene's loop shows it assembled,
+	   explodes it outward and brings it back (src/scripts/homepage.ts). */
+	.brain-art {
 		position: absolute;
-		left: 50%;
-		top: 50%;
+		left: -10px;
+		top: -10px;
+		width: 56px;
+		height: 56px;
+		overflow: visible;
+		pointer-events: none;
+	}
+	.brain {
 		opacity: 0;
-		box-sizing: border-box;
-		border: 2px solid var(--accent);
-		background: var(--bg);
+		fill: var(--bg);
+		stroke: var(--accent);
+		stroke-width: 1.2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
 	}
-	.frontal {
-		width: 18px;
-		height: 14px;
-		margin: -7px 0 0 -9px;
-		border-radius: 60% 80% 40% 50%;
-	}
-	.parietal {
-		width: 18px;
-		height: 12px;
-		margin: -6px 0 0 -9px;
-		border-radius: 80% 80% 30% 30%;
-	}
-	.occipital {
-		width: 13px;
-		height: 13px;
-		margin: -6px 0 0 -6px;
-		border-radius: 80% 30% 50% 70%;
-	}
-	.temporal {
-		width: 20px;
-		height: 9px;
-		margin: -4px 0 0 -10px;
-		border-radius: 50% 70% 60% 40%;
-	}
-	.cerebellum {
-		width: 13px;
-		height: 10px;
-		margin: -5px 0 0 -6px;
-		border-radius: 50%;
-		/* Folds. */
-		background:
-			repeating-linear-gradient(to bottom, transparent 0 2px, var(--accent) 2px 3px),
-			var(--bg);
-	}
-	.stem {
-		width: 6px;
-		height: 14px;
-		margin: -7px 0 0 -3px;
-		border-radius: 3px 3px 2px 2px;
+	.brain .fold {
+		fill: none;
+		stroke-width: 0.8;
 	}
 	.prop {
 		opacity: 0;
@@ -583,16 +578,16 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 	}
 	.prop-bike .wheel {
 		position: absolute;
-		bottom: 0;
-		left: 10px;
+		/* Hubs at 46,212 and 186,212. */
+		top: 184px;
+		left: 18px;
 		width: 56px;
 		height: 56px;
 		border: 2px solid var(--accent);
 		border-radius: 50%;
 	}
 	.prop-bike .wheel:last-child {
-		left: auto;
-		right: 10px;
+		left: 158px;
 	}
 	/* Spokes, so you can see the wheels turn. */
 	.prop-bike .wheel::before,

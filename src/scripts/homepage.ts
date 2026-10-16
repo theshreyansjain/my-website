@@ -53,7 +53,8 @@ const poses: Record<string, Pose> = {
 	},
 	run: { ...rest, torso: 4, armL: 40, armR: -45, legL: 30, legR: -35, kneeL: 35, kneeR: 10, gear: 1 },
 	// Hands on the handlebar grips; legs are set from the pedals below.
-	bike: { ...rest, torso: 40, armL: -43, armR: -45, bike: 1 },
+	// Race position: back nearly flat, head up, hands on the drops.
+	bike: { ...rest, torso: 80, armL: -24, armR: -27, headY: -6, bike: 1 },
 	// Seated on the stool: thighs forward, shins hanging down to the floor.
 	desk: { ...rest, armL: -65, armR: -75, legL: -85, legR: -80, kneeL: 85, kneeR: 80, bodyY: 34, desk: 1 },
 	read: { ...rest, armL: -70, armR: -78, headX: 4, headY: 6, book: 1 },
@@ -64,7 +65,7 @@ const poses: Record<string, Pose> = {
 // knee pointing forward. Positions are in the figure's own px (the hip pivot
 // and crank match the CSS and the bike SVG in index.astro).
 const HIP = { x: 100, y: 143 };
-const CRANK = { x: 106, y: 212, length: 11 };
+const CRANK = { x: 122, y: 208, length: 11 };
 const THIGH = 40;
 const SHIN = 40;
 const deg = (rad: number) => (rad * 180) / Math.PI;
@@ -292,28 +293,28 @@ if (figure && scenes.length) {
 			.to(seg('arm-l'), { rotation: 0, duration: 0.11 }, 0.23)
 			.to({}, { duration: 0.06 });
 
-		// Exploded view of the brain: parts burst out of the skull to these
-		// offsets (px from the head's centre; the figure faces right), hold,
-		// then collapse back in.
+		// Exploded view of the brain: it appears in the head, bursts apart to
+		// these offsets (px from where each part sits; the figure faces right),
+		// holds, snaps back together, then fades.
 		const brainParts: [string, number, number, number][] = [
-			['.frontal', 34, -26, -15],
-			['.parietal', 0, -44, 0],
-			['.occipital', -36, -22, 20],
-			['.temporal', 30, 14, 10],
-			['.cerebellum', -34, 16, -10],
-			['.stem', -6, 36, 0],
+			['.frontal', 22, -18, -12],
+			['.parietal', 0, -30, 0],
+			['.occipital', -24, -14, 14],
+			['.temporal', 20, 14, 8],
+			['.cerebellum', -22, 18, -10],
+			['.stem', -20, 16, 20], // down-left, clear of the torso
 		];
 		const brain = loop();
-		brain.to({}, { duration: 0.5 });
-		for (const [sel, x, y, rotation] of brainParts) {
-			brain.fromTo(
-				figure.querySelector(sel),
-				{ x: 0, y: 0, rotation: 0, scale: 0.3, opacity: 0 },
-				{ x, y, rotation, scale: 1, opacity: 1, duration: 0.7, ease: 'back.out(1.6)' },
-				0.5,
-			);
-			brain.to(figure.querySelector(sel), { x: 0, y: 0, rotation: 0, scale: 0.3, opacity: 0, duration: 0.6, ease: 'power2.in' }, 2.2);
-		}
+		const parts = brainParts.map(([sel]) => figure.querySelector(sel));
+		brain
+			.set(parts, { x: 0, y: 0, rotation: 0, transformOrigin: '50% 50%', opacity: 0 }, 0)
+			.to(parts, { opacity: 1, duration: 0.3 }, 0.3);
+		brainParts.forEach(([, x, y, rotation], i) => {
+			brain
+				.to(parts[i], { x, y, rotation, duration: 0.7, ease: 'back.out(1.6)' }, 0.9)
+				.to(parts[i], { x: 0, y: 0, rotation: 0, duration: 0.6, ease: 'power2.inOut' }, 2.6);
+		});
+		brain.to(parts, { opacity: 0, duration: 0.3 }, 3.5).to({}, { duration: 0.3 });
 
 		const limbSegs = (...limbs: string[]) => limbs.map(seg);
 		const sceneLoops: { id: string; tl: gsap.core.Timeline; start: string; end: string; reset: () => void }[] = [
@@ -337,7 +338,7 @@ if (figure && scenes.length) {
 				reset: () => gsap.to([...limbSegs('leg-l', 'leg-r'), calf('leg-l'), calf('leg-r')], { rotation: 0, duration: 0.3 }),
 			},
 			{ id: 'desk', tl: typing, start: 'top 50%', end: 'bottom 50%', reset: () => gsap.to(limbSegs('arm-l', 'arm-r'), { rotation: 0, duration: 0.3 }) },
-			{ id: 'read', tl: brain, start: 'top 50%', end: 'bottom 50%', reset: () => gsap.to('.brain', { x: 0, y: 0, rotation: 0, scale: 0.3, opacity: 0, duration: 0.3 }) },
+			{ id: 'read', tl: brain, start: 'top 50%', end: 'bottom 50%', reset: () => gsap.to('.brain', { x: 0, y: 0, rotation: 0, opacity: 0, duration: 0.3 }) },
 		];
 		for (const { id, tl, start, end, reset } of sceneLoops) {
 			const scene = scenes.find((el) => el.dataset.scene === id);

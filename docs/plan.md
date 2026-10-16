@@ -119,7 +119,12 @@ What changed from the plan while building, and why. Newest first.
   right). The desk monitor's code lines type themselves out, hold and clear
   on a 4s loop (still with reduced motion). Running torso lean cut to 4°.
   Limbs have an explicit draw order: far arm/leg behind the torso and head,
-  near ones in front. Between scenes the buttons cross-fade (scrubbed by
+  near ones in front.
+- Bike scene is a race position: back nearly flat (80° lean), saddle well
+  behind the crank, fork raking forward to the front hub, drop bars.
+- Brain: an SVG side view (frontal, parietal, occipital and temporal lobes,
+  cerebellum, brainstem, each with fold lines). It appears over the head
+  like an X-ray, bursts apart, holds, snaps back together and fades. Between scenes the buttons cross-fade (scrubbed by
   scroll) instead of scrolling past. Each topic group shows its button(s)
   with the topic description underneath; topic scenes have no title
   ("Productivity" is only the desk group's screen-reader label). "I write
