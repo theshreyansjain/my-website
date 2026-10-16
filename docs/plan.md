@@ -49,7 +49,12 @@ not transcripts.
 - [x] 5. Figure prototype at /lab/figure: stand + run, then desk, bike, read.
   Done, then rejected: the 2D homepage figure is the final figure.
 - [ ] 6. Polish: portrait layout, performance, reduced motion.
-- [ ] 7. Later: custom domain, analytics, newsletter.
+- [ ] 7. Analytics: see where visitors come from (country, referring site),
+  what device, OS and browser they use, and which pages they read.
+  Privacy-friendly and cookie-free, so no consent banner. Likely Vercel Web
+  Analytics (built into the hosting; enabled in the dashboard plus one
+  script tag, no npm package needed); Plausible or Umami are alternatives.
+- [ ] 8. Later: custom domain, newsletter.
 
 ## Build notes
 What changed from the plan while building, and why. Newest first.
