@@ -11,6 +11,7 @@ export async function GET(context) {
 		items: posts.map((post) => ({
 			...post.data,
 			link: `/blog/${post.id}/`,
+			categories: post.data.topic ? [post.data.topic] : undefined,
 		})),
 	});
 }
