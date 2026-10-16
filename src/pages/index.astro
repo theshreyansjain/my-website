@@ -6,37 +6,19 @@ import { SITE_DESCRIPTION, SITE_TITLE, TOPICS, type Topic } from '../consts';
 
 // The homepage scenes, in scroll order (see "Homepage plan" in docs/plan.md).
 // `id` must match a pose in src/scripts/homepage.ts.
-const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
+// Topic scenes show only their buttons under the sticky "I write about"
+// heading; `title` labels the section for screen readers.
+const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = [
 	{
 		id: 'stand',
 		title: "Hi, I'm Shreyans.",
 		text: 'This is where I write down what I learn. Scroll to look around.',
 		topics: [],
 	},
-	{
-		id: 'run',
-		title: 'Running',
-		text: 'Training logs, races and what I learn about building endurance.',
-		topics: ['running'],
-	},
-	{
-		id: 'bike',
-		title: 'Biking',
-		text: 'Rides, routes and gear.',
-		topics: ['biking'],
-	},
-	{
-		id: 'desk',
-		title: 'Productivity',
-		text: 'Code and AI, quant trading, and personal finance.',
-		topics: ['programming-ai', 'quant', 'finance'],
-	},
-	{
-		id: 'read',
-		title: 'Psychology',
-		text: 'Notes on how minds work, mostly from books.',
-		topics: ['psychology'],
-	},
+	{ id: 'run', title: 'Running', topics: ['running'] },
+	{ id: 'bike', title: 'Biking', topics: ['biking'] },
+	{ id: 'desk', title: 'Productivity', topics: ['programming-ai', 'quant', 'finance'] },
+	{ id: 'read', title: 'Psychology', topics: ['psychology'] },
 ];
 ---
 
@@ -79,12 +61,25 @@ const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
 				</div>
 			</div>
 
-			{scenes.map((scene, i) => (
-				<section class="scene" data-scene={scene.id} style={`grid-row: ${i + 1}`}>
-					<div class="scene-text">
-						{i === 0 ? <h1>{scene.title}</h1> : <h2>{scene.title}</h2>}
-						<p>{scene.text}</p>
-						{scene.topics.length > 0 ? (
+			<!-- Sticks while the topic scenes scroll past (rows 2 to 5). -->
+			<h2 class="write-about">I write about</h2>
+
+			{scenes.map((scene, i) =>
+				i === 0 ? (
+					<section class="scene" data-scene={scene.id} style="grid-row: 1">
+						<div class="scene-text">
+							<h1>{scene.title}</h1>
+							<p>{scene.text}</p>
+						</div>
+					</section>
+				) : (
+					<section
+						class="scene topic-scene"
+						data-scene={scene.id}
+						aria-label={scene.title}
+						style={`grid-row: ${i + 1}`}
+					>
+						<div class="scene-text">
 							<p class="links">
 								{scene.topics.map((topic) => (
 									<a class="button" href={`/topics/${topic}/`}>
@@ -92,14 +87,10 @@ const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
 									</a>
 								))}
 							</p>
-						) : (
-							<p class="links">
-								<a class="button" href="/blog/">All posts</a>
-							</p>
-						)}
-					</div>
-				</section>
-			))}
+						</div>
+					</section>
+				),
+			)}
 		</main>
 		<Footer />
 		<script>
@@ -111,6 +102,9 @@ const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
 <style>
 	/* Full-width page: undo the narrow column that global.css gives <main>. */
 	main.home {
+		/* Where the sticky "I write about" heading sits; topic buttons line up
+		   under it. Below the figure on phones, beside it on desktop. */
+		--label-top: 64svh;
 		display: grid;
 		grid-template-columns: 1fr;
 		width: auto;
@@ -152,9 +146,25 @@ const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
 		background: linear-gradient(to bottom, transparent, var(--bg) 2em);
 		padding-top: 2em;
 	}
-	.scene h1,
-	.scene h2 {
+	.scene h1 {
 		font-size: 2em;
+	}
+	.write-about {
+		grid-column: 1;
+		grid-row: 2 / span 4;
+		position: sticky;
+		top: var(--label-top);
+		align-self: start;
+		z-index: 2;
+		margin: 0;
+		padding: 0 1em;
+		color: var(--text-heading);
+		font-size: 1.6em;
+		pointer-events: none;
+	}
+	.topic-scene {
+		align-items: flex-start;
+		padding-top: calc(var(--label-top) + 3.4em);
 	}
 	.links {
 		display: flex;
@@ -186,6 +196,11 @@ const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
 	@media (min-width: 700px) {
 		main.home {
 			grid-template-columns: 1fr 1fr;
+			--label-top: 40svh;
+		}
+		.write-about {
+			grid-column: 2;
+			padding: 0 8vw 0 1.25em;
 		}
 		.stage {
 			grid-column: 1;
@@ -203,6 +218,10 @@ const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
 		}
 		.scene-text {
 			background: none;
+		}
+		.topic-scene {
+			align-items: flex-start;
+			padding-top: calc(var(--label-top) + 3.4em);
 		}
 	}
 
