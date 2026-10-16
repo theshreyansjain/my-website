@@ -51,7 +51,7 @@ const poses: Record<string, Pose> = {
 		legRX: -9, legR: 4,
 		legLX: 9, legL: -4,
 	},
-	run: { ...rest, torso: 12, armL: 40, armR: -45, legL: 30, legR: -35, kneeL: 35, kneeR: 10, gear: 1 },
+	run: { ...rest, torso: 4, armL: 40, armR: -45, legL: 30, legR: -35, kneeL: 35, kneeR: 10, gear: 1 },
 	// Hands on the handlebar grips; legs are set from the pedals below.
 	bike: { ...rest, torso: 40, armL: -43, armR: -45, bike: 1 },
 	// Seated on the stool: thighs forward, shins hanging down to the floor.

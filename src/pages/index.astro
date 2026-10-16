@@ -67,7 +67,11 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 						<span class="wheel"></span>
 					</div>
 					<div class="prop prop-desk">
-						<span class="monitor"></span>
+						<span class="monitor">
+							<span class="code-line"></span>
+							<span class="code-line"></span>
+							<span class="code-line"></span>
+						</span>
 						<span class="monitor-stand"></span>
 						<span class="desk-top"></span>
 						<span class="desk-leg"></span>
@@ -279,7 +283,10 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 	   Defined before the media queries below so their sizes win. */
 	.figure-scale {
 		--figure-scale: 1.6;
-		transform: scale(var(--figure-scale));
+		/* On phones the props stick out to the figure's right (desk, bike),
+		   so nudge the whole scene left to look centred. */
+		--figure-shift: -6vw;
+		transform: translateX(var(--figure-shift)) scale(var(--figure-scale));
 		transform-origin: top center;
 	}
 
@@ -303,6 +310,7 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		}
 		.figure-scale {
 			--figure-scale: 2.3;
+			--figure-shift: 0;
 			transform-origin: center;
 		}
 	}
@@ -342,6 +350,20 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 	.part {
 		background: var(--limb);
 		border-radius: 999px;
+	}
+	/* Drawing order: the far arm and leg (-l) go behind the body, the near
+	   ones (-r) in front, so a limb swinging behind the torso is hidden. */
+	.arm-l,
+	.leg-l {
+		z-index: 0;
+	}
+	.torso,
+	.head {
+		z-index: 1;
+	}
+	.arm-r,
+	.leg-r {
+		z-index: 2;
 	}
 	.head {
 		width: 36px;
@@ -604,12 +626,56 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		box-sizing: border-box;
 		border: 2px solid var(--accent);
 		border-radius: 3px;
-		/* Three short "code lines" on the screen. */
-		background:
-			linear-gradient(var(--accent), var(--accent)) 6px 8px / 24px 2px no-repeat,
-			linear-gradient(var(--accent), var(--accent)) 10px 15px / 28px 2px no-repeat,
-			linear-gradient(var(--accent), var(--accent)) 10px 22px / 16px 2px no-repeat,
-			var(--bg);
+		background: var(--bg);
+	}
+	/* Code on the screen: each line types itself out a few characters at a
+	   time, one after the other, holds, then the screen clears and it
+	   starts again. */
+	.prop-desk .code-line {
+		height: 2px;
+		/* Written out longhand: the build's CSS minifier turns a shorthand
+		   with no animation name into "animation: none". */
+		animation-duration: 4s;
+		animation-iteration-count: infinite;
+		animation-timing-function: steps(6, end);
+	}
+	.prop-desk .code-line:nth-child(1) {
+		left: 4px;
+		top: 6px;
+		width: 24px;
+		animation-name: type-line-1;
+	}
+	.prop-desk .code-line:nth-child(2) {
+		left: 8px;
+		top: 13px;
+		width: 28px;
+		animation-name: type-line-2;
+	}
+	.prop-desk .code-line:nth-child(3) {
+		left: 8px;
+		top: 20px;
+		width: 16px;
+		animation-name: type-line-3;
+	}
+	@keyframes type-line-1 {
+		0% { width: 0; }
+		18%, 90% { width: 24px; }
+		90.1%, 100% { width: 0; }
+	}
+	@keyframes type-line-2 {
+		0%, 20% { width: 0; }
+		42%, 90% { width: 28px; }
+		90.1%, 100% { width: 0; }
+	}
+	@keyframes type-line-3 {
+		0%, 45% { width: 0; }
+		60%, 90% { width: 16px; }
+		90.1%, 100% { width: 0; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.prop-desk .code-line {
+			animation: none;
+		}
 	}
 	.prop-desk .monitor-stand {
 		left: 168px;

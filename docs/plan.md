@@ -114,7 +114,12 @@ What changed from the plan while building, and why. Newest first.
   panel sits 71% down the screen (64% on short phones) to leave a clear gap
   below the figure.
 - The homepage has no footer (other pages keep it): the page ends with the
-  last scene, so the pinned figure doesn't get pushed up at the end. Between scenes the buttons cross-fade (scrubbed by
+  last scene, so the pinned figure doesn't get pushed up at the end.
+- Figure tweaks: on phones the figure is nudged left (props stick out to its
+  right). The desk monitor's code lines type themselves out, hold and clear
+  on a 4s loop (still with reduced motion). Running torso lean cut to 4°.
+  Limbs have an explicit draw order: far arm/leg behind the torso and head,
+  near ones in front. Between scenes the buttons cross-fade (scrubbed by
   scroll) instead of scrolling past. Each topic group shows its button(s)
   with the topic description underneath; topic scenes have no title
   ("Productivity" is only the desk group's screen-reader label). "I write
