@@ -115,8 +115,9 @@ What changed from the plan while building, and why. Newest first.
   below the figure.
 - The homepage has no footer (other pages keep it): the page ends with the
   last scene, so the pinned figure doesn't get pushed up at the end.
-- Figure tweaks: each scene has its own horizontal offset (`bodyX`) so the
-  whole scene, props included, is centred on screen; the figure slides
+- Figure tweaks: each scene has its own horizontal offset (`bodyX`):
+  centre the body when the extras are small (raised arm, book), the whole
+  scene when a big prop is part of it (bike, desk); the figure slides
   between them while scrolling. (Replaced a single phone-only nudge, which
   couldn't suit every scene and let the bike's front wheel run off a 390px
   screen.) The desk monitor's code lines type themselves out, hold and clear
