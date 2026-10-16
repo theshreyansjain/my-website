@@ -169,13 +169,19 @@ if (figure && scenes.length) {
 				.to(seg(limb), { rotation: angle, duration: duration / 2 }, 0)
 				.to(seg(limb), { rotation: 0, duration: duration / 2 }, duration / 2);
 
-		const wave = loop()
-			.to(seg('arm-r'), { rotation: 14, duration: 0.225 })
-			.to(seg('arm-r'), { rotation: -14, duration: 0.45 })
-			.to(seg('arm-r'), { rotation: 0, duration: 0.225 })
-			// The cape billows along with the wave.
-			.to('.cape', { skewX: 5, duration: 0.45 }, 0)
-			.to('.cape', { skewX: -5, duration: 0.45 }, 0.45);
+		// Two waves of the hand per sway of the cape. Every part ends where it
+		// started (0 → + → − → 0), so the loop repeats without a jump.
+		const wave = loop();
+		for (const at of [0, 0.9]) {
+			wave
+				.to(seg('arm-r'), { rotation: 14, duration: 0.225 }, at)
+				.to(seg('arm-r'), { rotation: -14, duration: 0.45 }, at + 0.225)
+				.to(seg('arm-r'), { rotation: 0, duration: 0.225 }, at + 0.675);
+		}
+		wave
+			.to('.cape', { skewX: 4, duration: 0.45 }, 0)
+			.to('.cape', { skewX: -4, duration: 0.9 }, 0.45)
+			.to('.cape', { skewX: 0, duration: 0.45 }, 1.35);
 
 		// The run pose is mid-stride; each limb swings to the opposite extreme.
 		const stride = loop();
