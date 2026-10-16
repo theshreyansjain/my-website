@@ -19,16 +19,17 @@ type Pose = {
 	bike: number;
 	desk: number;
 	book: number;
+	gear: number;
 };
 
 const rest: Pose = {
 	torso: 0, armL: 8, armR: -8, legL: 4, legR: -4,
-	headX: 0, headY: 0, bodyY: 0, bike: 0, desk: 0, book: 0,
+	headX: 0, headY: 0, bodyY: 0, bike: 0, desk: 0, book: 0, gear: 0,
 };
 
 const poses: Record<string, Pose> = {
 	stand: rest,
-	run: { ...rest, torso: 12, armL: 40, armR: -45, legL: 30, legR: -35, headX: 12 },
+	run: { ...rest, torso: 12, armL: 40, armR: -45, legL: 30, legR: -35, headX: 12, gear: 1 },
 	bike: { ...rest, torso: 40, armL: -60, armR: -65, legL: -70, legR: -25, headX: 34, headY: 16, bodyY: 26, bike: 1 },
 	desk: { ...rest, armL: -65, armR: -75, legL: -85, legR: -80, bodyY: 34, desk: 1 },
 	read: { ...rest, armL: -110, armR: -100, headY: 4, book: 1 },
@@ -49,6 +50,7 @@ function poseVars(p: Pose) {
 		['.prop-bike', { opacity: p.bike }],
 		['.prop-desk', { opacity: p.desk }],
 		['.prop-book', { opacity: p.book }],
+		['.gear', { opacity: p.gear }],
 	] as const;
 }
 

@@ -21,8 +21,8 @@ not transcripts.
   1. stand: intro ("Hi, I'm Shreyans"), no topic
   2. run: #running
   3. bike: #biking
-  4. desk + laptop: #programming-ai, #quant, #finance (one scene, three
-     buttons)
+  4. desk + computer, titled "Productivity": #programming-ai, #quant,
+     #finance (one scene, three buttons)
   5. read: #psychology
 - Each scene has visible buttons to its topic page(s); no keyboard
   shortcuts.
@@ -60,6 +60,10 @@ What changed from the plan while building, and why. Newest first.
   the right; phones stack figure above text (too narrow for side by side).
   Figure scaled up (1.3x phone, 1.8x desktop, 1.4x on short windows) via a
   `.figure-scale` wrapper. The "scroll ↓" hint was removed.
+- Homepage scenes: desk scene is titled "Productivity" and shows a desk with
+  a computer monitor (code lines on screen). Run scene adds a headband and
+  running shoes that fade in only while running. Step 5's Three.js figure
+  should keep these props.
 
 - Step 4: added `gsap` (3.15, free "standard no charge" license); `three`
   comes in step 5. The stage is pinned with CSS `position: sticky`, not GSAP
