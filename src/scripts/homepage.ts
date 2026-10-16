@@ -27,26 +27,31 @@ type Pose = {
 	legLX: number;
 	legRX: number;
 	torsoW: number;
+	headTilt: number;
+	front: number;
 };
 
 const rest: Pose = {
 	torso: 0, armL: 8, armR: -8, legL: 4, legR: -4,
 	headX: 0, headY: 0, bodyY: 0, bike: 0, desk: 0, book: 0, gear: 0,
-	armLX: 0, armRX: 0, legLX: 0, legRX: 0, torsoW: 1,
+	armLX: 0, armRX: 0, legLX: 0, legRX: 0, torsoW: 1, headTilt: 0, front: 0,
 };
 
 const poses: Record<string, Pose> = {
 	// Facing forward, waving with the figure's right hand (on the viewer's left).
 	stand: {
 		...rest,
+		front: 1,
 		torsoW: 1.5,
-		armRX: -22, armR: 160,
-		armLX: 22, armL: -6,
-		legRX: -8, legR: 3,
-		legLX: 8, legL: -3,
+		headTilt: -8,
+		armRX: -20, armR: 145,
+		armLX: 20, armL: -10,
+		legRX: -9, legR: 4,
+		legLX: 9, legL: -4,
 	},
-	run: { ...rest, torso: 12, armL: 40, armR: -45, legL: 30, legR: -35, headX: 12, gear: 1 },
-	bike: { ...rest, torso: 40, armL: -60, armR: -65, legL: -70, legR: -25, headX: 34, headY: 16, bodyY: 26, bike: 1 },
+	run: { ...rest, torso: 12, armL: 40, armR: -45, legL: 30, legR: -35, gear: 1 },
+	// Hands on the handlebar; feet around the chainring.
+	bike: { ...rest, torso: 40, armL: -35, armR: -40, legL: -20, legR: 10, bike: 1 },
 	desk: { ...rest, armL: -65, armR: -75, legL: -85, legR: -80, bodyY: 34, desk: 1 },
 	read: { ...rest, armL: -70, armR: -78, headX: 4, headY: 6, book: 1 },
 };
@@ -54,16 +59,36 @@ const poses: Record<string, Pose> = {
 const figure = document.querySelector<HTMLElement>('.figure');
 const scenes = gsap.utils.toArray<HTMLElement>('.scene');
 
+// Leaning the torso pivots it at the hip, which carries the shoulders and
+// head forward and down. These are their distances from the hip pivot (px,
+// matching the CSS in index.astro), so the arms and head stay attached
+// whatever the lean.
+const HIP_TO_SHOULDER = 68;
+const HIP_TO_HEAD = 104;
+
+// Side-on, the far arm and leg are drawn in a darker shade; facing the
+// viewer, both sides are the same colour.
+const css = getComputedStyle(document.documentElement);
+const NEAR = css.getPropertyValue('--text-heading').trim();
+const FAR = css.getPropertyValue('--text-muted').trim();
+
 // The GSAP properties to set on each part of the figure for a pose.
 function poseVars(p: Pose) {
+	const lean = (p.torso * Math.PI) / 180;
+	const forward = (dist: number) => dist * Math.sin(lean);
+	const down = (dist: number) => dist * (1 - Math.cos(lean));
+	const shoulder = { x: forward(HIP_TO_SHOULDER), y: down(HIP_TO_SHOULDER) };
 	return [
 		['.torso', { rotation: p.torso, scaleX: p.torsoW }],
-		['.arm-l', { rotation: p.armL, x: p.armLX }],
-		['.arm-r', { rotation: p.armR, x: p.armRX }],
+		['.arm-l', { rotation: p.armL, x: p.armLX + shoulder.x, y: shoulder.y }],
+		['.arm-r', { rotation: p.armR, x: p.armRX + shoulder.x, y: shoulder.y }],
 		['.leg-l', { rotation: p.legL, x: p.legLX }],
 		['.leg-r', { rotation: p.legR, x: p.legRX }],
-		['.head', { x: p.headX, y: p.headY }],
+		['.head', { x: p.headX + forward(HIP_TO_HEAD), y: p.headY + down(HIP_TO_HEAD), rotation: p.headTilt }],
+		['.face', { opacity: p.front }],
+		['.arm-l .seg, .leg-l .seg', { backgroundColor: p.front ? NEAR : FAR }],
 		['.prop-bike', { opacity: p.bike }],
+		['.bike-gear', { opacity: p.bike }],
 		['.prop-desk', { opacity: p.desk }],
 		['.prop-book', { opacity: p.book }],
 		['.gear', { opacity: p.gear }],
@@ -157,9 +182,9 @@ if (figure && scenes.length) {
 		swing(stride, 'arm-r', 85, 0.7);
 
 		const pedal = loop();
-		swing(pedal, 'leg-l', 45, 0.8);
-		swing(pedal, 'leg-r', -45, 0.8);
-		pedal.to('.prop-bike span', { rotation: 360, duration: 0.8, ease: 'none' }, 0);
+		swing(pedal, 'leg-l', 30, 0.8);
+		swing(pedal, 'leg-r', -30, 0.8);
+		pedal.to('.prop-bike .wheel', { rotation: 360, duration: 0.8, ease: 'none' }, 0);
 
 		// Typing: the hands take turns tapping up and down on the desk.
 		const typing = loop({ ease: 'power1.inOut' })

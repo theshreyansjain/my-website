@@ -46,16 +46,39 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 			<div class="stage" aria-hidden="true">
 				<div class="figure-scale">
 				<div class="figure">
-					<div class="prop prop-bike"><span></span><span></span></div>
+					<div class="prop prop-bike">
+						<!-- Frame in the figure's own coordinates (200 x 260): rear hub
+						     38,232, chainring 100,220, saddle under the hip, front hub
+						     162,232, handlebar where the hands land. -->
+						<svg class="bike-frame" viewBox="0 0 200 260">
+							<path d="M38 232 L100 220 L98 152 Z" />
+							<path d="M98 156 L172 146 L100 220" />
+							<path d="M174 138 L162 232" />
+							<path d="M166 136 L184 134 L188 143" />
+							<path class="saddle" d="M86 148 L110 148" />
+							<circle cx="100" cy="220" r="9" />
+						</svg>
+						<span class="wheel"></span>
+						<span class="wheel"></span>
+					</div>
 					<div class="prop prop-desk">
 						<span class="monitor"></span>
 						<span class="monitor-stand"></span>
 						<span class="desk-top"></span>
 						<span class="desk-leg"></span>
+						<span class="stool-seat"></span>
+						<span class="stool-leg"></span>
+						<span class="stool-base"></span>
 					</div>
 					<div class="prop prop-book"><span class="page page-l"></span><span class="page page-r"></span></div>
 					<div class="part head">
+						<span class="face">
+							<span class="eye"></span>
+							<span class="eye"></span>
+							<span class="smile"></span>
+						</span>
 						<span class="gear headband"></span>
+						<span class="bike-gear helmet"></span>
 						<!-- Brain parts that burst out of the head in the psychology scene. -->
 						<span class="brain frontal"></span>
 						<span class="brain parietal"></span>
@@ -391,6 +414,59 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		transform: rotate(25deg);
 		transform-origin: right center;
 	}
+	/* Face, only shown while the figure faces the viewer (intro). */
+	.face {
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+	}
+	.eye {
+		position: absolute;
+		top: 13px;
+		left: 11px;
+		width: 4px;
+		height: 5px;
+		border-radius: 50%;
+		background: var(--bg);
+	}
+	.eye + .eye {
+		left: 21px;
+	}
+	.smile {
+		position: absolute;
+		left: 12px;
+		top: 19px;
+		width: 12px;
+		height: 6px;
+		box-sizing: border-box;
+		border: 2px solid var(--bg);
+		border-top: none;
+		border-radius: 0 0 8px 8px;
+	}
+	/* Bike helmet: a dome over the top of the head with a short visor at
+	   the front (the figure faces right). */
+	.bike-gear {
+		position: absolute;
+		opacity: 0;
+		background: var(--accent);
+	}
+	.helmet {
+		left: -3px;
+		top: -5px;
+		width: 42px;
+		height: 22px;
+		border-radius: 50% 50% 12% 12% / 90% 90% 20% 20%;
+	}
+	.helmet::after {
+		content: '';
+		position: absolute;
+		right: -7px;
+		bottom: 2px;
+		width: 10px;
+		height: 4px;
+		border-radius: 2px;
+		background: inherit;
+	}
 	.shoe {
 		left: -1px;
 		bottom: -3px;
@@ -454,24 +530,40 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		border: 2px solid var(--accent);
 	}
 	.prop-bike {
-		inset: auto 10px 0 10px;
-		height: 60px;
+		inset: 0;
 		border: none;
 	}
-	.prop-bike span {
+	.bike-frame {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+		fill: none;
+		stroke: var(--accent);
+		stroke-width: 3;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+	.bike-frame .saddle {
+		stroke-width: 5;
+	}
+	.prop-bike .wheel {
 		position: absolute;
 		bottom: 0;
+		left: 10px;
 		width: 56px;
 		height: 56px;
 		border: 2px solid var(--accent);
 		border-radius: 50%;
 	}
-	.prop-bike span:last-child {
-		right: 0;
+	.prop-bike .wheel:last-child {
+		left: auto;
+		right: 10px;
 	}
 	/* Spokes, so you can see the wheels turn. */
-	.prop-bike span::before,
-	.prop-bike span::after {
+	.prop-bike .wheel::before,
+	.prop-bike .wheel::after {
 		content: '';
 		position: absolute;
 		left: 50%;
@@ -481,7 +573,7 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		margin-left: -1px;
 		background: var(--accent);
 	}
-	.prop-bike span::after {
+	.prop-bike .wheel::after {
 		transform: rotate(90deg);
 	}
 	/* Desk with a computer monitor; the hands rest on the desk top. */
@@ -525,6 +617,26 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		top: 96px;
 		width: 3px;
 		height: 92px;
+	}
+	/* Stool under the hips, standing on the same floor as the desk. */
+	.prop-desk .stool-seat {
+		left: 80px;
+		top: 150px;
+		width: 40px;
+		height: 5px;
+		border-radius: 2px;
+	}
+	.prop-desk .stool-leg {
+		left: 98px;
+		top: 155px;
+		width: 4px;
+		height: 33px;
+	}
+	.prop-desk .stool-base {
+		left: 86px;
+		top: 185px;
+		width: 28px;
+		height: 3px;
 	}
 	/* An open book held in both hands, pages tilted like an open spine. */
 	.prop-book {
