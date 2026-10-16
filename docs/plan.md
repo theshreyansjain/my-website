@@ -70,6 +70,14 @@ What changed from the plan while building, and why. Newest first.
   is a small loop that plays only while the intro is on screen: the one
   exception to "no idle animation", at the owner's request. With reduced
   motion the hand is raised but still.
+- Scene motion loops (owner's request, extending the wave exception): each
+  plays only while its scene is on screen. Running: arms and legs swing in
+  a stride. Biking: legs pedal, wheels (with spokes) spin. Productivity:
+  hands tap up and down, typing. Psychology: the figure holds an open book
+  and the brain bursts out of the head into its structures (frontal,
+  parietal, temporal and occipital lobes, cerebellum, brainstem), then
+  collapses back in. Limb loops rotate an inner `.seg` element so they don't
+  fight the scroll pose. None of them run with reduced motion.
 
 - Step 4: added `gsap` (3.15, free "standard no charge" license); `three`
   comes in step 5. The stage is pinned with CSS `position: sticky`, not GSAP

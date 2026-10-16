@@ -59,13 +59,22 @@ const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
 						<span class="desk-top"></span>
 						<span class="desk-leg"></span>
 					</div>
-					<div class="prop prop-book"></div>
-					<div class="part head"><span class="gear headband"></span></div>
+					<div class="prop prop-book"><span class="page page-l"></span><span class="page page-r"></span></div>
+					<div class="part head">
+						<span class="gear headband"></span>
+						<!-- Brain parts that burst out of the head in the psychology scene. -->
+						<span class="brain frontal"></span>
+						<span class="brain parietal"></span>
+						<span class="brain occipital"></span>
+						<span class="brain temporal"></span>
+						<span class="brain cerebellum"></span>
+						<span class="brain stem"></span>
+					</div>
 					<div class="part torso"></div>
-					<div class="part arm arm-l"></div>
-					<div class="part arm arm-r"><span class="wave"></span></div>
-					<div class="part leg leg-l"><span class="gear shoe"></span></div>
-					<div class="part leg leg-r"><span class="gear shoe"></span></div>
+					<div class="part arm arm-l"><span class="seg"></span></div>
+					<div class="part arm arm-r"><span class="seg"></span></div>
+					<div class="part leg leg-l"><span class="seg"><span class="gear shoe"></span></span></div>
+					<div class="part leg leg-r"><span class="seg"><span class="gear shoe"></span></span></div>
 				</div>
 				</div>
 			</div>
@@ -243,24 +252,29 @@ const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
 		top: 62px;
 		transform-origin: 50% 100%;
 	}
+	/* Limbs: the outer element takes the scroll pose, the inner .seg is what
+	   you see, and the motion loops (wave, stride, pedalling) rotate it on
+	   top of the pose without fighting the scroll timeline. */
+	.arm,
+	.leg {
+		background: none;
+	}
+	.seg {
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		transform-origin: inherit;
+		background: var(--text-muted);
+	}
+	.arm-r .seg,
+	.leg-r .seg {
+		background: var(--limb);
+	}
 	.arm {
 		width: 12px;
 		height: 64px;
 		left: 94px;
 		top: 68px;
-		transform-origin: 50% 6px;
-		background: var(--text-muted);
-	}
-	/* The right arm's visible part is an inner element, so the intro wave
-	   can rotate it without fighting the scroll timeline over .arm-r. */
-	.arm-r {
-		background: none;
-	}
-	.wave {
-		position: absolute;
-		inset: 0;
-		background: var(--limb);
-		border-radius: inherit;
 		transform-origin: 50% 6px;
 	}
 	.leg {
@@ -269,10 +283,6 @@ const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
 		left: 93px;
 		top: 136px;
 		transform-origin: 50% 7px;
-		background: var(--text-muted);
-	}
-	.leg-r {
-		background: var(--limb);
 	}
 	/* Running gear sits inside the head and legs so it moves with them. */
 	.gear {
@@ -306,6 +316,57 @@ const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
 		height: 10px;
 		border-radius: 3px 8px 4px 4px;
 	}
+	/* Brain structures: hidden inside the head until the psychology scene's
+	   loop explodes them outward (positions in src/scripts/homepage.ts). */
+	.brain {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		opacity: 0;
+		box-sizing: border-box;
+		border: 2px solid var(--accent);
+		background: var(--bg);
+	}
+	.frontal {
+		width: 18px;
+		height: 14px;
+		margin: -7px 0 0 -9px;
+		border-radius: 60% 80% 40% 50%;
+	}
+	.parietal {
+		width: 18px;
+		height: 12px;
+		margin: -6px 0 0 -9px;
+		border-radius: 80% 80% 30% 30%;
+	}
+	.occipital {
+		width: 13px;
+		height: 13px;
+		margin: -6px 0 0 -6px;
+		border-radius: 80% 30% 50% 70%;
+	}
+	.temporal {
+		width: 20px;
+		height: 9px;
+		margin: -4px 0 0 -10px;
+		border-radius: 50% 70% 60% 40%;
+	}
+	.cerebellum {
+		width: 13px;
+		height: 10px;
+		margin: -5px 0 0 -6px;
+		border-radius: 50%;
+		/* Folds. */
+		background:
+			repeating-linear-gradient(to bottom, transparent 0 2px, var(--accent) 2px 3px),
+			var(--bg);
+	}
+	.stem {
+		width: 6px;
+		height: 14px;
+		margin: -7px 0 0 -3px;
+		border-radius: 3px 3px 2px 2px;
+	}
 	.prop {
 		opacity: 0;
 		border: 2px solid var(--accent);
@@ -325,6 +386,21 @@ const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
 	}
 	.prop-bike span:last-child {
 		right: 0;
+	}
+	/* Spokes, so you can see the wheels turn. */
+	.prop-bike span::before,
+	.prop-bike span::after {
+		content: '';
+		position: absolute;
+		left: 50%;
+		top: 4px;
+		bottom: 4px;
+		width: 2px;
+		margin-left: -1px;
+		background: var(--accent);
+	}
+	.prop-bike span::after {
+		transform: rotate(90deg);
 	}
 	/* Desk with a computer monitor; the hands rest on the desk top. */
 	.prop-desk {
@@ -368,11 +444,37 @@ const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
 		width: 3px;
 		height: 92px;
 	}
+	/* An open book held in both hands, pages tilted like an open spine. */
 	.prop-book {
-		left: 112px;
-		top: 92px;
-		width: 34px;
-		height: 44px;
-		border-radius: 2px;
+		left: 138px;
+		top: 56px;
+		width: 52px;
+		height: 34px;
+		border: none;
+	}
+	.page {
+		position: absolute;
+		top: 0;
+		width: 26px;
+		height: 32px;
+		box-sizing: border-box;
+		border: 2px solid var(--accent);
+		/* Lines of text. */
+		background:
+			repeating-linear-gradient(to bottom, transparent 0 6px, var(--accent) 6px 7px) 4px 5px / 14px 20px
+				no-repeat,
+			var(--bg);
+	}
+	.page-l {
+		left: 0;
+		border-radius: 3px 0 0 3px;
+		transform: skewY(8deg);
+		transform-origin: right center;
+	}
+	.page-r {
+		right: 0;
+		border-radius: 0 3px 3px 0;
+		transform: skewY(-8deg);
+		transform-origin: left center;
 	}
 </style>
