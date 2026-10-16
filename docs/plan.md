@@ -58,12 +58,18 @@ What changed from the plan while building, and why. Newest first.
   Buttons are the only way to open a topic from the homepage.
 - Homepage layout: from 700px wide the figure is on the left and text on
   the right; phones stack figure above text (too narrow for side by side).
-  Figure scaled up (1.3x phone, 1.8x desktop, 1.4x on short windows) via a
-  `.figure-scale` wrapper. The "scroll ↓" hint was removed.
+  Figure scaled up via a `.figure-scale` wrapper: 1.6x on phones (1.25x on
+  short ones), 2.3x from 700px wide (1.7x on short windows, 2.7x on tall
+  screens). The "scroll ↓" hint was removed.
 - Homepage scenes: desk scene is titled "Productivity" and shows a desk with
   a computer monitor (code lines on screen). Run scene adds a headband and
   running shoes that fade in only while running. Step 5's Three.js figure
   should keep these props.
+- Intro pose faces the viewer, with the figure's right hand (viewer's left)
+  raised and waving, then turns side-on while scrolling to Running. The wave
+  is a small loop that plays only while the intro is on screen: the one
+  exception to "no idle animation", at the owner's request. With reduced
+  motion the hand is raised but still.
 
 - Step 4: added `gsap` (3.15, free "standard no charge" license); `three`
   comes in step 5. The stage is pinned with CSS `position: sticky`, not GSAP
