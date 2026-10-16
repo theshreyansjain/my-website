@@ -5,10 +5,11 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import TopicTag from '../components/TopicTag.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, topic } = Astro.props;
 ---
 
 <html lang="en">
@@ -72,6 +73,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 								</div>
 							)}
 						</div>
+						{topic && <TopicTag topic={topic} />}
 						<h1>{title}</h1>
 						<hr />
 					</div>

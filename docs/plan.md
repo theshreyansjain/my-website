@@ -37,7 +37,7 @@ not transcripts.
   the About page, Astro favicon.
 - [x] 2. Dark theme, including swapping Atkinson for a self-hosted monospace
   font.
-- [ ] 3. Topic field, /topics pages.
+- [x] 3. Topic field, /topics pages.
 - [ ] 4. Homepage skeleton with scroll sections and navigation, placeholder figure.
 - [ ] 5. Figure prototype at /lab/figure: stand + run, then desk, bike, read.
 - [ ] 6. Polish: portrait layout, performance, reduced motion.
@@ -45,6 +45,13 @@ not transcripts.
 
 ## Build notes
 What changed from the plan while building, and why. Newest first.
+
+- Step 3: `topic` is optional, not required: posts without one (like
+  hello-world) are general and only listed in `/blog`, so the six topics stay
+  matched to the six homepage scenes. A misspelled topic still fails the
+  build. Topic list lives in `TOPICS` in `src/consts.ts`. Added a `/topics`
+  index page. The nav's "Home" link was replaced by "Topics" (the site name
+  already links home), to keep the nav on one line on 360px phones.
 
 - Step 2: font is JetBrains Mono (self-hosted woff2, regular + bold, OFL
   license in `src/assets/fonts/`); Atkinson removed. Accent is green

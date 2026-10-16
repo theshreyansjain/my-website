@@ -1,0 +1,17 @@
+---
+import type { Topic } from '../consts';
+
+interface Props {
+	topic: Topic;
+}
+
+const { topic } = Astro.props;
+---
+
+<a class="topic-tag" href={`/topics/${topic}/`}>#{topic}</a>
+<style>
+	.topic-tag {
+		font-size: 0.85em;
+		text-decoration: none;
+	}
+</style>

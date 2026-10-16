@@ -1,0 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { SITE_TITLE, TOPICS, type Topic } from '../../consts';
+
+const posts = await getCollection('blog');
+const topics = (Object.entries(TOPICS) as [Topic, string][]).map(([slug, label]) => ({
+	slug,
+	label,
+	count: posts.filter((post) => post.data.topic === slug).length,
+}));
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Topics | ${SITE_TITLE}`} description="Everything I write about, by topic." />
+		<style>
+			ul {
+				list-style: none;
+				padding: 0;
+			}
+			li {
+				display: flex;
+				justify-content: space-between;
+				padding: 0.75em 0;
+				border-bottom: 1px solid var(--border);
+			}
+			li a {
+				text-decoration: none;
+			}
+			.count {
+				color: var(--text-muted);
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Topics</h1>
+			<ul>
+				{topics.map(({ slug, label, count }) => (
+					<li>
+						<a href={`/topics/${slug}/`}>{label}</a>
+						<span class="count">
+							{count} {count === 1 ? 'post' : 'posts'}
+						</span>
+					</li>
+				))}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>

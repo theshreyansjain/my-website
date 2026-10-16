@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import PostList from '../../components/PostList.astro';
+import { SITE_TITLE, TOPICS, type Topic } from '../../consts';
+
+// One page per topic, including topics with no posts yet, so links to
+// every topic always work.
+export function getStaticPaths() {
+	return Object.keys(TOPICS).map((topic) => ({ params: { topic } }));
+}
+
+const topic = Astro.params.topic as Topic;
+const label = TOPICS[topic];
+const posts = await getCollection('blog', (post) => post.data.topic === topic);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`${label} | ${SITE_TITLE}`} description={`Posts about ${label.toLowerCase()}.`} />
+		<style>
+			main {
+				width: 960px;
+			}
+			.muted {
+				color: var(--text-muted);
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>{label}</h1>
+			<p class="muted"><a href="/topics/">← All topics</a></p>
+			{posts.length > 0 ? <PostList posts={posts} /> : <p class="muted">No posts yet.</p>}
+		</main>
+		<Footer />
+	</body>
+</html>
