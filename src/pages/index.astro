@@ -72,20 +72,15 @@ const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
 							<p class="links">
 								{scene.topics.map((topic) => (
 									<a class="button" href={`/topics/${topic}/`}>
-										{TOPICS[topic]} →
+										{TOPICS[topic]}
 									</a>
 								))}
 							</p>
 						) : (
 							<p class="links">
-								<a class="button" href="/blog/">All posts →</a>
+								<a class="button" href="/blog/">All posts</a>
 							</p>
 						)}
-						<p class="key-hint">
-							{scene.topics.length > 1
-								? `press ${scene.topics.map((_, n) => n + 1).join(' · ')}`
-								: 'press →'}
-						</p>
 						{i === 0 && <p class="scroll-hint">scroll ↓</p>}
 					</div>
 				</section>
@@ -162,16 +157,9 @@ const scenes: { id: string; title: string; text: string; topics: Topic[] }[] = [
 		color: var(--bg);
 		text-shadow: none;
 	}
-	.key-hint,
 	.scroll-hint {
 		color: var(--text-muted);
 		font-size: 0.85em;
-	}
-	/* Keyboard hints only make sense with a keyboard and mouse. */
-	@media (hover: none) {
-		.key-hint {
-			display: none;
-		}
 	}
 
 	/* Desktop: text on the left, figure on the right. */

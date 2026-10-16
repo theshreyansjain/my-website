@@ -24,8 +24,8 @@ not transcripts.
   4. desk + laptop: #programming-ai, #quant, #finance (one scene, three
      buttons)
   5. read: #psychology
-- Desktop: "press →" opens that scene's topic page (desk: one key per
-  topic or a choice); mobile: visible buttons.
+- Each scene has visible buttons to its topic page(s); no keyboard
+  shortcuts.
 - Respect prefers-reduced-motion; cap devicePixelRatio at 2.
 
 ## Roadmap (in order)
@@ -52,6 +52,10 @@ not transcripts.
 
 ## Build notes
 What changed from the plan while building, and why. Newest first.
+
+- Homepage: keyboard shortcuts (→, 1/2/3) and their "press …" hints were
+  removed at the owner's request, along with the → in button labels.
+  Buttons are the only way to open a topic from the homepage.
 
 - Step 4: added `gsap` (3.15, free "standard no charge" license); `three`
   comes in step 5. The stage is pinned with CSS `position: sticky`, not GSAP

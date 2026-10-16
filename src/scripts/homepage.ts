@@ -1,6 +1,5 @@
-// Homepage scroll behaviour: poses the placeholder figure from scroll position
-// and handles the desktop keyboard shortcuts. Step 5 swaps the placeholder for
-// the Three.js figure but keeps this scroll setup.
+// Homepage scroll behaviour: poses the placeholder figure from scroll position.
+// Step 5 swaps the placeholder for the Three.js figure but keeps this setup.
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -98,29 +97,3 @@ if (figure && scenes.length) {
 		});
 	});
 }
-
-// Keyboard: → opens the current scene's topic; on the desk scene (several
-// topics), 1/2/3 pick one and → opens the first.
-let active: HTMLElement | undefined = scenes[0];
-scenes.forEach((scene) => {
-	ScrollTrigger.create({
-		trigger: scene,
-		start: 'top center',
-		end: 'bottom center',
-		onToggle: (self) => {
-			if (self.isActive) active = scene;
-		},
-	});
-});
-
-document.addEventListener('keydown', (e) => {
-	if (e.metaKey || e.ctrlKey || e.altKey || !active) return;
-	if (e.target instanceof HTMLElement && e.target.closest('input, textarea, select')) return;
-	const links = active.querySelectorAll<HTMLAnchorElement>('.links a');
-	const index = e.key === 'ArrowRight' ? 0 : Number(e.key) - 1;
-	const link = links[index];
-	if (link && (e.key === 'ArrowRight' || links.length > 1)) {
-		e.preventDefault();
-		window.location.href = link.href;
-	}
-});
