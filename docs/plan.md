@@ -83,8 +83,11 @@ What changed from the plan while building, and why. Newest first.
   on its own line ("Scroll" in green); no button. After the intro, a pinned
   panel with a white "I write about" heading and the scene's topic
   button(s) fades in. Between scenes the buttons cross-fade (scrubbed by
-  scroll) instead of scrolling past. Topic scenes have no title or
-  description; "Productivity" is only the desk group's screen-reader label.
+  scroll) instead of scrolling past. Each topic group shows its button(s)
+  with the topic description underneath; topic scenes have no title
+  ("Productivity" is only the desk group's screen-reader label). "I write
+  about" ends in three dots that appear one, two, three on a loop (still
+  "..." with reduced motion).
 
 - Step 4: added `gsap` (3.15, free "standard no charge" license); `three`
   comes in step 5. The stage is pinned with CSS `position: sticky`, not GSAP

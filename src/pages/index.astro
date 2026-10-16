@@ -10,12 +10,27 @@ import { SITE_DESCRIPTION, SITE_TITLE, TOPICS, type Topic } from '../consts';
 // heading; `title` labels the section for screen readers.
 // The intro's text is written out in the markup below, since parts of it are
 // highlighted.
-const scenes: { id: string; title: string; topics: Topic[] }[] = [
+const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = [
 	{ id: 'stand', title: 'Intro', topics: [] },
-	{ id: 'run', title: 'Running', topics: ['running'] },
-	{ id: 'bike', title: 'Biking', topics: ['biking'] },
-	{ id: 'desk', title: 'Productivity', topics: ['programming-ai', 'quant', 'finance'] },
-	{ id: 'read', title: 'Psychology', topics: ['psychology'] },
+	{
+		id: 'run',
+		title: 'Running',
+		text: 'Training logs, races and what I learn about building endurance.',
+		topics: ['running'],
+	},
+	{ id: 'bike', title: 'Biking', text: 'Rides, routes and gear.', topics: ['biking'] },
+	{
+		id: 'desk',
+		title: 'Productivity',
+		text: 'Code and AI, quant trading, and personal finance.',
+		topics: ['programming-ai', 'quant', 'finance'],
+	},
+	{
+		id: 'read',
+		title: 'Psychology',
+		text: 'Notes on how minds work, mostly from books.',
+		topics: ['psychology'],
+	},
 ];
 ---
 
@@ -62,16 +77,21 @@ const scenes: { id: string; title: string; topics: Topic[] }[] = [
 			     after the intro and cross-fades between each scene's buttons
 			     (src/scripts/homepage.ts), instead of them scrolling past. -->
 			<div class="topic-panel" style="grid-row: 1 / span 5">
-				<h2 class="write-about">I write about</h2>
+				<h2 class="write-about">
+					I write about<span class="dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span>
+				</h2>
 				<div class="topic-groups">
 					{scenes.slice(1).map((scene) => (
-						<p class="links topic-group" data-scene={scene.id} aria-label={scene.title}>
-							{scene.topics.map((topic) => (
-								<a class="button" href={`/topics/${topic}/`}>
-									{TOPICS[topic]}
-								</a>
-							))}
-						</p>
+						<div class="topic-group" data-scene={scene.id} aria-label={scene.title}>
+							<p class="links">
+								{scene.topics.map((topic) => (
+									<a class="button" href={`/topics/${topic}/`}>
+										{TOPICS[topic]}
+									</a>
+								))}
+							</p>
+							<p class="topic-text">{scene.text}</p>
+						</div>
 					))}
 				</div>
 			</div>
@@ -176,10 +196,41 @@ const scenes: { id: string; title: string; topics: Topic[] }[] = [
 	.topic-group {
 		grid-area: 1 / 1;
 		align-self: start;
-		/* Don't stretch buttons to the height of the tallest group. */
-		align-content: flex-start;
-		align-items: flex-start;
+	}
+	.topic-group .links {
 		margin: 0;
+	}
+	.topic-text {
+		margin: 0.8em 0 0;
+		max-width: 32em;
+	}
+	/* "I write about..." with the dots appearing one, two, three, then
+	   starting over. */
+	.dots span {
+		animation: dot 1.6s steps(1, end) infinite;
+	}
+	.dots span:nth-child(2) {
+		animation-name: dot2;
+	}
+	.dots span:nth-child(3) {
+		animation-name: dot3;
+	}
+	@keyframes dot {
+		0% { opacity: 0; }
+		25% { opacity: 1; }
+	}
+	@keyframes dot2 {
+		0% { opacity: 0; }
+		50% { opacity: 1; }
+	}
+	@keyframes dot3 {
+		0% { opacity: 0; }
+		75% { opacity: 1; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.dots span {
+			animation: none;
+		}
 	}
 	.links {
 		display: flex;
