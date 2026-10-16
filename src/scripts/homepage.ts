@@ -7,7 +7,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 // One pose per scene id (see `scenes` in src/pages/index.astro). Angles are in
 // degrees. Side-on the figure faces right, so negative limb angles swing
-// forward. The intro pose faces the viewer: limbs shift sideways (the *X
+// forward; knee angles bend the shin back from the thigh (positive = bent). The intro pose faces the viewer: limbs shift sideways (the *X
 // offsets, in px) and the torso widens (torsoW) instead.
 type Pose = {
 	torso: number;
@@ -15,6 +15,8 @@ type Pose = {
 	armR: number;
 	legL: number;
 	legR: number;
+	kneeL: number;
+	kneeR: number;
 	headX: number;
 	headY: number;
 	bodyY: number;
@@ -32,7 +34,7 @@ type Pose = {
 };
 
 const rest: Pose = {
-	torso: 0, armL: 8, armR: -8, legL: 4, legR: -4,
+	torso: 0, armL: 8, armR: -8, legL: 4, legR: -4, kneeL: 0, kneeR: 0,
 	headX: 0, headY: 0, bodyY: 0, bike: 0, desk: 0, book: 0, gear: 0,
 	armLX: 0, armRX: 0, legLX: 0, legRX: 0, torsoW: 1, headTilt: 0, front: 0,
 };
@@ -49,12 +51,56 @@ const poses: Record<string, Pose> = {
 		legRX: -9, legR: 4,
 		legLX: 9, legL: -4,
 	},
-	run: { ...rest, torso: 12, armL: 40, armR: -45, legL: 30, legR: -35, gear: 1 },
-	// Hands on the handlebar; feet around the chainring.
-	bike: { ...rest, torso: 40, armL: -35, armR: -40, legL: -20, legR: 10, bike: 1 },
-	desk: { ...rest, armL: -65, armR: -75, legL: -85, legR: -80, bodyY: 34, desk: 1 },
+	run: { ...rest, torso: 12, armL: 40, armR: -45, legL: 30, legR: -35, kneeL: 35, kneeR: 10, gear: 1 },
+	// Hands on the handlebar grips; legs are set from the pedals below.
+	bike: { ...rest, torso: 40, armL: -43, armR: -45, bike: 1 },
+	// Seated on the stool: thighs forward, shins hanging down to the floor.
+	desk: { ...rest, armL: -65, armR: -75, legL: -85, legR: -80, kneeL: 85, kneeR: 80, bodyY: 34, desk: 1 },
 	read: { ...rest, armL: -70, armR: -78, headX: 4, headY: 6, book: 1 },
 };
+
+// Pedalling: two-bone inverse kinematics. Given where a foot must be (on a
+// pedal), find the thigh angle and knee bend that put it there, with the
+// knee pointing forward. Positions are in the figure's own px (the hip pivot
+// and crank match the CSS and the bike SVG in index.astro).
+const HIP = { x: 100, y: 143 };
+const CRANK = { x: 106, y: 212, length: 11 };
+const THIGH = 40;
+const SHIN = 40;
+const deg = (rad: number) => (rad * 180) / Math.PI;
+
+function legToward(foot: { x: number; y: number }) {
+	const dx = foot.x - HIP.x;
+	const dy = foot.y - HIP.y;
+	const d = Math.min(Math.hypot(dx, dy), THIGH + SHIN - 0.01);
+	// Angle of the hip→foot line, in CSS rotation terms (0 = straight down).
+	const line = Math.atan2(-dx, dy);
+	// Law of cosines: the angles at the hip and at the foot of the triangle.
+	const atHip = Math.acos((THIGH ** 2 + d ** 2 - SHIN ** 2) / (2 * THIGH * d));
+	const atFoot = Math.acos((SHIN ** 2 + d ** 2 - THIGH ** 2) / (2 * SHIN * d));
+	return { thigh: deg(line - atHip), knee: deg(atHip + atFoot) };
+}
+
+// Feet for a crank angle (degrees, clockwise): near foot on one pedal, far
+// foot on the opposite one.
+function pedalLegs(crankDeg: number) {
+	const a = (crankDeg * Math.PI) / 180;
+	const pedal = (angle: number) => ({
+		x: CRANK.x + CRANK.length * Math.cos(angle),
+		y: CRANK.y + CRANK.length * Math.sin(angle),
+	});
+	return { near: legToward(pedal(a)), far: legToward(pedal(a + Math.PI)) };
+}
+
+{
+	const start = pedalLegs(0);
+	Object.assign(poses.bike, {
+		legR: start.near.thigh,
+		kneeR: start.near.knee,
+		legL: start.far.thigh,
+		kneeL: start.far.knee,
+	});
+}
 
 const figure = document.querySelector<HTMLElement>('.figure');
 const scenes = gsap.utils.toArray<HTMLElement>('.scene');
@@ -84,9 +130,11 @@ function poseVars(p: Pose) {
 		['.arm-r', { rotation: p.armR, x: p.armRX + shoulder.x, y: shoulder.y }],
 		['.leg-l', { rotation: p.legL, x: p.legLX }],
 		['.leg-r', { rotation: p.legR, x: p.legRX }],
+		['.leg-l .shin', { rotation: p.kneeL }],
+		['.leg-r .shin', { rotation: p.kneeR }],
 		['.head', { x: p.headX + forward(HIP_TO_HEAD), y: p.headY + down(HIP_TO_HEAD), rotation: p.headTilt }],
 		['.cape', { opacity: p.front }],
-		['.arm-l .seg, .leg-l .seg', { backgroundColor: p.front ? NEAR : FAR }],
+		['.arm-l, .leg-l', { '--limb-colour': p.front ? NEAR : FAR }],
 		['.prop-bike', { opacity: p.bike }],
 		['.bike-gear', { opacity: p.bike }],
 		['.prop-desk', { opacity: p.desk }],
@@ -183,17 +231,55 @@ if (figure && scenes.length) {
 			.to('.cape', { skewX: -4, duration: 0.9 }, 0.45)
 			.to('.cape', { skewX: 0, duration: 0.45 }, 1.35);
 
-		// The run pose is mid-stride; each limb swings to the opposite extreme.
+		// The run pose is mid-stride; each limb swings to the opposite extreme,
+		// and the knees swap too (the back leg's knee is the bent one).
+		const shin = (limb: string) => figure.querySelector(`.${limb} .shin`);
+		const calf = (limb: string) => figure.querySelector(`.${limb} .calf`);
 		const stride = loop();
 		swing(stride, 'leg-l', -65, 0.7);
 		swing(stride, 'leg-r', 65, 0.7);
 		swing(stride, 'arm-l', -85, 0.7);
 		swing(stride, 'arm-r', 85, 0.7);
+		const kneeSwap = poses.run.kneeL - poses.run.kneeR;
+		stride
+			.to(calf('leg-l'), { rotation: -kneeSwap, duration: 0.35 }, 0)
+			.to(calf('leg-l'), { rotation: 0, duration: 0.35 }, 0.35)
+			.to(calf('leg-r'), { rotation: kneeSwap, duration: 0.35 }, 0)
+			.to(calf('leg-r'), { rotation: 0, duration: 0.35 }, 0.35);
 
-		const pedal = loop();
-		swing(pedal, 'leg-l', 30, 0.8);
-		swing(pedal, 'leg-r', -30, 0.8);
-		pedal.to('.prop-bike .wheel', { rotation: 360, duration: 0.8, ease: 'none' }, 0);
+		// Pedalling: turn the crank and, every frame, put each foot on its
+		// pedal with legToward(). The thigh and knee angles go on the .seg and
+		// .calf as offsets from whatever the scroll pose currently has.
+		const legs = ['leg-r', 'leg-l'].map((limb) => ({
+			leg: figure.querySelector(`.${limb}`)!,
+			seg: seg(limb)!,
+			shin: shin(limb)!,
+			calf: calf(limb)!,
+		}));
+		const crankArm = figure.querySelector('.crank');
+		const crank = { angle: 0 };
+		const pedal = loop({ ease: 'none' });
+		pedal.fromTo(
+			crank,
+			{ angle: 0 },
+			{
+				angle: 360,
+				duration: 0.9,
+				// Don't apply anything until the bike scene actually starts.
+				immediateRender: false,
+				onUpdate: () => {
+					const { near, far } = pedalLegs(crank.angle);
+					[near, far].forEach((target, i) => {
+						const { leg, seg, shin, calf } = legs[i];
+						gsap.set(seg, { rotation: target.thigh - (gsap.getProperty(leg, 'rotation') as number) });
+						gsap.set(calf, { rotation: target.knee - (gsap.getProperty(shin, 'rotation') as number) });
+					});
+					gsap.set(crankArm, { rotation: crank.angle, svgOrigin: `${CRANK.x} ${CRANK.y}` });
+				},
+			},
+			0,
+		);
+		pedal.fromTo('.prop-bike .wheel', { rotation: 0 }, { rotation: 360, duration: 0.9, immediateRender: false }, 0);
 
 		// Typing: the hands take turns tapping up and down on the desk.
 		const typing = loop({ ease: 'power1.inOut' })
@@ -229,8 +315,24 @@ if (figure && scenes.length) {
 		const limbSegs = (...limbs: string[]) => limbs.map(seg);
 		const sceneLoops: { id: string; tl: gsap.core.Timeline; start: string; end: string; reset: () => void }[] = [
 			{ id: 'stand', tl: wave, start: 'top bottom', end: 'bottom 60%', reset: () => gsap.to([seg('arm-r'), '.cape'], { rotation: 0, skewX: 0, duration: 0.3 }) },
-			{ id: 'run', tl: stride, start: 'top 50%', end: 'bottom 50%', reset: () => gsap.to(limbSegs('leg-l', 'leg-r', 'arm-l', 'arm-r'), { rotation: 0, duration: 0.3 }) },
-			{ id: 'bike', tl: pedal, start: 'top 50%', end: 'bottom 50%', reset: () => gsap.to(limbSegs('leg-l', 'leg-r'), { rotation: 0, duration: 0.3 }) },
+			{
+				id: 'run',
+				tl: stride,
+				start: 'top 50%',
+				end: 'bottom 50%',
+				reset: () =>
+					gsap.to([...limbSegs('leg-l', 'leg-r', 'arm-l', 'arm-r'), calf('leg-l'), calf('leg-r')], {
+						rotation: 0,
+						duration: 0.3,
+					}),
+			},
+			{
+				id: 'bike',
+				tl: pedal,
+				start: 'top 50%',
+				end: 'bottom 50%',
+				reset: () => gsap.to([...limbSegs('leg-l', 'leg-r'), calf('leg-l'), calf('leg-r')], { rotation: 0, duration: 0.3 }),
+			},
 			{ id: 'desk', tl: typing, start: 'top 50%', end: 'bottom 50%', reset: () => gsap.to(limbSegs('arm-l', 'arm-r'), { rotation: 0, duration: 0.3 }) },
 			{ id: 'read', tl: brain, start: 'top 50%', end: 'bottom 50%', reset: () => gsap.to('.brain', { x: 0, y: 0, rotation: 0, scale: 0.3, opacity: 0, duration: 0.3 }) },
 		];

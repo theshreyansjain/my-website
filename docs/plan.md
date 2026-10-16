@@ -66,9 +66,14 @@ What changed from the plan while building, and why. Newest first.
   running shoes that fade in only while running. Step 5's Three.js figure
   should keep these props.
 - Figure details: arms and head follow the torso lean (attached at the
-  shoulder/neck, computed from the lean angle). Bike scene: SVG frame with
-  saddle, chainring, fork and drop handlebar, hands on the bar, feet pedal
-  around the chainring, plus a helmet. Desk scene: a stool. Intro (facing
+  shoulder/neck, computed from the lean angle). Legs have knees (thigh +
+  shin). Bike scene: SVG frame built around the rider (saddle under the
+  hip, crank within leg reach, grips where the hands land), a teardrop
+  helmet with vents and strap, and real pedalling: the crank turns and
+  two-bone inverse kinematics keeps each foot on its pedal every frame.
+  Every animated joint has two layers: the scroll pose on the outer element
+  and the motion loop's offset on an inner one, so loops never overwrite a
+  pose. Desk scene: a stool. Intro (facing
   the viewer): a green superhero cape that billows with the wave (a smiley
   face was tried and rejected), slight head tilt, and both arms and legs the
   same colour; side-on, the far limbs are darker. The cape fades out as the

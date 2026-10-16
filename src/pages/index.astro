@@ -47,16 +47,21 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 				<div class="figure-scale">
 				<div class="figure">
 					<div class="prop prop-bike">
-						<!-- Frame in the figure's own coordinates (200 x 260): rear hub
-						     38,232, chainring 100,220, saddle under the hip, front hub
-						     162,232, handlebar where the hands land. -->
+						<!-- Frame in the figure's own coordinates (200 x 260), built
+						     around the rider: saddle under the hip (100,143), crank at
+						     106,212 within leg reach, grips where the hands land
+						     (~186,132), hubs at 38,232 and 162,232. The crank's numbers
+						     are mirrored in src/scripts/homepage.ts. -->
 						<svg class="bike-frame" viewBox="0 0 200 260">
-							<path d="M38 232 L100 220 L98 152 Z" />
-							<path d="M98 156 L172 146 L100 220" />
-							<path d="M174 138 L162 232" />
-							<path d="M166 136 L184 134 L188 143" />
-							<path class="saddle" d="M86 148 L110 148" />
-							<circle cx="100" cy="220" r="9" />
+							<!-- Chainstay, seat tube, seat stay. -->
+							<path d="M38 232 L106 212 L96 150 M38 232 L97 156" />
+							<!-- Top tube, down tube. -->
+							<path d="M97 156 L171 144 M106 212 L170 156" />
+							<!-- Head tube and fork, stem, drop handlebar. -->
+							<path d="M172 138 L162 232 M172 138 L180 132 L189 132 C196 132 197 142 191 145" />
+							<path class="saddle" d="M86 148 L108 148" />
+							<circle cx="106" cy="212" r="8" />
+							<path class="crank" d="M95 212 L117 212" />
 						</svg>
 						<span class="wheel"></span>
 						<span class="wheel"></span>
@@ -75,7 +80,13 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 					<div class="cape"></div>
 					<div class="part head">
 						<span class="gear headband"></span>
-						<span class="bike-gear helmet"></span>
+						<!-- Bike helmet in the head's coordinates (36 x 36, facing right):
+						     a teardrop swept back to a point, with vents and a chin strap. -->
+						<svg class="bike-gear helmet" viewBox="-10 -8 56 46">
+							<path class="shell" d="M37 15 C38 4 26 -6 12 -5 C2 -4 -6 2 -10 10 L-2 14 C8 10 26 10 37 15 Z" />
+							<path class="vents" d="M7 -1 L12 6 M17 -3 L20 5 M27 -1 L28 6" />
+							<path class="strap" d="M4 14 L22 34 L30 30" />
+						</svg>
 						<!-- Brain parts that burst out of the head in the psychology scene. -->
 						<span class="brain frontal"></span>
 						<span class="brain parietal"></span>
@@ -87,8 +98,8 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 					<div class="part torso"></div>
 					<div class="part arm arm-l"><span class="seg"></span></div>
 					<div class="part arm arm-r"><span class="seg"></span></div>
-					<div class="part leg leg-l"><span class="seg"><span class="gear shoe"></span></span></div>
-					<div class="part leg leg-r"><span class="seg"><span class="gear shoe"></span></span></div>
+					<div class="part leg leg-l"><span class="seg"><span class="shin"><span class="calf"><span class="gear shoe"></span></span></span></span></div>
+					<div class="part leg leg-r"><span class="seg"><span class="shin"><span class="calf"><span class="gear shoe"></span></span></span></span></div>
 				</div>
 				</div>
 			</div>
@@ -366,11 +377,17 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		inset: 0;
 		border-radius: inherit;
 		transform-origin: inherit;
-		background: var(--text-muted);
+		background: var(--limb-colour);
 	}
-	.arm-r .seg,
-	.leg-r .seg {
-		background: var(--limb);
+	/* Far-side limbs are darker; homepage.ts tweens this variable to match
+	   the near side when the figure faces the viewer. */
+	.arm,
+	.leg {
+		--limb-colour: var(--text-muted);
+	}
+	.arm-r,
+	.leg-r {
+		--limb-colour: var(--limb);
 	}
 	.arm {
 		width: 12px;
@@ -379,12 +396,32 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		top: 68px;
 		transform-origin: 50% 6px;
 	}
+	/* Leg = thigh (the .seg) + shin. Hip pivot 7px from the top, knee 40px
+	   below it, foot 40px below the knee. */
 	.leg {
 		width: 14px;
-		height: 86px;
+		height: 54px;
 		left: 93px;
 		top: 136px;
 		transform-origin: 50% 7px;
+	}
+	/* Like the limbs: .shin takes the pose's knee bend, the visible .calf
+	   takes the motion loops' extra bend on top. */
+	.shin,
+	.calf {
+		position: absolute;
+		border-radius: 7px;
+		transform-origin: 50% 7px;
+	}
+	.shin {
+		left: 0;
+		top: 40px;
+		width: 100%;
+		height: 54px;
+	}
+	.calf {
+		inset: 0;
+		background: var(--limb-colour);
 	}
 	/* Running gear sits inside the head and legs so it moves with them. */
 	.gear {
@@ -424,29 +461,31 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 		clip-path: polygon(30% 0, 70% 0, 100% 96%, 82% 100%, 64% 95%, 46% 100%, 28% 95%, 12% 100%, 0 96%);
 		transform-origin: 50% 0;
 	}
-	/* Bike helmet: a dome over the top of the head with a short visor at
-	   the front (the figure faces right). */
+	/* Bike helmet (SVG, drawn in the head's coordinates). */
 	.bike-gear {
 		position: absolute;
 		opacity: 0;
-		background: var(--accent);
 	}
 	.helmet {
-		left: -3px;
-		top: -5px;
-		width: 42px;
-		height: 22px;
-		border-radius: 50% 50% 12% 12% / 90% 90% 20% 20%;
+		left: -10px;
+		top: -8px;
+		width: 56px;
+		height: 46px;
+		overflow: visible;
+		fill: none;
+		stroke-linecap: round;
+		stroke-linejoin: round;
 	}
-	.helmet::after {
-		content: '';
-		position: absolute;
-		right: -7px;
-		bottom: 2px;
-		width: 10px;
-		height: 4px;
-		border-radius: 2px;
-		background: inherit;
+	.helmet .shell {
+		fill: var(--accent);
+	}
+	.helmet .vents {
+		stroke: var(--bg);
+		stroke-width: 2;
+	}
+	.helmet .strap {
+		stroke: var(--accent);
+		stroke-width: 1.5;
 	}
 	.shoe {
 		left: -1px;
