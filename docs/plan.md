@@ -30,7 +30,7 @@ not transcripts.
     (push stays on "ask").
   - [ ] Optional, needs approval for dev deps: `@astrojs/check` + `typescript`
     for `astro check` before the Three.js work.
-- [ ] 1. Replace template homepage text and footer. Also clear the other
+- [x] 1. Replace template homepage text and footer. Also clear the other
   template leftovers: Astro's social links in Header/Footer, lorem ipsum on
   the About page, Astro favicon.
 - [ ] 2. Dark theme, including swapping Atkinson for a self-hosted monospace
@@ -43,3 +43,9 @@ not transcripts.
 
 ## Build notes
 What changed from the plan while building, and why. Newest first.
+
+- Step 1: Astro's social links were removed, not replaced, since no accounts
+  were chosen yet; add them back in Header/Footer when decided. The favicon is
+  now a placeholder monospace "S" SVG; `favicon.ico` was dropped because
+  modern browsers use the SVG. Homepage and About copy are short drafts
+  for Shreyans to rewrite.
