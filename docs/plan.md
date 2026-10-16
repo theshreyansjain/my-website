@@ -22,8 +22,19 @@ not transcripts.
 - Respect prefers-reduced-motion; cap devicePixelRatio at 2.
 
 ## Roadmap (in order)
-- [ ] 1. Replace template homepage text and footer.
-- [ ] 2. Dark theme.
+- [ ] 0. Setup checks:
+  - [ ] Vercel: Node.js version 22.x or newer (package.json needs >= 22.12).
+  - [ ] Vercel: production branch is `main`; previews viewable on the phone
+    (log in there or relax Deployment Protection).
+  - [ ] Claude Code: allow `git add` / `git commit` in `.claude/settings.json`
+    (push stays on "ask").
+  - [ ] Optional, needs approval for dev deps: `@astrojs/check` + `typescript`
+    for `astro check` before the Three.js work.
+- [ ] 1. Replace template homepage text and footer. Also clear the other
+  template leftovers: Astro's social links in Header/Footer, lorem ipsum on
+  the About page, Astro favicon.
+- [ ] 2. Dark theme, including swapping Atkinson for a self-hosted monospace
+  font.
 - [ ] 3. Topic field, /topics pages.
 - [ ] 4. Homepage skeleton with scroll sections and navigation, placeholder figure.
 - [ ] 5. Figure prototype at /lab/figure: stand + run, then desk, bike, read.
