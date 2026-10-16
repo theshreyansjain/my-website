@@ -53,6 +53,16 @@ not transcripts.
 ## Build notes
 What changed from the plan while building, and why. Newest first.
 
+- Step 5 (in progress): `three` 0.186 added (MIT; ~131 KB gzipped, loaded
+  only on pages that use it). `/lab/figure` renders the 3D figure with a
+  slider that scrubs the five scenes like scrolling will. Built from the 2D
+  homepage figure as the spec, plus elbows, IK for hands (handlebar, desk,
+  book) and feet (pedals, desk floor), a real turn from front to side, and
+  real lighting instead of shaded far limbs. Side scenes turn three-quarters
+  (desk: over the shoulder) so props show their depth. Motion loops are pure
+  functions of time, blended in by distance to the scene, instead of
+  start/stop timelines. Lab pages are `noindex` and left out of the sitemap.
+
 - Homepage: keyboard shortcuts (→, 1/2/3) and their "press …" hints were
   removed at the owner's request, along with the → in button labels.
   Buttons are the only way to open a topic from the homepage.

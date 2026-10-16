@@ -7,7 +7,11 @@ import { defineConfig, fontProviders } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://my-website-phi-topaz.vercel.app',
-	integrations: [mdx(), sitemap()],
+	integrations: [
+		mdx(),
+		// Lab pages are work in progress: leave them out of the sitemap.
+		sitemap({ filter: (page) => !page.includes('/lab/') }),
+	],
 	fonts: [
 		{
 			provider: fontProviders.local(),
