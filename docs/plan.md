@@ -17,8 +17,15 @@ not transcripts.
 - A solid-color humanoid built procedurally in Three.js (primitives + joint
   hierarchy, no model files), driven purely by scroll position. No idle
   animation. GSAP ScrollTrigger for scroll. Props and camera move too.
-- One scene per topic (stand, run, desk+laptop, bike, read). Desktop: "press
-  →" opens that topic's page; mobile: a visible button.
+- Five scenes, in scroll order:
+  1. stand: intro ("Hi, I'm Shreyans"), no topic
+  2. run: #running
+  3. bike: #biking
+  4. desk + laptop: #programming-ai, #quant, #finance (one scene, three
+     buttons)
+  5. read: #psychology
+- Desktop: "press →" opens that scene's topic page (desk: one key per
+  topic or a choice); mobile: visible buttons.
 - Respect prefers-reduced-motion; cap devicePixelRatio at 2.
 
 ## Roadmap (in order)
@@ -47,9 +54,8 @@ not transcripts.
 What changed from the plan while building, and why. Newest first.
 
 - Step 3: `topic` is optional, not required: posts without one (like
-  hello-world) are general and only listed in `/blog`, so the six topics stay
-  matched to the six homepage scenes. A misspelled topic still fails the
-  build. Topic list lives in `TOPICS` in `src/consts.ts`. Topics are part of
+  hello-world) are general and only listed in `/blog`, so no catch-all
+  "meta" topic is needed. A misspelled topic still fails the build. Topic list lives in `TOPICS` in `src/consts.ts`. Topics are part of
   the blog, so they are not in the header (which stays Home | Blog | About,
   with Blog highlighted on topic pages too); instead a row of `#topic` chips
   sits above the post list on `/blog` and every topic page. No `/topics`
