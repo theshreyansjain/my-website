@@ -54,7 +54,7 @@ const poses: Record<string, Pose> = {
 	run: { ...rest, torso: 4, armL: 40, armR: -45, legL: 30, legR: -35, kneeL: 35, kneeR: 10, gear: 1 },
 	// Hands on the handlebar grips; legs are set from the pedals below.
 	// Race position: back nearly flat, head up, hands on the drops.
-	bike: { ...rest, torso: 80, armL: -24, armR: -27, headY: -6, bike: 1 },
+	bike: { ...rest, torso: 72, armL: -32, armR: -34, headY: -4, bike: 1 },
 	// Seated on the stool: thighs forward, shins hanging down to the floor.
 	desk: { ...rest, armL: -65, armR: -75, legL: -85, legR: -80, kneeL: 85, kneeR: 80, bodyY: 34, desk: 1 },
 	read: { ...rest, armL: -70, armR: -78, headX: 4, headY: 6, book: 1 },
@@ -65,7 +65,7 @@ const poses: Record<string, Pose> = {
 // knee pointing forward. Positions are in the figure's own px (the hip pivot
 // and crank match the CSS and the bike SVG in index.astro).
 const HIP = { x: 100, y: 143 };
-const CRANK = { x: 122, y: 208, length: 11 };
+const CRANK = { x: 121, y: 202, length: 14 };
 const THIGH = 40;
 const SHIN = 40;
 const deg = (rad: number) => (rad * 180) / Math.PI;

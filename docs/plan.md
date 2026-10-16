@@ -120,9 +120,11 @@ What changed from the plan while building, and why. Newest first.
   on a 4s loop (still with reduced motion). Running torso lean cut to 4°.
   Limbs have an explicit draw order: far arm/leg behind the torso and head,
   near ones in front.
-- Bike scene is a race position: back nearly flat (80° lean), saddle well
-  behind the crank, fork raking forward to the front hub, drop bars with
-  their top level with the saddle.
+- Bike scene is a race position (72° torso lean, hands on the drops) on a
+  bike with real road-bike proportions, reviewed by a Fable sub-agent:
+  700c-size wheels, ~1.5 wheel-diameter wheelbase, crank 8px below the
+  hubs, 73° seat tube with seatpost, short head tube, raked fork, drop bars
+  with their top level with the saddle.
 - Brain: an SVG side view (frontal, parietal, occipital and temporal lobes,
   cerebellum, brainstem, each with fold lines). It appears over the head
   like an X-ray, bursts apart, holds, snaps back together and fades. Between scenes the buttons cross-fade (scrubbed by

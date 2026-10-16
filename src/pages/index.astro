@@ -47,25 +47,27 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 				<div class="figure-scale">
 				<div class="figure">
 					<div class="prop prop-bike">
-						<!-- Race bike in the figure's own coordinates (200 x 260), built
-						     around a flat-backed rider: saddle under the hip (100,143)
-						     and well behind the crank (122,208), drop bars out front with
-						     their top level with the saddle and the hands on the drops
-						     (~193,178), fork raking forward from
-						     the head tube to the front hub. Hubs at 46,212 and 186,212.
+						<!-- Race bike in the figure's own coordinates (200 x 260), with
+						     real road-bike proportions (~9 mm per px): 700c-size wheels
+						     (radius 36) on the ground at y 230, hubs at 77,194 and 187,194
+						     (110 wheelbase), crank 121,202 sitting 8 below the hub line,
+						     73° seat tube with a seatpost to the saddle under the hip
+						     (100,143), a short head tube, a raked fork, and drop bars whose
+						     top is level with the saddle (hands on the drops ~197,170).
 						     The crank's numbers are mirrored in src/scripts/homepage.ts. -->
 						<svg class="bike-frame" viewBox="0 0 200 260">
-							<!-- Chainstay, seat tube (sloping back to the saddle), seat stay. -->
-							<path d="M46 212 L122 208 L99 152 M46 212 L101 157" />
+							<!-- Chainstay, seat tube, seatpost; seat stay. -->
+							<path d="M77 194 L121 202 L108 159 L105 149 M77 194 L108 159" />
 							<!-- Top tube, down tube. -->
-							<path d="M101 157 L174 153 M122 208 L178 173" />
-							<!-- Head tube and fork raking forward to the hub; stem; drop bar
-							     with its top level with the saddle (y 149), curving down to
-							     the drops where the hands rest. -->
-							<path d="M174 153 L186 212 M174 153 L184 149 L192 149 C200 149 200 172 193 178" />
-							<path class="saddle" d="M86 149 L110 149" />
-							<circle cx="122" cy="208" r="8" />
-							<path class="crank" d="M111 208 L133 208" />
+							<path d="M108 159 L168 148 M121 202 L171 158" />
+							<!-- Head tube, then the fork raking forward to the front hub. -->
+							<path class="head-tube" d="M168 148 L171 158" />
+							<path d="M171 158 L187 194" />
+							<!-- Stem and drop handlebar. -->
+							<path d="M168 148 L192 148 C201 149 201 162 196 170 L191 171" />
+							<path class="saddle" d="M90 148 L118 148" />
+							<circle cx="121" cy="202" r="10" />
+							<path class="crank" d="M107 202 L135 202" />
 						</svg>
 						<span class="wheel"></span>
 						<span class="wheel"></span>
@@ -582,18 +584,21 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 	.bike-frame .saddle {
 		stroke-width: 5;
 	}
+	.bike-frame .head-tube {
+		stroke-width: 5;
+	}
 	.prop-bike .wheel {
 		position: absolute;
-		/* Hubs at 46,212 and 186,212. */
-		top: 184px;
-		left: 18px;
-		width: 56px;
-		height: 56px;
+		/* Hubs at 77,194 and 187,194; radius 36. */
+		top: 158px;
+		left: 41px;
+		width: 72px;
+		height: 72px;
 		border: 2px solid var(--accent);
 		border-radius: 50%;
 	}
 	.prop-bike .wheel:last-child {
-		left: 158px;
+		left: 151px;
 	}
 	/* Spokes, so you can see the wheels turn. */
 	.prop-bike .wheel::before,
