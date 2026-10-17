@@ -55,10 +55,17 @@ Vercel is connected to the GitHub repo: pushing `main` deploys production, and
 pushing any other branch gets a preview URL.
 
 - Commit directly on `main`: blog posts, text edits, docs (`AGENTS.md`, `docs/`).
-- Use one branch per roadmap step or other risky change (theme, layout, new
-  pages, homepage changes). Push it so the owner can check the Vercel
-  preview on a phone, then merge into `main` once approved.
-- Never push without being asked.
+- Small, safe changes: commit (or merge) to `main` and push without asking,
+  then tell the owner what went live. That means small CSS or copy tweaks,
+  small component fixes, docs, and anything else that is small and low-risk,
+  as long as `npm run check` and `npm run build` pass and the change was
+  checked in a screenshot when it's visible.
+- Use one branch per roadmap step or other risky change (theme, layout
+  overhauls, new pages, homepage animation, new dependencies, deleting
+  content, anything not checkable in a screenshot). Push it so the owner can
+  check the Vercel preview on a phone, then merge into `main` once approved.
+- Apart from the small, safe changes above, never push without being asked.
+  When unsure whether a change counts as small, treat it as risky.
 - When asking the owner to look at a Vercel preview (or any other link), open
   it in their browser with `open <url>` instead of only printing it, and
   still include the URL in the reply.
