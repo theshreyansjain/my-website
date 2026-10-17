@@ -29,16 +29,17 @@ not transcripts.
 - Respect prefers-reduced-motion; cap devicePixelRatio at 2.
 
 ## Roadmap (in order)
-- [ ] 0. Setup checks:
+- [x] 0. Setup checks:
   - [x] Vercel: Node.js version 22.x or newer (package.json needs >= 22.12).
     Set to 24.x.
   - [x] Vercel: production branch is `main`; previews viewable on the phone.
     Previews use Vercel Authentication: log in to vercel.com on the phone.
     The production URL stays public.
-  - [ ] Claude Code: allow `git add` / `git commit` in `.claude/settings.json`
+  - [x] Claude Code: allow `git add` / `git commit` in `.claude/settings.json`
     (push stays on "ask").
-  - [ ] Optional, needs approval for dev deps: `@astrojs/check` + `typescript`
-    for `astro check` before the Three.js work.
+  - [x] Optional, needs approval for dev deps: `@astrojs/check` + `typescript`
+    for `astro check` before the Three.js work. Added 2026-10-17 as dev
+    dependencies; run with `npm run check`.
 - [x] 1. Replace template homepage text and footer. Also clear the other
   template leftovers: Astro's social links in Header/Footer, lorem ipsum on
   the About page, Astro favicon.

@@ -18,8 +18,9 @@ Other commands:
 
 - `npm run build`: static build to `./dist/`
 - `npm run preview`: serve the built site locally
+- `npm run check`: type-checks every `.astro` and `.ts` file (`astro check`). Run it before committing code changes.
 
-There is no test suite or linter. `astro check` (type-checking) needs `@astrojs/check` and `typescript` installed first.
+There is no test suite or linter.
 
 ## Architecture
 
