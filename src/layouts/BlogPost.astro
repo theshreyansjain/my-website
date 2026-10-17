@@ -5,16 +5,17 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import NextUp from '../components/NextUp.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import CopyButtons from '../components/CopyButtons.astro';
 import TopicTag from '../components/TopicTag.astro';
 import { SITE_TITLE } from '../consts';
 
 // Post frontmatter; the date is optional so non-post pages (About) can use
-// this layout without one.
-type Props = Omit<CollectionEntry<'blog'>['data'], 'pubDate'> & { pubDate?: Date };
+// this layout without one. Posts also pass their id and reading time.
+type Props = Omit<CollectionEntry<'blog'>['data'], 'pubDate'> & { pubDate?: Date; id?: string; minutes?: number };
 
-const { title, description, pubDate, updatedDate, heroImage, ogImage, topic } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, ogImage, topic, id, minutes } = Astro.props;
 ---
 
 <html lang="en">
@@ -60,6 +61,12 @@ const { title, description, pubDate, updatedDate, heroImage, ogImage, topic } = 
 				margin-bottom: 0.5em;
 				color: var(--text-muted);
 			}
+			.next {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: 3em auto 0;
+				padding: 0 1em;
+			}
 			.last-updated-on {
 				font-style: italic;
 			}
@@ -78,6 +85,7 @@ const { title, description, pubDate, updatedDate, heroImage, ogImage, topic } = 
 					<div class="title">
 						<div class="date">
 							{pubDate && <FormattedDate date={pubDate} />}
+							{minutes && <span> · {minutes} min read</span>}
 							{updatedDate && (
 								<div class="last-updated-on">
 									Last updated on <FormattedDate date={updatedDate} />
@@ -93,6 +101,11 @@ const { title, description, pubDate, updatedDate, heroImage, ogImage, topic } = 
 					</div>
 				</div>
 			</article>
+			{pubDate && (
+				<div class="next">
+					<NextUp heading="Keep reading" exclude={id} />
+				</div>
+			)}
 		</main>
 		<Footer />
 		<CopyButtons />

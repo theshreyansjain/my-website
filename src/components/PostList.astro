@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
 import TopicTag from './TopicTag.astro';
+import { readingMinutes } from '../utils/reading-time';
 
 interface Props {
 	posts: CollectionEntry<'blog'>[];
@@ -21,7 +22,7 @@ const posts = [...Astro.props.posts].sort(
 	{posts.map((post) => (
 		<li>
 			<p class="meta">
-				<FormattedDate date={post.data.pubDate} />
+				<FormattedDate date={post.data.pubDate} /> · {readingMinutes(post.body)} min read
 				{post.data.topic && <TopicTag topic={post.data.topic} />}
 			</p>
 			<h2 class="title">
