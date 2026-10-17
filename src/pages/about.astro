@@ -57,6 +57,10 @@ const [latest] = (await getCollection('blog')).sort((a, b) => b.data.pubDate.val
 </Layout>
 
 <style>
+	/* The page title, from the shared layout: green on this page only. */
+	:global(.title h1) {
+		color: var(--accent);
+	}
 	.lead {
 		font-size: 1.15em;
 	}
