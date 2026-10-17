@@ -40,6 +40,8 @@ and family an easy way to keep up with what I'm doing.
 		{ value: '97 KB', label: 'homepage size' },
 		{ value: '97–100', label: 'Lighthouse scores' },
 		{ value: '~480', label: 'requests to Claude' },
+		{ value: '~122M', label: 'input tokens (read)' },
+		{ value: '~370k', label: 'output tokens (written)' },
 	]}
 />
 
@@ -198,7 +200,7 @@ Claude Code works in <Term t="token">tokens</Term>. It ran on Claude Opus 5.5
 (with a few requests to Fable, the reviewer) under a Claude Max subscription.
 Over about 480 requests it wrote roughly 370,000 tokens: code, explanations,
 commands. Every request also sends the whole conversation and the relevant
-code again, which added up to about 121 million tokens of context: roughly 330
+code again, which added up to about 122 million input tokens: roughly 330
 read for every one written. Nearly all of that came from a cache, which makes
 re-sending it cheap.
 
