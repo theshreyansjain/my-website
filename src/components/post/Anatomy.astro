@@ -307,12 +307,6 @@ const label = Object.fromEntries(parts.map((p) => [p.id, p.name]));
 		outline: 2px solid var(--accent);
 		outline-offset: 2px;
 	}
-	.is-interactive .part:not(.is-active) {
-		opacity: 0.55;
-	}
-	.is-interactive .part:hover {
-		opacity: 1;
-	}
 	.part.is-active {
 		z-index: 1;
 		margin: calc(var(--grow) * -1);

@@ -59,6 +59,12 @@ not transcripts.
 ## Build notes
 What changed from the plan while building, and why. Newest first.
 
+- Pre-launch polish (2026-10-17): site-wide link-preview card
+  `src/assets/og-default.png` (photo + name, replaces the template
+  placeholder; template placeholder images removed), `apple-touch-icon.png`,
+  `robots.txt`, a terminal-style 404 page, and the anatomy diagram no longer
+  fades unselected parts (colour contrast). The first post gained a "Since I
+  first published this" section.
 - First post (2026-10-17): "How this website was built" is MDX
   (`src/content/blog/building-this-site.mdx`) with post components in
   `src/components/post/` (anatomy diagram, expandable sections, glossary

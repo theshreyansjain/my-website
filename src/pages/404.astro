@@ -1,0 +1,60 @@
+---
+// Shown for any address that doesn't exist (Vercel serves 404.html).
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Page not found | ${SITE_TITLE}`} description="This page doesn't exist." />
+		<style>
+			.terminal {
+				margin: 2em 0;
+				padding: 1em 1.2em;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				background: var(--surface);
+				font-size: 0.9em;
+			}
+			.terminal p {
+				margin: 0;
+			}
+			.terminal .ps {
+				color: var(--accent);
+			}
+			.terminal .err {
+				color: #ff9a92;
+			}
+			.terminal .path {
+				overflow-wrap: anywhere;
+			}
+			ul {
+				padding-left: 1.2em;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>404</h1>
+			<div class="terminal" aria-label="Error message">
+				<p><span class="ps">$ </span>cd <span class="path">this page</span></p>
+				<p class="err">cd: no such page: <span class="path">this page</span></p>
+			</div>
+			<p>That page doesn't exist, or it moved. Try one of these instead:</p>
+			<ul>
+				<li><a href="/">Home</a>, where the figure lives</li>
+				<li><a href="/blog/">All posts</a></li>
+				<li><a href="/about/">About me</a></li>
+			</ul>
+		</main>
+		<Footer />
+		<script>
+			// Show the address the visitor actually tried (as plain text).
+			for (const el of document.querySelectorAll('.terminal .path')) el.textContent = location.pathname;
+		</script>
+	</body>
+</html>
