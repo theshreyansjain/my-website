@@ -1,0 +1,102 @@
+---
+// A section that starts closed. Built on <details>, so it opens without
+// JavaScript and works with the keyboard, screen readers and find-in-page.
+//   kind="code": small label under a paragraph, e.g. "show the command"
+//   kind="deep": full-width row with a title, a teaser and a reading time
+interface Props {
+	title: string;
+	kind?: 'code' | 'deep';
+	teaser?: string;
+	time?: string;
+}
+
+const { title, kind = 'code', teaser, time } = Astro.props;
+---
+
+<details class={`expand expand-${kind}`}>
+	<summary>
+		<span class="expand-title">{title}</span>
+		{time && <span class="expand-time">{time}</span>}
+		{teaser && <span class="expand-teaser">{teaser}</span>}
+	</summary>
+	<div class="expand-body">
+		<slot />
+	</div>
+</details>
+
+<style>
+	.expand {
+		margin: -1em 0 2em;
+	}
+	summary {
+		cursor: pointer;
+		list-style: none;
+	}
+	summary::-webkit-details-marker {
+		display: none;
+	}
+	/* Our own arrow, so it looks the same in every browser. */
+	summary::before {
+		content: '▸';
+		display: inline-block;
+		margin-right: 0.5em;
+		color: var(--accent);
+		transition: transform 0.15s;
+	}
+	[open] > summary::before {
+		transform: rotate(90deg);
+	}
+	summary:hover .expand-title,
+	summary:focus-visible .expand-title {
+		color: var(--accent);
+	}
+
+	.expand-code summary {
+		display: inline-block;
+		color: var(--text-muted);
+		font-size: 0.85em;
+	}
+
+	.expand-deep {
+		margin: 0 0 1em;
+		padding: 0.75em 1em;
+		border: 1px solid var(--border);
+		border-radius: 8px;
+		background: var(--surface);
+	}
+	.expand-deep[open] {
+		border-color: var(--accent);
+	}
+	.expand-deep .expand-title {
+		color: var(--text-heading);
+		font-weight: 700;
+	}
+	.expand-time {
+		margin-left: 0.5em;
+		color: var(--text-muted);
+		font-size: 0.85em;
+	}
+	.expand-teaser {
+		display: block;
+		margin-left: 1.4em;
+		color: var(--text-muted);
+		font-size: 0.85em;
+	}
+
+	.expand-body {
+		padding-top: 1em;
+	}
+	/* The post's 2em paragraph gap is too airy inside a closed-up box. */
+	.expand-body :global(p) {
+		margin-bottom: 1em;
+	}
+	.expand-body :global(> :last-child) {
+		margin-bottom: 0;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		summary::before {
+			transition: none;
+		}
+	}
+</style>

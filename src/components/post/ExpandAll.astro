@@ -1,0 +1,39 @@
+---
+// "Expand all / collapse all" for every expandable section in the post.
+// Hidden without JavaScript, where it couldn't do anything.
+---
+
+<button type="button" class="expand-all" hidden>expand all sections</button>
+
+<script>
+	const button = document.querySelector<HTMLButtonElement>('.expand-all');
+	if (button) {
+		const sections = () => [...document.querySelectorAll<HTMLDetailsElement>('details.expand')];
+		const sync = () => {
+			const allOpen = sections().every((d) => d.open);
+			button.textContent = allOpen ? 'collapse all sections' : 'expand all sections';
+		};
+		button.hidden = false;
+		button.addEventListener('click', () => {
+			const open = !sections().every((d) => d.open);
+			for (const d of sections()) d.open = open;
+			sync();
+		});
+		// Keep the label right when a section is opened by hand.
+		document.addEventListener('toggle', sync, true);
+	}
+</script>
+
+<style>
+	.expand-all {
+		margin: 0 0 2em;
+		padding: 0;
+		border: none;
+		background: none;
+		color: var(--accent);
+		font: inherit;
+		font-size: 0.85em;
+		text-decoration: underline;
+		cursor: pointer;
+	}
+</style>

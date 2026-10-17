@@ -1,0 +1,54 @@
+---
+// Adds a "copy" button to every code block in a post. The buttons are made
+// by the script, so the styles below are global.
+---
+
+<script>
+	for (const pre of document.querySelectorAll<HTMLPreElement>('.prose pre')) {
+		// Wrap the block so the button stays put when the code scrolls sideways.
+		const wrap = document.createElement('div');
+		wrap.className = 'code-wrap';
+		pre.replaceWith(wrap);
+		wrap.append(pre);
+
+		const button = document.createElement('button');
+		button.type = 'button';
+		button.className = 'copy-button';
+		button.textContent = 'copy';
+		button.addEventListener('click', async () => {
+			try {
+				await navigator.clipboard.writeText(pre.innerText.trimEnd());
+				button.textContent = 'copied';
+			} catch {
+				button.textContent = 'press ⌘C';
+				getSelection()?.selectAllChildren(pre);
+			}
+			setTimeout(() => (button.textContent = 'copy'), 1500);
+		});
+		wrap.append(button);
+	}
+</script>
+
+<style is:global>
+	.code-wrap {
+		position: relative;
+	}
+	.copy-button {
+		position: absolute;
+		top: 0.5em;
+		right: 0.5em;
+		padding: 0.2em 0.6em;
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		background: var(--surface);
+		color: var(--text-muted);
+		font: inherit;
+		font-size: 0.75em;
+		cursor: pointer;
+	}
+	.copy-button:hover,
+	.copy-button:focus-visible {
+		color: var(--accent);
+		border-color: var(--accent);
+	}
+</style>

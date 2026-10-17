@@ -1,0 +1,58 @@
+---
+title: 'How this website was built'
+description: 'Astro, GSAP and Claude Code: what each part of this site does, why it was picked, and the steps from a blank MacBook to a live site.'
+pubDate: '2026-10-18'
+topic: 'programming-ai'
+---
+
+import Anatomy from '../../components/post/Anatomy.astro';
+import Expand from '../../components/post/Expand.astro';
+import ExpandAll from '../../components/post/ExpandAll.astro';
+
+[DRAFT: placeholder text. The opening GIF and the numbers go here.]
+
+I didn't write the code for this site. I decided what it should be, Claude
+Code built it, and I checked every change on my phone before it went live.
+
+<ExpandAll />
+
+## The anatomy of this website
+
+A website is a few layers, and most of them are invisible. Hover over a part
+(or tap it on a phone) to see what it does, what I picked and why.
+
+<Anatomy />
+
+## The figure
+
+[DRAFT: how scroll becomes motion, the slider demo, the 3D version that was dropped.]
+
+<Expand kind="deep" title="How scroll becomes motion" time="2 min" teaser="Your scroll position is one number between 0 and 1. Everything else follows from it.">
+
+[DRAFT: deep dive text.]
+
+</Expand>
+
+## From a blank MacBook to a live site
+
+[DRAFT: seven steps. The first two, to show how the commands look.]
+
+1. Install Homebrew, which installs other software for you (and git with it).
+
+<Expand title="show the command">
+
+```sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+</Expand>
+
+2. Install Node (runs the build tools) and the GitHub command line.
+
+<Expand title="show the command">
+
+```sh
+brew install node gh
+```
+
+</Expand>
