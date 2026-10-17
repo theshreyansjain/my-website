@@ -16,6 +16,8 @@ export function getStaticPaths() {
 const topic = Astro.params.topic as Topic;
 const label = TOPICS[topic];
 const posts = await getCollection('blog', (post) => post.data.topic === topic);
+// For empty topics: suggest the newest post from any topic instead.
+const [latest] = (await getCollection('blog')).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <!doctype html>
@@ -33,7 +35,16 @@ const posts = await getCollection('blog', (post) => post.data.topic === topic);
 		<main>
 			<h1 class="sr-only">{label} posts</h1>
 			<TopicNav current={topic} />
-			{posts.length > 0 ? <PostList posts={posts} /> : <p class="muted">No posts yet.</p>}
+			{
+				posts.length > 0 ? (
+					<PostList posts={posts} />
+				) : (
+					<>
+						<p class="muted">No {label.toLowerCase()} posts yet. Meanwhile, here's the latest post:</p>
+						{latest && <PostList posts={[latest]} />}
+					</>
+				)
+			}
 		</main>
 		<Footer />
 	</body>
