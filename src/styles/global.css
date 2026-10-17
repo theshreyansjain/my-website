@@ -185,3 +185,22 @@ hr {
 	font-size: 0.8em;
 	text-align: center;
 }
+/* Post text: colour marks the structure so long text is easy to scan.
+   Only direct children of the post body, so components keep their own look. */
+[data-progress-target] > h2 {
+	margin-top: 2.2em;
+}
+[data-progress-target] > h2::before {
+	content: '## ';
+	color: var(--accent);
+}
+[data-progress-target] > h3 {
+	margin-top: 1.6em;
+}
+[data-progress-target] strong {
+	color: var(--text-heading);
+}
+[data-progress-target] > ul > li::marker,
+[data-progress-target] > ol > li::marker {
+	color: var(--accent);
+}
