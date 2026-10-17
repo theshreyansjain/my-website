@@ -7,14 +7,18 @@ const glossary = {
 	build: 'A step that runs once, before anyone visits, and turns your files into plain HTML, CSS and JavaScript.',
 	cdn: 'Content delivery network: copies of your site on servers around the world, so each visitor gets it from one nearby.',
 	deploy: 'Putting a new version of the site online.',
+	headless: 'A browser running without a window, controlled by a program. It can still load pages and take screenshots.',
 	ik: 'Inverse kinematics: working out the joint angles from where the end should be, like bending a knee so the foot lands on the pedal.',
 	markdown: 'Plain text with a few symbols for formatting, like # for a heading and * for a list.',
+	mcp: 'Model Context Protocol: a standard way to plug outside tools, like your hosting account, into an AI agent.',
 	preview: 'A private copy of the site, with its own link, built from a branch so you can check it before it goes live.',
 	repo: 'Repository: the folder of code plus its full history of changes.',
 	static: 'A site made of ready-made files. Nothing runs on a server when you visit; the files are just sent to you.',
 	svg: 'An image format made of shapes described in code, so it stays sharp at any size.',
+	symlink: 'Symbolic link: a file that just points to another file. Opening either one opens the same text.',
 	terminal: 'The text window where you type commands instead of clicking.',
 	token: 'The unit AI models read and write in. Roughly ¾ of a word.',
+	worktree: 'A second working folder for the same repo, checked out on a different branch. Both share one history.',
 } as const;
 
 interface Props {

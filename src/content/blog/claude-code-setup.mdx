@@ -1,0 +1,383 @@
+---
+title: 'My Claude Code setup, file by file'
+description: 'The handful of plain text files that make Claude Code work for me: standing rules, a permission list, a shared plan, memory, and worktrees for running agents in parallel.'
+pubDate: '2026-10-17'
+topic: 'programming-ai'
+---
+
+import Expand from '../../components/post/Expand.astro';
+import ExpandAll from '../../components/post/ExpandAll.astro';
+import StatStrip from '../../components/post/StatStrip.astro';
+import Term from '../../components/post/Term.astro';
+
+[My first post](/blog/building-this-site/) was about what Claude Code built.
+This one is about the setup around it: what I told it, what it's allowed to
+do, and how it remembers things between sessions.
+
+There's nothing clever here. Each piece is a small text file in a folder,
+and you can copy all of them in ten minutes.
+
+<StatStrip
+	stats={[
+		{ value: '1', label: 'rules file' },
+		{ value: '14', label: 'pre-approved commands' },
+		{ value: '1', label: 'shared plan' },
+		{ value: '2', label: 'saved memories' },
+		{ value: '0', label: 'hooks' },
+	]}
+/>
+
+```
+~/dev/my-website/
+├── CLAUDE.md → AGENTS.md
+├── .claude/
+│   ├── settings.json
+│   ├── settings.local.json
+│   └── worktrees/
+└── docs/plan.md
+
+~/.claude/projects/…/memory/
+```
+
+Dotted words have a definition: tap them. The real files are folded away.
+
+<ExpandAll />
+
+## 1. Standing rules: CLAUDE.md
+
+Claude Code starts every session knowing nothing about your project. The
+first thing it reads is `CLAUDE.md` in the project folder, so that's where
+anything it should always know goes.
+
+Mine is a <Term t="symlink">symlink</Term> to `AGENTS.md`. Other coding agents
+look for `AGENTS.md`, so one file serves all of them.
+
+Typing `/init` inside Claude Code writes a first version: how to run the
+project and how the code is laid out. That part is useful but generic. The
+part that changes how it behaves is what you add about yourself and how you
+want to work. Mine says I'm learning, so explain every change and the
+reasoning; ask before adding a dependency; and read the roadmap before
+starting a feature.
+
+<Expand title="show my working-style rules">
+
+```md
+## Owner and working style
+
+Owner: Shreyans. Learning web development through this project. Explain
+changes and the reasoning, not just the result. Ask before adding dependencies.
+
+## Plan and roadmap
+
+Design decisions, site structure, the homepage plan and the roadmap live in
+`docs/plan.md`; read it before starting feature work. The owner discusses
+design in a separate claude.ai chat that reads the same file, so keep it
+current: tick off roadmap steps when done, and add a short entry under
+"Build notes" when the implementation departs from the plan.
+```
+
+The full file is [on GitHub](https://github.com/theshreyansjain/my-website/blob/main/AGENTS.md).
+
+</Expand>
+
+The rules changed as I trusted it more. You can see it in the git history of
+the file's push rule:
+
+- **8 October:** "Never push without being asked." Everything went through
+  a branch and a <Term t="preview">preview</Term> I checked on my phone.
+- **16 October:** added "open preview links in my browser" instead of only
+  printing them.
+- **17 October:** small, safe changes (copy tweaks, small CSS fixes, docs) go
+  straight to `main` and get pushed, as long as the type check and the build
+  pass and it checked a screenshot. Anything risky still gets a branch.
+
+<Expand title="show the git rules today">
+
+```md
+- Commit directly on `main`: blog posts, text edits, docs (`AGENTS.md`, `docs/`).
+- Small, safe changes: commit (or merge) to `main` and push without asking,
+  then tell the owner what went live. That means small CSS or copy tweaks,
+  small component fixes, docs, and anything else that is small and low-risk,
+  as long as `npm run check` and `npm run build` pass and the change was
+  checked in a screenshot when it's visible.
+- Use one branch per roadmap step or other risky change (theme, layout
+  overhauls, new pages, homepage animation, new dependencies, deleting
+  content, anything not checkable in a screenshot). Push it so the owner can
+  check the Vercel preview on a phone, then merge into `main` once approved.
+- Apart from the small, safe changes above, never push without being asked.
+  When unsure whether a change counts as small, treat it as risky.
+- When asking the owner to look at a Vercel preview (or any other link), open
+  it in their browser with `open <url>` instead of only printing it, and
+  still include the URL in the reply.
+```
+
+</Expand>
+
+One catch: the file is read when a session starts. Edit it mid-session and
+the running session won't see the change until you restart it.
+
+## 2. Permissions: settings.json
+
+Rules are advice. Permissions are enforced: Claude Code can't run a command
+it isn't allowed to.
+
+I run it in **auto mode**. Before each action a separate check decides whether
+it's safe, and only asks me when it isn't sure. The claude.ai chat suggested
+not using auto mode while learning, so I could see every step. On top of that,
+`.claude/settings.json` lists commands that are always fine: build, preview,
+the dev server, reading git history, committing, opening links, and pushing.
+
+<Expand title="show both settings files">
+
+`.claude/settings.json` is committed, so it applies to every copy of the
+repo:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build)",
+      "Bash(npm run preview)",
+      "Bash(npx astro dev *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git commit *)",
+      "Bash(git add *)",
+      "Bash(open https://*)",
+      "Bash(git push *)"
+    ]
+  }
+}
+```
+
+`.claude/settings.local.json` isn't committed, so it only applies on my Mac.
+Picking "yes, and don't ask again" on a prompt adds a rule here:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(git switch *)",
+      "Bash(git pull *)",
+      "Bash(git merge *)",
+      "Bash(curl -s https://my-website-phi-topaz.vercel.app/)"
+    ]
+  }
+}
+```
+
+The `*` matches anything after it, so `git log *` covers `git log --oneline`
+and every other variant.
+
+</Expand>
+
+`git push` is on the list, yet the rules above say when not to push. That's
+the split: the permission says it *can*, `CLAUDE.md` says *when*.
+
+## 3. Shared memory with the design chat: docs/plan.md
+
+I talk through design in the claude.ai app, and Claude Code builds. The two
+can't see each other, so they share one file: the roadmap, the decisions, and
+a "Build notes" log of every time the build departed from the plan. The rule
+in `CLAUDE.md` above is what keeps it current. More on this in
+[the first post](/blog/building-this-site/#how-i-worked-with-claude-code).
+
+## 4. Memory: what it learned about me
+
+`CLAUDE.md` holds the rules I write down. Memory holds what Claude Code
+notices on its own: when I correct it, or ask for something to happen every
+time, it saves a short note.
+
+The notes live outside the repo, in `~/.claude/projects/<project>/memory/`:
+one file per fact, plus a `MEMORY.md` index that's loaded into every session.
+I have two so far.
+
+- **Delete merged branches.** I asked why deleting branches was necessary.
+  It isn't: a merged branch is just a label. I said yes to cleaning them up,
+  and now it does that after every merge without asking.
+- **Buttons, not typing.** I often follow along on my phone, so I asked it to
+  end each turn with clickable options ("push", "merge", "change something")
+  instead of making me type.
+
+<Expand title="show the memory files">
+
+`MEMORY.md`, the index:
+
+```md
+- [Merged branches](merged-branches.md) — delete branches after they're merged into main; keep unmerged ones like step-5-figure-3d
+- [Next-step buttons](next-step-buttons.md) — end turns with AskUserQuestion options instead of asking him to type
+```
+
+`merged-branches.md`:
+
+```md
+---
+name: merged-branches
+description: "After merging a roadmap/feature branch into main, delete it locally and on GitHub"
+metadata:
+  type: feedback
+---
+
+Delete a branch (local and on GitHub) once it's fully merged into main. Keep unmerged branches, e.g. `step-5-figure-3d` (rejected 3D figure, kept for reference).
+
+**Why:** On 2026-10-16 Shreyans approved deleting the merged step-3, step-4 and homepage branches after I explained that a merged branch is only a label and deleting it loses nothing.
+
+**How to apply:** After a merge to main is pushed, check `git log main..<branch>` is empty, then `git branch -d` and `git push origin --delete`. Mention it in one line rather than asking again.
+```
+
+`next-step-buttons.md`:
+
+```md
+---
+name: next-step-buttons
+description: End turns with clickable AskUserQuestion options for next steps instead of asking him to type
+metadata:
+  type: feedback
+---
+
+When a turn ends with choices or next steps (push, merge, which option, what next), offer them as clickable options via the AskUserQuestion tool rather than asking Shreyans to type a reply.
+
+**Why:** he asked for buttons so he doesn't have to type commands like "push" or "merge" (2026-10-17); he often follows along from his phone via remote control.
+
+**How to apply:** keep options to 2–4, recommended first. "Push" in a button still counts as being asked to push. Skip the buttons when there's nothing to choose.
+```
+
+(I left out a few bookkeeping lines: a session id and timestamps.)
+
+</Expand>
+
+Each note records *why*, not just the rule. That's what lets it handle
+cases the rule doesn't name: "'Push' in a button still counts as being asked
+to push."
+
+## 5. Parallel agents: worktrees
+
+One Claude Code session works on one folder. Two sessions in the same folder
+would edit the same files and trip over each other.
+
+A <Term t="worktree">worktree</Term> solves that: a second folder for the
+same repo, on its own <Term t="branch">branch</Term>. Both share one git
+history, so finished work merges back like any other branch. Claude Code
+can create them itself, under `.claude/worktrees/`.
+
+The analytics step was built that way, in a second session, while the first
+was still polishing the homepage. This post is too: it was written in
+`.claude/worktrees/post-3` while another session worked on a different post.
+
+<Expand title="show the git commands">
+
+Claude Code does this for you, but here's what's happening underneath:
+
+```sh
+# a new folder next to the repo, on a new branch called post-3
+git worktree add ../my-website-post-3 -b post-3
+
+# list them; remove one when you're done
+git worktree list
+git worktree remove ../my-website-post-3
+```
+
+Each worktree needs its own `npm install`: `node_modules` isn't shared.
+
+</Expand>
+
+Two things to watch. Pull `main` before merging, because the other session
+may have merged first. And some things are shared between worktrees even
+though the folders aren't: `git stash` is one stack for all of them, so one
+session can pop another's stash.
+
+## 6. Eyes and hands
+
+Last, the things that let it check its own work and reach outside the repo.
+
+- **Screenshots.** Before showing me a layout, Claude Code opens the page in
+  a <Term t="headless">headless</Term> Chrome at phone, tablet and desktop
+  sizes and looks at the screenshots. That way it can catch layout problems
+  before I see them.
+- **Vercel.** A <Term t="mcp">connector</Term> to my Vercel account lets it
+  find a branch's preview link and check whether a deploy worked.
+- **Previews on my phone.** It pushes the branch, Vercel builds a preview, it
+  opens the link, and I look at it on my phone.
+- **Following along from anywhere.** I use Claude Code in the terminal on my
+  Mac, in the desktop app, and from my phone with Remote Control, which
+  connects the Claude app to a session running on my Mac. The buttons from
+  memory note #2 make the phone part easy.
+
+<Expand title="show a screenshot command">
+
+A command like this takes a phone-sized screenshot of the dev server, with no
+browser window opening:
+
+```sh
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --headless --hide-scrollbars \
+  --window-size=390,844 \
+  --screenshot=phone.png \
+  http://localhost:4321/
+```
+
+Change `--window-size` to `820,1180` for a tablet or `1440,900` for a
+laptop.
+
+</Expand>
+
+## What I haven't set up
+
+All of these came up in my chats, and I haven't needed them yet:
+
+- **Hooks:** scripts that run at fixed moments, like after every edit. Unlike
+  `CLAUDE.md`, they always run, so they're for things that must never be
+  skipped, like running the build before a push.
+- **My own skills:** saved instructions for a task you repeat, like "new post". The
+  advice I got was to do the task by hand twice before writing one.
+- **Plan mode:** Claude Code proposes a plan and waits for a yes before
+  touching any files.
+
+## Copy this setup
+
+<Expand kind="deep" title="A starter CLAUDE.md and settings.json" time="1 min" teaser="Two files to drop into your own project.">
+
+Run `/init` first, then add something like this to the end of `CLAUDE.md`:
+
+```md
+## Owner and working style
+
+Owner: <your name>. <What you're learning.> Explain changes and the
+reasoning, not just the result. Ask before adding dependencies.
+
+## Git workflow
+
+- Use a branch for anything risky. Push it so I can check the preview,
+  then merge into `main` once I approve.
+- Never push without being asked.
+- When showing me a link, open it in my browser with `open <url>`.
+```
+
+And `.claude/settings.json`, with your own build commands:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build)",
+      "Bash(npm run dev)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ]
+  }
+}
+```
+
+Leave `git push` off the list until you trust it; that's how I started.
+Memory and worktrees need no setup.
+
+</Expand>
+
+---
+
+*Claude Code drafted this post from its own config files, the git history
+and notes from my chats. I chose what went in.*
