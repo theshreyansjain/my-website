@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
+import portrait from '../assets/about/portrait.jpg';
 import IndexChart from '../components/about/IndexChart.astro';
 import Route from '../components/about/Route.astro';
 import TopicCards from '../components/about/TopicCards.astro';
@@ -11,11 +13,22 @@ const [latest] = (await getCollection('blog')).sort((a, b) => b.data.pubDate.val
 ---
 
 <Layout title="About" description="Quant trader from Mumbai, living in Amsterdam. What I do and what this site is for.">
-	<p class="lead">
-		I'm Shreyans, a quant trader from Mumbai, living in Amsterdam. I work at an options market
-		maker. Outside work, I love learning new things, building things, and spending time outdoors
-		doing sports.
-	</p>
+	<div class="intro">
+		<Image
+			src={portrait}
+			alt="Shreyans in sports sunglasses, grinning next to a tabby cat that has pushed its face right up to the camera."
+			width={160}
+			height={160}
+			densities={[1, 2]}
+			class="portrait"
+			loading="eager"
+		/>
+		<p class="lead">
+			I'm Shreyans, a quant trader from Mumbai, living in Amsterdam. I work at an options market
+			maker. Outside work, I love learning new things, building things, and spending time outdoors
+			doing sports.
+		</p>
+	</div>
 
 	<Whoami
 		rows={[
@@ -69,6 +82,37 @@ const [latest] = (await getCollection('blog')).sort((a, b) => b.data.pubDate.val
 	/* The page title, from the shared layout: green on this page only. */
 	:global(.title h1) {
 		color: var(--accent);
+	}
+	.intro {
+		display: flex;
+		align-items: center;
+		gap: 1.5em;
+		margin-bottom: 2em;
+	}
+	.intro .lead {
+		margin: 0;
+	}
+	/* Rounded-square photo with a thin green ring (a circle would cut off
+	   the edge of my face; the cat takes up the rest). */
+	.intro :global(.portrait) {
+		flex: none;
+		width: 160px;
+		height: 160px;
+		border-radius: 22%;
+		object-fit: cover;
+		border: 2px solid var(--accent);
+		box-shadow: 0 0 20px var(--accent-glow);
+	}
+	/* Phones: photo above the text, centred. */
+	@media (max-width: 560px) {
+		.intro {
+			flex-direction: column;
+			text-align: center;
+		}
+		.intro :global(.portrait) {
+			width: 128px;
+			height: 128px;
+		}
 	}
 	.lead {
 		font-size: 1.15em;
