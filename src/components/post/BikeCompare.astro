@@ -17,6 +17,8 @@ interface Bike {
 	/** Max tyre clearance in mm. */
 	tyre: number | null;
 	comfort: string;
+	/** One line: why you'd pick this one over the others. */
+	why: string;
 	pick?: boolean;
 }
 
@@ -41,6 +43,7 @@ const euro = (n: number) => `€${n.toLocaleString('en-GB')}`;
 					<th scope="col" class="num" data-sort="weight"><button type="button">Weight</button></th>
 					<th scope="col" class="num" data-sort="tyre"><button type="button">Max tyre</button></th>
 					<th scope="col">Comfort</th>
+					<th scope="col">Why pick it</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -68,6 +71,7 @@ const euro = (n: number) => `€${n.toLocaleString('en-GB')}`;
 							</td>
 							<td class="num">{b.tyre ? `${b.tyre} mm` : '?'}</td>
 							<td>{b.comfort}</td>
+							<td class="why">{b.why}</td>
 						</tr>
 					))
 				}
@@ -120,7 +124,7 @@ const euro = (n: number) => `€${n.toLocaleString('en-GB')}`;
 	}
 	table {
 		width: 100%;
-		min-width: 720px;
+		min-width: 860px;
 		border-collapse: collapse;
 		font-family: var(--font-sans);
 		font-size: 0.85em;
@@ -180,6 +184,10 @@ const euro = (n: number) => `€${n.toLocaleString('en-GB')}`;
 	th[aria-sort='descending'] button::after {
 		content: ' ↓';
 		opacity: 1;
+	}
+	td.why {
+		min-width: 12em;
+		color: var(--text-heading);
 	}
 	tr.pick > * {
 		background: rgb(57 245 140 / 7%);

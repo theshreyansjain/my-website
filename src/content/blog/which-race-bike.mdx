@@ -3,16 +3,42 @@ title: 'Which race bike should I buy?'
 description: 'I ride a touring bike and want a carbon race bike for long rides, for €3,000–5,000. What matters, the bikes on my shortlist, and the one I lean towards.'
 pubDate: '2026-10-17'
 topic: 'biking'
+ogImage: './which-race-bike/touring.jpg'
 ---
 
+import { Image } from 'astro:assets';
 import BikeCompare from '../../components/post/BikeCompare.astro';
+import BikeExplorer from '../../components/post/BikeExplorer.astro';
 import Expand from '../../components/post/Expand.astro';
+import koga from './which-race-bike/koga.jpg';
 
-I ride a touring bike. I want a race bike for long rides and gran fondos, and I've set myself
-a budget of €3,000 to €5,000 for the bike alone.
+I ride a touring bike. I want a race bike for long rides and gran fondos,
+and I've set myself a budget of €3,000 to €5,000 for the bike alone.
 
 This post is how I'm deciding. When I've bought one, I'll add what I picked
 and why.
+
+## The bike I have
+
+A **Koga WorldTraveller Signature**: Koga's touring bike, built to order.
+
+- **Frame:** aluminium, built to carry racks and bags
+- **Gears:** Shimano XT, a mountain-bike groupset with three chainrings
+- **Brakes:** hydraulic discs
+- **Handlebar:** a flat trekking bar
+- **Weight:** about 20 kg, before any bags
+
+It's made for carrying luggage across countries, and it shows on a day ride:
+
+- **It's heavy.** Twenty kilos is more than twice a race bike.
+- **The position is upright.** Comfortable, but not aggressive.
+- **It isn't dynamic.** It's stable and steady, not quick to speed up or
+  change direction.
+
+<figure class="post-photo">
+	<Image src={koga} alt="Me standing next to my orange Koga touring bike by a harbour, with sailing boats and Dutch houses behind." widths={[720, 1440]} sizes="(max-width: 760px) 100vw, 720px" />
+	<figcaption>My Koga WorldTraveller.</figcaption>
+</figure>
 
 ## What I want
 
@@ -21,41 +47,41 @@ and why.
 - **Best value.** I don't mind whether it comes from a shop or straight from
   the brand online.
 
-I haven't had a bike fit, so getting the size right matters (more on that below).
+## Build your own
 
-## What actually matters
+A race bike is a handful of parts, and each one has a few options. Tap a
+part to see what it does, how my Koga does it, and what you can pick. The
+total is a rough estimate, and the closest real bike shows what you can
+actually buy.
 
-### 1. Fit, before anything else
+<BikeExplorer />
 
-Frame sizes like "54" or "M" mean different things at different brands. What
-matters are two numbers: **stack** (how high the handlebars are) and
-**reach** (how far forward). An endurance bike has more stack and less reach
-than a pure race bike, so you sit more upright. Coming from a touring bike,
-that's what I want.
+<Expand kind="deep" title="How the estimate works" teaser="Why the parts don't add up to shop prices" time="1 min">
 
-My plan: use Canyon's size advice for my height and inseam, and lean on its
-30-day return if the size turns out wrong.
+The estimate starts from a real bike: the Canyon Endurace CF 7 Di2, listed
+at €2,999 by Tour magazine (carbon frame, Shimano 105 Di2, aluminium wheels). Each option adds or
+takes away what that change adds to a complete bike's price, worked out from
+pairs of real bikes that differ in one or two parts:
 
-<Expand kind="deep" title="Stack and reach, explained" teaser="Why '54' on one bike isn't '54' on another" time="1 min">
+- Canyon's Endurace CF SLX 7 Di2 to SLX 8 Di2 is **+€500**, for Ultegra Di2
+  and a power meter.
+- Canyon's Endurace CF 7 Di2 to CF SLX 7 Di2 is **+€1,000**, for the lighter
+  frame and carbon wheels.
 
-Stack is the vertical distance from the middle of the cranks to the top of
-the head tube. Reach is the horizontal distance between the same two points.
-Two bikes with the same stack and reach will put you in roughly the same
-position, whatever their size labels say.
-
-If you're between two sizes on an endurance bike, the larger one is usually
-the safer choice. Don't count on a long stem or a stack of spacers to fix a
-frame that's the wrong size.
-
-Source: [BikeTips on stack and reach](https://biketips.com/bike-stack-and-reach-explained/).
+Brands buy parts far cheaper than you or I can, so these gaps are smaller
+than the parts' shop prices: the SLX 7 to SLX 8 upgrade would cost about
+€660–810 bought separately. Shop brands like Specialized and Giant also cost
+more than direct brands for the same parts, which the estimate doesn't model.
 
 </Expand>
 
-### 2. Endurance geometry and comfort tech
+## The parts, one by one
 
-Every bike on my list is an "endurance" bike: a race bike with a slightly
-taller, shorter front, longer wheelbase and room for wide tyres. Some add
-comfort tech on top:
+### Frame
+
+Every bike on my list is an **endurance** bike: a race bike with a slightly
+taller front, longer wheelbase and room for wide tyres. The frames differ in
+how they add comfort:
 
 - **Specialized Roubaix:** a small suspension unit under the handlebars
   (about 20 mm of travel).
@@ -64,31 +90,45 @@ comfort tech on top:
   adjust in width and height.
 - **Giant Defy:** a flexy seatpost and handlebar.
 
-### 3. Wide tyres (and room for mudguards)
+### Wheels and tyres
+
+Some bikes come with **carbon wheels** (both Canyons, Trek, Van Rysel),
+others with **aluminium** ones and the money spent on comfort tech instead
+(Roubaix, Defy). Carbon wheels are lighter; bought separately, the upgrade
+costs about €700–850.
 
 Wider tyres at lower pressure are more comfortable, and not slower: in one
 lab test, 32 mm tyres rolled at least 5% more efficiently than otherwise
-identical 30 mm ones. (The test was paid for by the tyre maker, so take the
-exact number lightly.) Every bike here comes with 32 mm tyres.
+identical 30 mm ones. (The tyre maker paid for the test, so take the exact
+number lightly.) Every bike here comes with 32 mm tyres.
 
 The catch for Dutch winters: mudguards take up space. Check the clearance
 *with* mudguards fitted, not the headline number.
 
-### 4. Electronic shifting is the default now
+### Groupset
 
-At this price, every bike on my list has electronic shifting: Shimano 105
-Di2 or SRAM Rival AXS, or better. Mechanical versions start around €3,000.
-So the real trade-off isn't shifting, it's **wheels**: some bikes come with
-carbon wheels, others with aluminium ones and the money spent on comfort tech
-instead.
+At this price, every bike on my list has **electronic shifting**. Mechanical
+versions start around €3,000, so the choice is between electronic groupsets:
 
-### 5. Online or a shop?
+- **Shimano 105 Di2:** the default on most of the list.
+- **Shimano Ultegra Di2:** works the same, but lighter (the rear derailleur
+  alone is 41 g lighter) and better finished. On the SLX 8 it comes with a
+  power meter.
+- **SRAM Rival AXS:** wireless, with smaller chainrings (46/33) and a 10-36
+  cassette, so the easiest gears are easier.
+
+### Brakes
+
+All six bikes have **hydraulic disc brakes**, the same kind as my Koga. They
+stop well in the wet and need little adjusting. Nothing to choose here.
+
+### Online or a shop?
 
 Brands that sell direct (Canyon, Decathlon's Van Rysel) give you more bike
 per euro, and Canyon has a 30-day return. But you build it yourself, and
 some parts are proprietary. A shop gives you a test ride, a fitting and
-someone to fix it. Stock in the Netherlands is patchy right now, so it's worth
-checking with a shop before relying on a web price.
+someone to fix it. Stock in the Netherlands is patchy right now, so it's
+worth checking with a shop before relying on a web price.
 
 ## The shortlist
 
@@ -108,6 +148,7 @@ Sort by price, weight or tyre clearance by clicking the green headers.
 			weightNote: 'size M',
 			tyre: 38,
 			comfort: 'Flexing seatpost, adjustable cockpit',
+			why: 'Most bike for the money: Ultegra Di2, carbon wheels and a power meter',
 			pick: true,
 		},
 		{
@@ -121,6 +162,7 @@ Sort by price, weight or tyre clearance by clicking the green headers.
 			weightNote: 'size M',
 			tyre: 38,
 			comfort: 'Flexing seatpost, adjustable cockpit',
+			why: 'Same frame and wheels as the SLX 8 for €500 less',
 		},
 		{
 			name: 'Specialized Roubaix SL8 Comp',
@@ -131,6 +173,7 @@ Sort by price, weight or tyre clearance by clicking the green headers.
 			weight: null,
 			tyre: 40,
 			comfort: 'Front suspension (~20 mm), flexing seatpost',
+			why: 'The softest ride: front suspension',
 		},
 		{
 			name: 'Trek Domane SL 6 Gen 4',
@@ -143,6 +186,7 @@ Sort by price, weight or tyre clearance by clicking the green headers.
 			weightNote: 'Tour magazine, size not given',
 			tyre: 38,
 			comfort: 'IsoSpeed (flexing seat tube)',
+			why: 'Comfort tech and carbon wheels',
 		},
 		{
 			name: 'Van Rysel EDR CF Ultra 105 Di2',
@@ -154,6 +198,7 @@ Sort by price, weight or tyre clearance by clicking the green headers.
 			weight: null,
 			tyre: 38,
 			comfort: 'Endurance geometry',
+			why: 'The cheapest way to carbon wheels and electronic shifting',
 		},
 		{
 			name: 'Giant Defy Advanced 1',
@@ -164,6 +209,7 @@ Sort by price, weight or tyre clearance by clicking the green headers.
 			weight: null,
 			tyre: 38,
 			comfort: 'Flexing seatpost and handlebar',
+			why: 'The cheapest bike on the list',
 		},
 	]}
 />
@@ -206,6 +252,13 @@ Two catches:
   Trek's Dutch page showed it as out of stock.
 - Van Rysel EDR CF Ultra: price from Decathlon's Dutch listings; tyre
   clearance and mudguard mounts from [BikeRadar](https://www.bikeradar.com/news/van-rysel-edr-cf-ultra).
+- Koga WorldTraveller: [Koga](https://www.koga.com/en/bikes/trekking/worldtraveller).
+- Part prices for "How the estimate works": [bike-components](https://www.bike-components.de/en/Shimano/Ultegra-Di2-R8150-Powermeter-Group-2x12-p294530/)
+  and [materiel-velo](https://www.materiel-velo.com/gb/1877366-complete-shimano-ultegra-12-speed-r8170-road-bike-groupset-with-discs.html)
+  for groupsets, [Hunt](https://eu.huntbikewheels.com/products/hunt-40-carbon-disc-wheelset)
+  and [materiel-velo](https://www.materiel-velo.com/gb/1879353-dt-swiss-p-1800-spline-23-disc-road-bike-wheels.html)
+  for wheels, and [Tour magazine](https://www.tour-magazin.de/en/brands/canyon/model/endurace-cf-7-di2-6a02e4d1c167db2d1952c0ba/)
+  for the Endurace CF 7 Di2.
 - Tyre width test: [Tour magazine on Hutchinson's tests](https://www.tour-magazin.de/en/tyres/hutchinson-tests-prove-it-wide-tyres-on-road-bikes-are-faster/).
 
 Prices change often and sales are common; check before buying.
