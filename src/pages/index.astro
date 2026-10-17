@@ -1,6 +1,8 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import NextUp from '../components/NextUp.astro';
 import { SITE_DESCRIPTION, SITE_TITLE, TOPICS, type Topic } from '../consts';
 
 // The homepage scenes, in scroll order (see "Homepage plan" in docs/plan.md).
@@ -178,8 +180,13 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 				<div class="scene" data-scene={scene.id} style={`grid-row: ${i + 1}`}></div>
 			))}
 		</main>
-		<!-- No footer here: the page ends with the last scene, so the pinned
-		     figure stays in place right to the end. -->
+		<!-- After the last scene the figure scrolls away and these cards
+		     come up. They sit outside .home, so the scroll animation (which
+		     runs over .home only) keeps its timing. -->
+		<div class="home-next">
+			<NextUp heading="Where to next?" />
+		</div>
+		<Footer />
 		<script>
 			import '../scripts/homepage.ts';
 		</script>
@@ -187,6 +194,9 @@ const scenes: { id: string; title: string; text?: string; topics: Topic[] }[] = 
 </html>
 
 <style>
+	.home-next {
+		padding: 4em 1em 3em;
+	}
 	/* Full-width page: undo the narrow column that global.css gives <main>. */
 	main.home {
 		/* Where the pinned text panel sits: below the figure on phones,

@@ -1,0 +1,133 @@
+---
+// "Where to next?" cards: the newest post (other than the one being read)
+// and the About page. Used at the end of the homepage and of every post, so
+// a visitor never reaches a dead end.
+import { getCollection } from 'astro:content';
+import { readingMinutes } from '../utils/reading-time';
+
+interface Props {
+	heading: string;
+	/** The post being read, so it isn't suggested to itself. */
+	exclude?: string;
+}
+
+const { heading, exclude } = Astro.props;
+const post = (await getCollection('blog'))
+	.filter((p) => p.id !== exclude)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())[0];
+---
+
+<section class="next-up" aria-labelledby="next-up-heading">
+	<h2 id="next-up-heading">{heading}</h2>
+	<div class="cards">
+		{
+			post && (
+				<a class="card" href={`/blog/${post.id}/`}>
+					<span class="kicker">
+						{exclude ? 'Read next' : 'Latest post'} · {readingMinutes(post.body)} min read
+					</span>
+					<span class="title">{post.data.title}</span>
+					<span class="text">{post.data.description}</span>
+					<span class="go" aria-hidden="true">
+						Read <span>→</span>
+					</span>
+				</a>
+			)
+		}
+		<a class="card" href="/about/">
+			<span class="kicker">About</span>
+			<span class="title">Who's Shreyans?</span>
+			<span class="text">A quant trader from Mumbai, living in Amsterdam. Also, a cat.</span>
+			<span class="go" aria-hidden="true">
+				Say hi <span>→</span>
+			</span>
+		</a>
+	</div>
+	<p class="all"><a href="/blog/">All posts →</a></p>
+</section>
+
+<style>
+	.next-up {
+		width: 720px;
+		max-width: 100%;
+		margin: 0 auto;
+	}
+	h2 {
+		margin: 0 0 0.75em;
+		font-size: 1.3em;
+	}
+	.cards {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+		gap: 1em;
+	}
+	.card {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4em;
+		padding: 1.1em 1.25em;
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		background: var(--surface);
+		color: var(--text);
+		text-decoration: none;
+		transition:
+			border-color 0.15s,
+			transform 0.15s;
+	}
+	.card:hover,
+	.card:focus-visible {
+		border-color: var(--accent);
+		outline: none;
+	}
+	.card:hover {
+		transform: translateY(-2px);
+	}
+	.kicker {
+		color: var(--text-muted);
+		font-family: var(--font-mono);
+		font-size: 0.8em;
+	}
+	.title {
+		color: var(--text-heading);
+		font-size: 1.15em;
+		font-weight: 700;
+		line-height: 1.25;
+	}
+	.card:hover .title,
+	.card:focus-visible .title {
+		color: var(--accent);
+	}
+	.text {
+		flex: 1;
+		font-family: var(--font-sans);
+		font-size: 0.95em;
+		line-height: 1.5;
+	}
+	.go {
+		color: var(--accent);
+		font-family: var(--font-mono);
+		font-size: 0.85em;
+	}
+	.go span {
+		display: inline-block;
+		transition: transform 0.15s;
+	}
+	.card:hover .go span {
+		transform: translateX(4px);
+	}
+	.all {
+		margin: 1em 0 0;
+		font-size: 0.9em;
+		text-align: right;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.card,
+		.go span {
+			transition: none;
+		}
+		.card:hover {
+			transform: none;
+		}
+	}
+</style>

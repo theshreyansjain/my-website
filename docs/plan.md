@@ -206,3 +206,10 @@ What changed from the plan while building, and why. Newest first.
   now a placeholder monospace "S" SVG; `favicon.ico` was dropped because
   modern browsers use the SVG. Homepage and About copy are short drafts
   for Shreyans to rewrite.
+- **Visitor flow (2026-10-17):** post lists are now clickable cards (grey
+  surface, green border on hover, "Read →"), with a reading time from
+  `src/utils/reading-time.ts` (~220 words/min, expandables included). The
+  homepage no longer ends on the last scene: after it, the figure scrolls away
+  and a "Where to next?" block (`src/components/NextUp.astro`: latest post +
+  About) and the footer follow. They sit outside `.home`, so the GSAP timeline
+  is unchanged. Every post ends with the same block as "Keep reading".
