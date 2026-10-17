@@ -1,6 +1,6 @@
 ---
-title: 'How this website was built'
-description: 'Astro, GSAP and Claude Code: what each part of this site does, why it was picked, and the steps from a blank MacBook to a live site.'
+title: "I didn't write this website"
+description: 'Claude Code wrote it. What each part of this site does, why it was picked, how I worked with an AI agent, and the steps from a blank MacBook to a live site.'
 pubDate: '2026-10-17'
 topic: 'programming-ai'
 ogImage: './building-this-site/og.png'
@@ -18,10 +18,19 @@ import TwoClaudes from '../../components/post/TwoClaudes.astro';
 
 ![The homepage figure in its five scenes: waving in a cape, running, cycling on a race bike, typing at a desk, and reading a book.](./building-this-site/scenes.png)
 
-This site is a <Term t="static">static</Term> blog with an animated homepage.
-I didn't write its code. I described what I wanted, Claude Code (Anthropic's
-coding agent, which works in the terminal) wrote it, and I said yes, no, or
-"the motion is not smooth". All of the code is [on GitHub](https://github.com/theshreyansjain/my-website).
+I didn't write this blog either.
+
+This site is a <Term t="static">static</Term> blog with an animated homepage,
+and Claude Code (Anthropic's coding agent, which works in the terminal) wrote
+all of its code. My part was deciding what it should be, and saying yes, no,
+or "the motion is not smooth". Claude Code also drafted this post; I chose
+what went in. All of the code is [on GitHub](https://github.com/theshreyansjain/my-website).
+
+Why build it? Mostly to learn AI by making something with it. Building
+something real and watching it work gives me the same eureka feeling as the
+first HTML file I ever wrote. I also wanted a home for my side quests:
+writing things down gives what I learn some structure, and it gives friends
+and family an easy way to keep up with what I'm doing.
 
 <StatStrip
 	stats={[
@@ -360,6 +369,14 @@ No. A site can only read its own cookies; browsers block everything else on
 purpose. This site uses no cookies at all.
 
 </Expand>
+
+## What surprised me
+
+How easy it was, mostly. Claude's taste was better than I expected, and
+Claude Code was more self-sufficient: it ran the build, checked its own work
+with screenshots, and opened previews in my browser. These agents can now
+drive a good part of a Mac on their own. And the animations on the homepage
+and the interactive parts of this post came out better than I'd hoped.
 
 ## What's next
 

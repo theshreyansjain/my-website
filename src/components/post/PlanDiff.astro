@@ -46,7 +46,9 @@ const changes = [
 	.change + .change {
 		margin-top: 0.5em;
 	}
-	p {
+	/* Stays mono: it's drawn like a git diff. */
+	.diff p {
+		font-family: var(--font-mono);
 		margin: 0;
 		padding: 0 1em;
 		line-height: 1.6;
