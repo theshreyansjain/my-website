@@ -15,6 +15,8 @@
 	--text-muted: #7d8590;
 	--accent: #39f58c;
 	--accent-glow: rgb(57 245 140 / 35%);
+	/* Second colour: amber, for sub-headings and secondary highlights. */
+	--accent-2: #f5a524;
 	--box-shadow: 0 0 0 1px var(--border), 0 8px 24px rgb(0 0 0 / 50%);
 	/* Post text: the reader's system font (San Francisco on Apple devices,
 	   Segoe UI on Windows). Nothing to download. */
@@ -196,6 +198,7 @@ hr {
 }
 [data-progress-target] > h3 {
 	margin-top: 1.6em;
+	color: var(--accent-2);
 }
 [data-progress-target] strong {
 	color: var(--text-heading);
