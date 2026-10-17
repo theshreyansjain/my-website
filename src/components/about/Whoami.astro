@@ -1,0 +1,112 @@
+---
+// A terminal card that "prints" a few facts, one line after another.
+// Pure CSS: each line fades in a little later than the one before.
+// With reduced motion every line is simply there.
+interface Props {
+	rows: [string, string][];
+}
+
+const { rows } = Astro.props;
+---
+
+<figure class="whoami">
+	<div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+	<div class="screen">
+		<p class="prompt"><span aria-hidden="true">$ </span>whoami</p>
+		<dl>
+			{
+				rows.map(([key, value], i) => (
+					<div style={`--i: ${i}`}>
+						<dt>{key}</dt>
+						<dd>{value}</dd>
+					</div>
+				))
+			}
+		</dl>
+		<p class="cursor" aria-hidden="true" style={`--i: ${rows.length}`}><span>$ </span><b></b></p>
+	</div>
+</figure>
+
+<style>
+	.whoami {
+		margin: 0;
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		background: var(--surface);
+		overflow: hidden;
+		font-family: var(--font-mono);
+		font-size: 0.9em;
+	}
+	.bar {
+		display: flex;
+		gap: 5px;
+		padding: 0.6em 0.8em;
+		border-bottom: 1px solid var(--border);
+	}
+	.bar i {
+		width: 9px;
+		height: 9px;
+		border-radius: 50%;
+		background: var(--border);
+	}
+	.screen {
+		padding: 1em 1.2em;
+	}
+	.prompt,
+	.cursor {
+		margin: 0;
+		font-family: var(--font-mono);
+		color: var(--text-heading);
+	}
+	.prompt span,
+	.cursor span {
+		color: var(--accent);
+	}
+	dl {
+		margin: 0.5em 0;
+	}
+	dl div,
+	.cursor {
+		display: flex;
+		gap: 1em;
+		animation: print 0.3s calc(0.25s + var(--i) * 0.18s) both;
+	}
+	dt {
+		flex: none;
+		width: 6.5em;
+		color: var(--text-muted);
+	}
+	dd {
+		margin: 0;
+		color: var(--text);
+	}
+	.cursor {
+		gap: 0;
+	}
+	.cursor b {
+		display: inline-block;
+		width: 0.6em;
+		height: 1.1em;
+		margin-top: 0.3em;
+		background: var(--accent);
+		animation: blink 1s steps(1) infinite;
+	}
+	@keyframes print {
+		from {
+			opacity: 0;
+			transform: translateY(4px);
+		}
+	}
+	@keyframes blink {
+		50% {
+			opacity: 0;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		dl div,
+		.cursor,
+		.cursor b {
+			animation: none;
+		}
+	}
+</style>
