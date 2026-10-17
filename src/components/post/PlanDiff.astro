@@ -1,0 +1,74 @@
+---
+// "What I planned vs what shipped", drawn like a git diff:
+// red lines were the plan, green lines are what's on the site.
+const changes = [
+	{ plan: '3D figure in Three.js', shipped: '2D figure: CSS shapes and SVG', why: 'built the 3D one, preferred the 2D one' },
+	{ plan: 'animation clips from Mixamo', shipped: 'hand-written poses', why: 'not needed once the figure went 2D' },
+	{ plan: 'no GSAP, ~20 lines of my own scroll code', shipped: 'GSAP ScrollTrigger', why: 'Claude Code suggested it; one small library' },
+	{ plan: 'no idle animation', shipped: 'running, pedalling, typing loops', why: 'I wanted it to move' },
+	{ plan: 'keyboard shortcuts to open a topic', shipped: 'buttons only', why: 'I asked for buttons only' },
+	{ plan: 'topics in the header', shipped: 'topic chips on the blog page', why: 'topics are part of the blog' },
+	{ plan: 'a smiley face', shipped: 'a superhero cape', why: 'I didn’t like the face' },
+	{ plan: 'SPEC.md, HANDOFF.md and hooks', shipped: 'one file: docs/plan.md', why: 'one file both Claudes read' },
+];
+---
+
+<figure class="diff">
+	<figcaption>planned or first built → shipped</figcaption>
+	<div class="lines">
+		{
+			changes.map((c) => (
+				<div class="change">
+					<p class="del"><span aria-hidden="true">-</span> {c.plan}</p>
+					<p class="add"><span aria-hidden="true">+</span> {c.shipped}</p>
+					<p class="why"><span aria-hidden="true">#</span> {c.why}</p>
+				</div>
+			))
+		}
+	</div>
+</figure>
+
+<style>
+	.diff {
+		margin: 0 0 2em;
+		border: 1px solid var(--border);
+		border-radius: 8px;
+		background: var(--surface);
+		overflow: hidden;
+		font-size: 0.85em;
+	}
+	figcaption {
+		padding: 0.5em 1em;
+		border-bottom: 1px solid var(--border);
+		color: var(--text-muted);
+	}
+	.lines {
+		padding: 0.5em 0;
+	}
+	.change + .change {
+		margin-top: 0.5em;
+	}
+	p {
+		margin: 0;
+		padding: 0 1em;
+		line-height: 1.6;
+	}
+	.prose .diff p {
+		margin: 0;
+	}
+	.del {
+		background: rgb(248 81 73 / 12%);
+		color: #ff9a92;
+	}
+	.add {
+		background: rgb(57 245 140 / 10%);
+		color: var(--accent);
+	}
+	.why {
+		color: var(--text-muted);
+	}
+	span {
+		display: inline-block;
+		width: 1em;
+	}
+</style>

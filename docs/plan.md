@@ -59,6 +59,14 @@ not transcripts.
 ## Build notes
 What changed from the plan while building, and why. Newest first.
 
+- First post (2026-10-17): "How this website was built" is MDX
+  (`src/content/blog/building-this-site.mdx`) with post components in
+  `src/components/post/` (anatomy diagram, expandable sections, glossary
+  popovers, stat strip, plan-vs-shipped diff, commit chart, scroll slider
+  demo). Every post now has a reading progress bar and copy buttons on code
+  blocks (added to `BlogPost.astro`). No new dependencies. Images are
+  headless-Chrome screenshots, including the 3D figure from the
+  `step-5-figure-3d` branch.
 - Step 7 (2026-10-17): Vercel Web Analytics added as a plain
   `<script defer src="/_vercel/insights/script.js">` in `BaseHead.astro`
   (every page), no npm package. Cookie-free, no consent banner. The owner

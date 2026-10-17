@@ -1,0 +1,51 @@
+---
+// Thin bar at the top of the screen that fills as you read the post.
+// Measures the element marked data-progress-target: 0% when its top reaches
+// the top of the screen, 100% when its bottom reaches the bottom.
+---
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<script>
+	const bar = document.querySelector<HTMLElement>('.reading-progress');
+	const target = document.querySelector<HTMLElement>('[data-progress-target]');
+
+	if (bar && target) {
+		let queued = false;
+		const update = () => {
+			queued = false;
+			const rect = target.getBoundingClientRect();
+			const scrollable = rect.height - window.innerHeight;
+			const progress = scrollable <= 0 ? 1 : -rect.top / scrollable;
+			bar.style.transform = `scaleX(${Math.min(1, Math.max(0, progress))})`;
+		};
+		// At most one update per frame, however many scroll events fire.
+		const queue = () => {
+			if (!queued) {
+				queued = true;
+				requestAnimationFrame(update);
+			}
+		};
+		addEventListener('scroll', queue, { passive: true });
+		addEventListener('resize', queue);
+		// Opening or closing an expandable section changes the post's height.
+		new ResizeObserver(queue).observe(target);
+		update();
+	}
+</script>
+
+<style>
+	.reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 100;
+		width: 100%;
+		height: 3px;
+		background: var(--accent);
+		box-shadow: 0 0 8px var(--accent-glow);
+		transform: scaleX(0);
+		transform-origin: left;
+		pointer-events: none;
+	}
+</style>

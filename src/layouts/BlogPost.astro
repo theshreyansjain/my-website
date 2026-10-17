@@ -5,6 +5,8 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
+import CopyButtons from '../components/CopyButtons.astro';
 import TopicTag from '../components/TopicTag.astro';
 
 // Post frontmatter; the date is optional so non-post pages (About) can use
@@ -59,6 +61,7 @@ const { title, description, pubDate, updatedDate, heroImage, topic } = Astro.pro
 	</head>
 
 	<body>
+		{pubDate && <ReadingProgress />}
 		<Header />
 		<main>
 			<article>
@@ -79,10 +82,13 @@ const { title, description, pubDate, updatedDate, heroImage, topic } = Astro.pro
 						<h1>{title}</h1>
 						<hr />
 					</div>
-					<slot />
+					<div data-progress-target>
+						<slot />
+					</div>
 				</div>
 			</article>
 		</main>
 		<Footer />
+		<CopyButtons />
 	</body>
 </html>

@@ -1,0 +1,111 @@
+---
+// "Scroll is one number": a slider stands in for scroll progress t (0 to 1)
+// and bends a two-part leg between a standing pose and a running pose,
+// the same blending the homepage figure does for every joint.
+const HIP = { x: 100, y: 20 };
+const THIGH = 55;
+const SHIN = 55;
+---
+
+<figure class="scroll-demo">
+	<svg viewBox="0 0 200 150" aria-hidden="true">
+		<line x1="40" y1="138" x2="160" y2="138" class="ground"></line>
+		<circle cx={HIP.x} cy={HIP.y} r="5" class="joint"></circle>
+		<g class="thigh" transform={`rotate(0 ${HIP.x} ${HIP.y})`}>
+			<line x1={HIP.x} y1={HIP.y} x2={HIP.x} y2={HIP.y + THIGH} class="bone"></line>
+			<circle cx={HIP.x} cy={HIP.y + THIGH} r="4" class="joint"></circle>
+			<g class="shin" transform={`rotate(0 ${HIP.x} ${HIP.y + THIGH})`}>
+				<line x1={HIP.x} y1={HIP.y + THIGH} x2={HIP.x} y2={HIP.y + THIGH + SHIN} class="bone"></line>
+				<line x1={HIP.x} y1={HIP.y + THIGH + SHIN} x2={HIP.x + 14} y2={HIP.y + THIGH + SHIN} class="bone foot"></line>
+			</g>
+		</g>
+	</svg>
+	<label>
+		<span>scroll progress <var>t</var></span>
+		<input type="range" min="0" max="1" step="0.01" value="0" />
+	</label>
+	<output class="readout"><var>t</var> = 0.00 → hip 0°, knee 0°</output>
+	<figcaption>Drag the slider. Standing at <var>t</var> = 0, mid-stride at <var>t</var> = 1.</figcaption>
+</figure>
+
+<script>
+	// Two poses: hip and knee angles in degrees. Every in-between pose is
+	// start + (end - start) × t: that's the whole trick.
+	const STAND = { hip: 0, knee: 0 };
+	const STRIDE = { hip: 35, knee: 70 };
+
+	for (const demo of document.querySelectorAll('.scroll-demo')) {
+		const input = demo.querySelector('input');
+		const thigh = demo.querySelector('.thigh');
+		const shin = demo.querySelector('.shin');
+		const readout = demo.querySelector('.readout');
+		const update = () => {
+			const t = Number(input.value);
+			const h = STAND.hip + (STRIDE.hip - STAND.hip) * t;
+			const k = STAND.knee + (STRIDE.knee - STAND.knee) * t;
+			// Positive angles swing the thigh forward and bend the knee back.
+			thigh.setAttribute('transform', `rotate(${-h} 100 20)`);
+			shin.setAttribute('transform', `rotate(${k} 100 75)`);
+			readout.innerHTML = `<var>t</var> = ${t.toFixed(2)} → hip ${Math.round(h)}°, knee ${Math.round(k)}°`;
+		};
+		input.addEventListener('input', update);
+		update();
+	}
+</script>
+
+<style>
+	.scroll-demo {
+		margin: 0 0 2em;
+		padding: 1em;
+		border: 1px solid var(--border);
+		border-radius: 8px;
+		background: var(--surface);
+		text-align: center;
+	}
+	svg {
+		display: block;
+		width: 100%;
+		max-width: 14rem;
+		margin: 0 auto;
+	}
+	.bone {
+		stroke: var(--text-heading);
+		stroke-width: 6;
+		stroke-linecap: round;
+	}
+	.joint {
+		fill: var(--accent);
+	}
+	.ground {
+		stroke: var(--border);
+		stroke-width: 2;
+	}
+	label {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25em;
+		margin-top: 0.5em;
+		color: var(--text-muted);
+		font-size: 0.85em;
+	}
+	input {
+		width: 100%;
+		max-width: 20rem;
+		margin: 0 auto;
+		accent-color: var(--accent);
+	}
+	.readout {
+		display: block;
+		margin-top: 0.5em;
+		color: var(--accent);
+		font-size: 0.9em;
+	}
+	var {
+		font-style: italic;
+	}
+	figcaption {
+		margin-top: 0.5em;
+		color: var(--text-muted);
+		font-size: 0.8em;
+	}
+</style>

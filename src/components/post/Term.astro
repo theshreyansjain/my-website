@@ -1,0 +1,71 @@
+---
+// A word with a one-sentence definition that pops up on tap or click.
+// Uses the HTML popover attribute: no JavaScript, closes on a tap outside.
+// Usage: <Term t="cdn">CDN</Term>
+const glossary = {
+	branch: 'A separate copy of the code where you can try a change without touching the live site.',
+	build: 'A step that runs once, before anyone visits, and turns your files into plain HTML, CSS and JavaScript.',
+	cdn: 'Content delivery network: copies of your site on servers around the world, so each visitor gets it from one nearby.',
+	deploy: 'Putting a new version of the site online.',
+	ik: 'Inverse kinematics: working out the joint angles from where the end should be, like bending a knee so the foot lands on the pedal.',
+	markdown: 'Plain text with a few symbols for formatting, like # for a heading and * for a list.',
+	preview: 'A private copy of the site, with its own link, built from a branch so you can check it before it goes live.',
+	repo: 'Repository: the folder of code plus its full history of changes.',
+	static: 'A site made of ready-made files. Nothing runs on a server when you visit; the files are just sent to you.',
+	svg: 'An image format made of shapes described in code, so it stays sharp at any size.',
+	terminal: 'The text window where you type commands instead of clicking.',
+	token: 'The unit AI models read and write in. Roughly ¾ of a word.',
+} as const;
+
+interface Props {
+	t: keyof typeof glossary;
+}
+
+const { t } = Astro.props;
+// Each use needs its own id, even when the same word appears twice.
+const id = `term-${t}-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<button type="button" class="term" popovertarget={id}><slot /></button><span
+	id={id}
+	popover
+	class="term-pop"
+	role="note"><strong><slot /></strong>{glossary[t]}</span
+>
+
+<style>
+	.term {
+		padding: 0;
+		border: none;
+		border-bottom: 1px dotted var(--accent);
+		background: none;
+		color: inherit;
+		font: inherit;
+		cursor: help;
+	}
+	.term:hover,
+	.term:focus-visible {
+		color: var(--accent);
+	}
+	/* Popovers open in the centre of the screen, above everything. */
+	.term-pop {
+		box-sizing: border-box;
+		max-width: min(24rem, calc(100vw - 2rem));
+		padding: 1em 1.25em;
+		border: 1px solid var(--accent);
+		border-radius: 8px;
+		background: var(--surface);
+		color: var(--text);
+		box-shadow: 0 0 24px var(--accent-glow);
+		font-size: 0.9em;
+		line-height: 1.6;
+	}
+	.term-pop::backdrop {
+		background: rgb(0 0 0 / 40%);
+	}
+	.term-pop strong {
+		display: block;
+		margin-bottom: 0.25em;
+		color: var(--accent);
+	}
+</style>
