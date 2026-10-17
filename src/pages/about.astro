@@ -12,18 +12,18 @@ const [latest] = (await getCollection('blog')).sort((a, b) => b.data.pubDate.val
 <Layout title="About" description="Quant trader from Mumbai, living in Amsterdam. What I do and what this site is for.">
 	<p class="lead">
 		I'm Shreyans, a quant trader from Mumbai, living in Amsterdam. I work at an options market
-		maker. Outside work I love learning new things, building things, and being outdoors doing
-		sports.
+		maker. Outside work, I love learning new things, building things, and spending time outdoors
+		doing sports.
 	</p>
 
 	<Whoami
 		rows={[
 			['name', 'Shreyans'],
-			['role', 'quant trader, options market making'],
+			['role', 'Quant trader at an options market maker'],
 			['from', 'Mumbai'],
 			['based', 'Amsterdam'],
-			['likes', 'learning, building, sports outdoors'],
-			['status', 'learning in public'],
+			['likes', 'Learning, building, outdoor sports'],
+			['status', 'Learning in public'],
 		]}
 	/>
 
@@ -32,13 +32,14 @@ const [latest] = (await getCollection('blog')).sort((a, b) => b.data.pubDate.val
 
 	<h2>Why this site</h2>
 	<p>
-		Mostly to learn AI by making something with it. Building something real and watching it work
+		Mostly to learn AI by building something with it. Making something real and watching it work
 		gives me the same eureka feeling as the first HTML file I ever wrote. It's also a home for my
 		side quests: writing things down gives what I learn some structure, and it gives friends and
 		family an easy way to keep up with what I'm doing.
 	</p>
 	<p>
-		I didn't write the code myself; Claude Code did, while I decided what it should be. <a
+		I didn't write the code myself. Claude Code did, while I decided what the site should be and
+		how it should look. <a
 			href="/blog/building-this-site/">Here's how it was built.</a
 		>
 	</p>
