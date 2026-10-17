@@ -135,7 +135,7 @@ const shell = { rows, topics, latest };
 				help: 'cat latest',
 				run: ([what]) => {
 					if (what === 'latest' && data.latest) return go(data.latest.url, `"${data.latest.title}"`);
-					print('cat: try cat latest');
+					print(what ? `cat: ${what}: no such file. Try cat latest.` : 'Not that cat. The cat declined to comment. Try cat latest.');
 				},
 			},
 			date: {
