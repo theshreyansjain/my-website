@@ -15,6 +15,8 @@
 		button.type = 'button';
 		button.className = 'copy-button';
 		button.textContent = 'copy';
+		// Screen readers announce the change to "copied".
+		button.setAttribute('aria-live', 'polite');
 		button.addEventListener('click', async () => {
 			try {
 				await navigator.clipboard.writeText(pre.innerText.trimEnd());
@@ -32,6 +34,10 @@
 <style is:global>
 	.code-wrap {
 		position: relative;
+	}
+	/* Room on the right so the button never covers the first line. */
+	.code-wrap pre {
+		padding-right: 4.5em;
 	}
 	.copy-button {
 		position: absolute;

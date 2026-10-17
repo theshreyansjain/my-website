@@ -15,6 +15,9 @@ const blog = defineCollection({
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: z.optional(image()),
+			// Image for link previews on social sites (1200×630). Falls back to
+			// heroImage, then to the site-wide placeholder.
+			ogImage: z.optional(image()),
 			// Optional: posts without a topic only appear in /blog.
 			topic: z.enum(Object.keys(TOPICS) as [Topic, ...Topic[]]).optional(),
 		}),

@@ -37,7 +37,8 @@ const { title, kind = 'code', teaser, time } = Astro.props;
 	}
 	/* Our own arrow, so it looks the same in every browser. */
 	summary::before {
-		content: '▸';
+		/* Empty alt text: screen readers skip the arrow. */
+		content: '▸' / '';
 		display: inline-block;
 		margin-right: 0.5em;
 		color: var(--accent);
@@ -52,7 +53,8 @@ const { title, kind = 'code', teaser, time } = Astro.props;
 	}
 
 	/* Under a numbered step: line up with the step's text. */
-	:global(ol) + .expand-code {
+	:global(ol) + .expand-code,
+	:global(ul) + .expand-code {
 		margin-left: 2.5rem;
 	}
 	/* Room before the next section's heading. */

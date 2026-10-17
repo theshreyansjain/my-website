@@ -1,5 +1,6 @@
 ---
-// "Expand all / collapse all" for every expandable section in the post.
+// "Expand all / collapse all" for every expandable section in the post
+// (not the code inside the anatomy diagram's hidden panels).
 // Hidden without JavaScript, where it couldn't do anything.
 ---
 
@@ -8,7 +9,7 @@
 <script>
 	const button = document.querySelector<HTMLButtonElement>('.expand-all');
 	if (button) {
-		const sections = () => [...document.querySelectorAll<HTMLDetailsElement>('details.expand')];
+		const sections = () => [...document.querySelectorAll<HTMLDetailsElement>('details.expand:not(.anatomy details)')];
 		const sync = () => {
 			const allOpen = sections().every((d) => d.open);
 			button.textContent = allOpen ? 'collapse all sections' : 'expand all sections';

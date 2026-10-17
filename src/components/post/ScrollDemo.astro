@@ -28,9 +28,9 @@ const SHIN = 55;
 	<figcaption>Drag the slider. Standing at <var>t</var> = 0, mid-stride at <var>t</var> = 1.</figcaption>
 </figure>
 
-<script>
+<script define:vars={{ hip: HIP, knee: { x: HIP.x, y: HIP.y + THIGH } }}>
 	// Two poses: hip and knee angles in degrees. Every in-between pose is
-	// start + (end - start) × t: that's the whole trick.
+	// start + (end - start) × t.
 	const STAND = { hip: 0, knee: 0 };
 	const STRIDE = { hip: 35, knee: 70 };
 
@@ -39,13 +39,14 @@ const SHIN = 55;
 		const thigh = demo.querySelector('.thigh');
 		const shin = demo.querySelector('.shin');
 		const readout = demo.querySelector('.readout');
+		if (!input || !thigh || !shin || !readout) continue;
 		const update = () => {
 			const t = Number(input.value);
 			const h = STAND.hip + (STRIDE.hip - STAND.hip) * t;
 			const k = STAND.knee + (STRIDE.knee - STAND.knee) * t;
 			// Positive angles swing the thigh forward and bend the knee back.
-			thigh.setAttribute('transform', `rotate(${-h} 100 20)`);
-			shin.setAttribute('transform', `rotate(${k} 100 75)`);
+			thigh.setAttribute('transform', `rotate(${-h} ${hip.x} ${hip.y})`);
+			shin.setAttribute('transform', `rotate(${k} ${knee.x} ${knee.y})`);
 			readout.innerHTML = `<var>t</var> = ${t.toFixed(2)} → hip ${Math.round(h)}°, knee ${Math.round(k)}°`;
 		};
 		input.addEventListener('input', update);

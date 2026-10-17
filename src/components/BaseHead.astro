@@ -11,11 +11,13 @@ interface Props {
 	title: string;
 	description: string;
 	image?: ImageMetadata;
+	// Blog posts are articles to social sites; everything else is a website.
+	article?: { publishedTime: Date };
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = FallbackImage } = Astro.props;
+const { title, description, image = FallbackImage, article } = Astro.props;
 ---
 
 <!-- Global Metadata -->
@@ -41,7 +43,8 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta name="description" content={description} />
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
+<meta property="og:type" content={article ? 'article' : 'website'} />
+{article && <meta property="article:published_time" content={article.publishedTime.toISOString()} />}
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
@@ -50,9 +53,10 @@ const { title, description, image = FallbackImage } = Astro.props;
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 
-<!-- Vercel Web Analytics: counts page views, country, referrer, device, OS
-     and browser. Cookie-free, so no consent banner is needed. Plain script
-     tag instead of the @vercel/analytics npm package. The /_vercel/insights/
-     route only exists on Vercel deployments once Web Analytics is enabled in
-     the dashboard; on localhost the script 404s harmlessly. -->
+{/* Vercel Web Analytics: counts page views, country, referrer, device, OS
+    and browser. Cookie-free, so no consent banner is needed. Plain script
+    tag instead of the @vercel/analytics npm package. The /_vercel/insights/
+    route only exists on Vercel deployments once Web Analytics is enabled in
+    the dashboard; on localhost the script 404s harmlessly. (An Astro comment,
+    so it isn't sent to visitors.) */}
 <script defer src="/_vercel/insights/script.js"></script>
