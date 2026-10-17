@@ -13,8 +13,10 @@ const posts = [...Astro.props.posts].sort(
 );
 ---
 
-<!-- A simple list: date and topic, the title as a link, then the
-     description. Hero images only show on the post page itself. -->
+<!-- Each post is a card: date and topic, the title as a link, the
+     description, then a "Read" cue. The title link is stretched over the
+     whole card, so clicking anywhere opens the post. Hero images only show
+     on the post page itself. -->
 <ul>
 	{posts.map((post) => (
 		<li>
@@ -26,29 +28,45 @@ const posts = [...Astro.props.posts].sort(
 				<a href={`/blog/${post.id}/`}>{post.data.title}</a>
 			</h2>
 			<p class="description">{post.data.description}</p>
+			<p class="read" aria-hidden="true">Read <span>→</span></p>
 		</li>
 	))}
 </ul>
 <style>
 	ul {
+		display: grid;
+		gap: 1em;
 		list-style: none;
 		margin: 0;
 		padding: 0;
 	}
 	li {
-		padding: 1.2em 0;
-		border-bottom: 1px solid var(--border);
+		position: relative;
+		padding: 1.1em 1.25em;
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		background: var(--surface);
+		transition:
+			border-color 0.15s,
+			transform 0.15s;
 	}
-	li:first-child {
-		padding-top: 0;
+	li:hover,
+	li:focus-within {
+		border-color: var(--accent);
+	}
+	li:hover {
+		transform: translateY(-2px);
 	}
 	.meta {
 		margin: 0 0 0.3em;
 		color: var(--text-muted);
 		font-size: 0.85em;
 	}
-	/* TopicTag is a separate component, so its class needs :global here. */
+	/* TopicTag is a separate component, so its class needs :global here.
+	   It sits above the stretched title link so it stays its own link. */
 	.meta :global(.topic-tag) {
+		position: relative;
+		z-index: 1;
 		margin-left: 1em;
 	}
 	.title {
@@ -59,11 +77,44 @@ const posts = [...Astro.props.posts].sort(
 		color: var(--text-heading);
 		text-decoration: none;
 	}
-	.title a:hover {
+	/* Stretch the link over the whole card. */
+	.title a::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+	}
+	.title a:focus-visible {
+		outline: none;
+	}
+	li:hover .title a,
+	.title a:focus-visible {
 		color: var(--accent);
 	}
 	.description {
 		margin: 0;
 		color: var(--text);
+	}
+	.read {
+		margin: 0.6em 0 0;
+		color: var(--accent);
+		font-family: var(--font-mono);
+		font-size: 0.85em;
+	}
+	.read span {
+		display: inline-block;
+		transition: transform 0.15s;
+	}
+	li:hover .read span {
+		transform: translateX(4px);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		li,
+		.read span {
+			transition: none;
+		}
+		li:hover {
+			transform: none;
+		}
 	}
 </style>
