@@ -67,6 +67,11 @@ What changed from the plan while building, and why. Newest first.
   blocks (added to `BlogPost.astro`). No new dependencies. Images are
   headless-Chrome screenshots, including the 3D figure from the
   `step-5-figure-3d` branch.
+- Post text (paragraphs and lists in posts) uses the system sans font
+  (`--font-sans`) for readability; headings, code, diagrams and the homepage
+  stay JetBrains Mono. Posts can set `ogImage` (1200×630) for link previews;
+  the post layout passes it (or `heroImage`) to the head, with `og:type`
+  article. The reading progress bar is 6px with a percentage tag.
 - Step 7 (2026-10-17): Vercel Web Analytics added as a plain
   `<script defer src="/_vercel/insights/script.js">` in `BaseHead.astro`
   (every page), no npm package. Cookie-free, no consent banner. The owner

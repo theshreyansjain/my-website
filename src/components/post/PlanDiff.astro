@@ -3,8 +3,6 @@
 // red lines were the plan, green lines are what's on the site.
 const changes = [
 	{ plan: '3D figure in Three.js', shipped: '2D figure: CSS shapes and SVG', why: 'built the 3D one, preferred the 2D one' },
-	{ plan: 'animation clips from Mixamo', shipped: 'hand-written poses', why: 'not needed once the figure went 2D' },
-	{ plan: 'no GSAP, ~20 lines of my own scroll code', shipped: 'GSAP ScrollTrigger', why: 'Claude Code suggested it; one small library' },
 	{ plan: 'no idle animation', shipped: 'running, pedalling, typing loops', why: 'I wanted it to move' },
 	{ plan: 'keyboard shortcuts to open a topic', shipped: 'buttons only', why: 'I asked for buttons only' },
 	{ plan: 'topics in the header', shipped: 'topic chips on the blog page', why: 'topics are part of the blog' },
@@ -19,9 +17,9 @@ const changes = [
 		{
 			changes.map((c) => (
 				<div class="change">
-					<p class="del"><span aria-hidden="true">-</span> {c.plan}</p>
-					<p class="add"><span aria-hidden="true">+</span> {c.shipped}</p>
-					<p class="why"><span aria-hidden="true">#</span> {c.why}</p>
+					<p class="del"><span aria-hidden="true">-</span><span class="sr-only">Planned: </span> {c.plan}</p>
+					<p class="add"><span aria-hidden="true">+</span><span class="sr-only">Shipped: </span> {c.shipped}</p>
+					<p class="why"><span aria-hidden="true">#</span><span class="sr-only">Why: </span> {c.why}</p>
 				</div>
 			))
 		}
@@ -48,13 +46,12 @@ const changes = [
 	.change + .change {
 		margin-top: 0.5em;
 	}
-	p {
+	/* Stays mono: it's drawn like a git diff. */
+	.diff p {
+		font-family: var(--font-mono);
 		margin: 0;
 		padding: 0 1em;
 		line-height: 1.6;
-	}
-	.prose .diff p {
-		margin: 0;
 	}
 	.del {
 		background: rgb(248 81 73 / 12%);
@@ -67,7 +64,7 @@ const changes = [
 	.why {
 		color: var(--text-muted);
 	}
-	span {
+	span[aria-hidden] {
 		display: inline-block;
 		width: 1em;
 	}

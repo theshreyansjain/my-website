@@ -1,52 +1,118 @@
 ---
 // "Scroll is one number": a slider stands in for scroll progress t (0 to 1)
-// and bends a two-part leg between a standing pose and a running pose,
-// the same blending the homepage figure does for every joint.
-const HIP = { x: 100, y: 20 };
-const THIGH = 55;
-const SHIN = 55;
+// and blends a stick figure from standing to running, the same way the
+// homepage figure blends between scenes. Far limbs are grey and drawn
+// behind the body, like on the homepage.
+
+// Joint positions in the drawing (viewBox units).
+const HIP = { x: 100, y: 108 };
+const SHOULDER = { x: 100, y: 58 };
+const THIGH = 42;
+const SHIN = 42;
+const UPPER_ARM = 30;
+const FOREARM = 28;
+const GROUND = HIP.y + THIGH + SHIN + 4;
+
+// Each joint: its angle when standing (t = 0) and running (t = 1), in
+// degrees. Positive means forward for hips, shoulders and elbows, back for
+// knees, and leaning forward for the torso.
+const joints = {
+	torso: [0, 8],
+	nearHip: [-3, 35],
+	nearKnee: [0, 20],
+	farHip: [3, -30],
+	farKnee: [0, 85],
+	nearShoulder: [0, -45],
+	nearElbow: [5, 85],
+	farShoulder: [0, 40],
+	farElbow: [5, 85],
+};
+
+const knee = { x: HIP.x, y: HIP.y + THIGH };
+const elbow = { x: SHOULDER.x, y: SHOULDER.y + UPPER_ARM };
+const pivots = {
+	torso: HIP,
+	nearHip: HIP,
+	farHip: HIP,
+	nearKnee: knee,
+	farKnee: knee,
+	nearShoulder: SHOULDER,
+	farShoulder: SHOULDER,
+	nearElbow: elbow,
+	farElbow: elbow,
+};
 ---
 
 <figure class="scroll-demo">
-	<svg viewBox="0 0 200 150" aria-hidden="true">
-		<line x1="40" y1="138" x2="160" y2="138" class="ground"></line>
-		<circle cx={HIP.x} cy={HIP.y} r="5" class="joint"></circle>
-		<g class="thigh" transform={`rotate(0 ${HIP.x} ${HIP.y})`}>
-			<line x1={HIP.x} y1={HIP.y} x2={HIP.x} y2={HIP.y + THIGH} class="bone"></line>
-			<circle cx={HIP.x} cy={HIP.y + THIGH} r="4" class="joint"></circle>
-			<g class="shin" transform={`rotate(0 ${HIP.x} ${HIP.y + THIGH})`}>
-				<line x1={HIP.x} y1={HIP.y + THIGH} x2={HIP.x} y2={HIP.y + THIGH + SHIN} class="bone"></line>
-				<line x1={HIP.x} y1={HIP.y + THIGH + SHIN} x2={HIP.x + 14} y2={HIP.y + THIGH + SHIN} class="bone foot"></line>
-			</g>
-		</g>
+	<svg viewBox="0 0 200 200" aria-hidden="true">
+		<line x1="30" y1={GROUND} x2="170" y2={GROUND} class="ground"></line>
+		{
+			(['far', 'near'] as const).map((side) => (
+				<g class={side}>
+					{side === 'near' && (
+						<g data-joint="torso">
+							<line x1={HIP.x} y1={HIP.y} x2={SHOULDER.x} y2={SHOULDER.y} class="bone" />
+							<circle cx={SHOULDER.x} cy={SHOULDER.y - 18} r="12" class="head" />
+						</g>
+					)}
+					<g data-joint={`${side}Hip`}>
+						<line x1={HIP.x} y1={HIP.y} x2={knee.x} y2={knee.y} class="bone" />
+						<g data-joint={`${side}Knee`}>
+							<line x1={knee.x} y1={knee.y} x2={knee.x} y2={knee.y + SHIN} class="bone" />
+							<line x1={knee.x} y1={knee.y + SHIN} x2={knee.x + 10} y2={knee.y + SHIN} class="bone" />
+						</g>
+					</g>
+					<g data-follows="torso">
+						<g data-joint={`${side}Shoulder`}>
+							<line x1={SHOULDER.x} y1={SHOULDER.y} x2={elbow.x} y2={elbow.y} class="bone" />
+							<g data-joint={`${side}Elbow`}>
+								<line x1={elbow.x} y1={elbow.y} x2={elbow.x} y2={elbow.y + FOREARM} class="bone" />
+							</g>
+						</g>
+					</g>
+				</g>
+			))
+		}
 	</svg>
 	<label>
 		<span>scroll progress <var>t</var></span>
 		<input type="range" min="0" max="1" step="0.01" value="0" />
 	</label>
-	<output class="readout"><var>t</var> = 0.00 → hip 0°, knee 0°</output>
-	<figcaption>Drag the slider. Standing at <var>t</var> = 0, mid-stride at <var>t</var> = 1.</figcaption>
+	<output class="readout"><var>t</var> = 0.00</output>
+	<figcaption>
+		Drag the slider. Every joint angle is <code>start + (end − start) × t</code>:
+		standing at <var>t</var> = 0, running at <var>t</var> = 1.
+	</figcaption>
 </figure>
 
-<script>
-	// Two poses: hip and knee angles in degrees. Every in-between pose is
-	// start + (end - start) × t: that's the whole trick.
-	const STAND = { hip: 0, knee: 0 };
-	const STRIDE = { hip: 35, knee: 70 };
+<script define:vars={{ joints, pivots }}>
+	// SVG rotates clockwise for positive angles. Hanging limbs swing forward
+	// (to the right) with a negative rotation, so flip those; knees bend back
+	// and the torso leans forward with a positive one.
+	const sign = (name) => (name === 'torso' || name.endsWith('Knee') ? 1 : -1);
 
 	for (const demo of document.querySelectorAll('.scroll-demo')) {
 		const input = demo.querySelector('input');
-		const thigh = demo.querySelector('.thigh');
-		const shin = demo.querySelector('.shin');
 		const readout = demo.querySelector('.readout');
+		if (!input || !readout) continue;
+
 		const update = () => {
 			const t = Number(input.value);
-			const h = STAND.hip + (STRIDE.hip - STAND.hip) * t;
-			const k = STAND.knee + (STRIDE.knee - STAND.knee) * t;
-			// Positive angles swing the thigh forward and bend the knee back.
-			thigh.setAttribute('transform', `rotate(${-h} 100 20)`);
-			shin.setAttribute('transform', `rotate(${k} 100 75)`);
-			readout.innerHTML = `<var>t</var> = ${t.toFixed(2)} → hip ${Math.round(h)}°, knee ${Math.round(k)}°`;
+			const angles = {};
+			for (const [name, [start, end]] of Object.entries(joints)) {
+				angles[name] = start + (end - start) * t;
+				const { x, y } = pivots[name];
+				const rotate = `rotate(${sign(name) * angles[name]} ${x} ${y})`;
+				for (const el of demo.querySelectorAll(`[data-joint="${name}"]`)) el.setAttribute('transform', rotate);
+				// The arms hang from the shoulders, so they lean with the torso.
+				if (name === 'torso') {
+					for (const el of demo.querySelectorAll('[data-follows="torso"]')) el.setAttribute('transform', rotate);
+				}
+			}
+			const r = (n) => Math.round(angles[n]);
+			readout.innerHTML =
+				`<var>t</var> = ${t.toFixed(2)} → hip ${r('nearHip')}°, knee ${r('nearKnee')}°, ` +
+				`shoulder ${r('nearShoulder')}°, elbow ${r('nearElbow')}°, …`;
 		};
 		input.addEventListener('input', update);
 		update();
@@ -65,16 +131,21 @@ const SHIN = 55;
 	svg {
 		display: block;
 		width: 100%;
-		max-width: 14rem;
+		max-width: 13rem;
 		margin: 0 auto;
 	}
 	.bone {
-		stroke: var(--text-heading);
-		stroke-width: 6;
+		stroke-width: 9;
 		stroke-linecap: round;
 	}
-	.joint {
-		fill: var(--accent);
+	.near .bone {
+		stroke: var(--text-heading);
+	}
+	.far .bone {
+		stroke: var(--text-muted);
+	}
+	.head {
+		fill: var(--text-heading);
 	}
 	.ground {
 		stroke: var(--border);
@@ -98,7 +169,8 @@ const SHIN = 55;
 		display: block;
 		margin-top: 0.5em;
 		color: var(--accent);
-		font-size: 0.9em;
+		font-family: var(--font-mono);
+		font-size: 0.85em;
 	}
 	var {
 		font-style: italic;

@@ -1,8 +1,9 @@
 ---
-title: 'How this website was built'
-description: 'Astro, GSAP and Claude Code: what each part of this site does, why it was picked, and the steps from a blank MacBook to a live site.'
+title: "I didn't write this website"
+description: 'Claude Code wrote it. What each part of this site does, why it was picked, how I worked with an AI agent, and the steps from a blank MacBook to a live site.'
 pubDate: '2026-10-17'
 topic: 'programming-ai'
+ogImage: './building-this-site/og.png'
 ---
 
 import Anatomy from '../../components/post/Anatomy.astro';
@@ -17,11 +18,19 @@ import TwoClaudes from '../../components/post/TwoClaudes.astro';
 
 ![The homepage figure in its five scenes: waving in a cape, running, cycling on a race bike, typing at a desk, and reading a book.](./building-this-site/scenes.png)
 
-This site is a <Term t="static">static</Term> blog with an animated homepage.
-I didn't write its code. I described what I wanted, Claude Code wrote it, and
-I said yes, no, or "make the cape smoother". This post covers what each part
-of the site is, why it was picked, how I worked with Claude Code, and the
-shortest path from a blank MacBook to a live site.
+I didn't write this blog either.
+
+This site is a <Term t="static">static</Term> blog with an animated homepage,
+and Claude Code (Anthropic's coding agent, which works in the terminal) wrote
+all of its code. My part was deciding what it should be, and saying yes, no,
+or "the motion is not smooth". Claude Code also drafted this post; I chose
+what went in. All of the code is [on GitHub](https://github.com/theshreyansjain/my-website).
+
+Why build it? Mostly to learn AI by making something with it. Building
+something real and watching it work gives me the same eureka feeling as the
+first HTML file I ever wrote. I also wanted a home for my side quests:
+writing things down gives what I learn some structure, and it gives friends
+and family an easy way to keep up with what I'm doing.
 
 <StatStrip
 	stats={[
@@ -30,10 +39,13 @@ shortest path from a blank MacBook to a live site.
 		{ value: '1', label: 'dependency added' },
 		{ value: '97 KB', label: 'homepage size' },
 		{ value: '97–100', label: 'Lighthouse scores' },
+		{ value: '~480', label: 'requests to Claude' },
+		{ value: '~122M', label: 'input tokens (read)' },
+		{ value: '~370k', label: 'output tokens (written)' },
 	]}
 />
 
-Dotted words have a definition: tap them. Code and longer explanations are
+Dotted words have a definition: tap or click them. Code and longer explanations are
 folded away; open what interests you.
 
 <ExpandAll />
@@ -48,12 +60,12 @@ or tap it on a phone, to see what it does, what I picked and why.
 The short version: posts are <Term t="markdown">Markdown</Term> files, Astro
 <Term t="build">builds</Term> them into plain files, GitHub stores the code,
 and Vercel sends the files to visitors from a <Term t="cdn">CDN</Term>.
-There's no server running code and no database, so there's nothing to keep
-running or patch.
+There's no server running code and no database, so there's very little to
+keep running or patch.
 
 ## The figure
 
-The homepage figure is made of plain shapes: rounded rectangles for the body,
+The [homepage](/) figure is made of plain shapes: rounded rectangles for the body,
 <Term t="svg">SVG</Term> drawings for the bike, desk, book and brain. A
 library called GSAP watches how far down the page you've scrolled and sets
 the figure's pose to match.
@@ -99,7 +111,7 @@ times a second.
 </Expand>
 
 The plan was a 3D figure, built with Three.js. Claude Code built it in one
-evening on a separate <Term t="branch">branch</Term>, with all five scenes,
+evening on a separate <Term t="branch">branch</Term> ([still on GitHub](https://github.com/theshreyansjain/my-website/tree/step-5-figure-3d)), with all five scenes,
 lighting and a real turn of the body. I looked at it next to the 2D one and
 kept the 2D one.
 
@@ -112,7 +124,7 @@ that's 97 KB now.
 
 ## What I planned vs what shipped
 
-Most of the plan changed once it met a real screen.
+Most of the plan changed once I saw it running.
 
 <PlanDiff />
 
@@ -126,7 +138,7 @@ The two can't see each other. The only link is a file in the
 
 <TwoClaudes />
 
-`docs/plan.md` holds the roadmap, the decisions and a log of every time the
+[`docs/plan.md`](https://github.com/theshreyansjain/my-website/blob/main/docs/plan.md) holds the roadmap, the decisions and a log of every time the
 build departed from the plan. Claude Code updates it after each step. One
 lesson: when I asked the claude.ai project to review it while writing this
 post, it was reading a copy from before most of the build, with seven steps
@@ -134,7 +146,7 @@ and none ticked. A shared file only works if both sides see the latest copy.
 
 What made the biggest difference:
 
-- **Standing rules.** A `CLAUDE.md` file is read at the start of every
+- **Standing rules.** A [`CLAUDE.md`](https://github.com/theshreyansjain/my-website/blob/main/CLAUDE.md) file is read at the start of every
   session. Mine says: explain every change and the reasoning, ask before adding
   a dependency, one branch per roadmap step, never push without being asked,
   and open preview links in my browser.
@@ -175,7 +187,7 @@ What made the biggest difference:
 </Expand>
 
 Advice I got and didn't use: plan mode, hooks, custom skills, and a cheaper
-model for routine edits. The site got built without them.
+model for routine edits.
 
 ## The numbers
 
@@ -184,12 +196,13 @@ model for routine edits. The site got built without them.
 Eleven days from my first question to this post, but most of the building
 happened in one evening: 34 of the 47 commits are from 16 October.
 
-Claude Code works in <Term t="token">tokens</Term>. Over the whole project it
-wrote about 370,000 of them (code, explanations, commands) and re-read about
-121 million. That's roughly 330 tokens read for every token written: an agent
-spends most of its effort re-reading the conversation and the code, not
-writing. Most of that re-reading comes from a cache, which is much cheaper
-than reading fresh.
+Claude Code works in <Term t="token">tokens</Term>. It ran on Claude Opus 5.5
+(with a few requests to Fable, the reviewer) under a Claude Max subscription.
+Over about 480 requests it wrote roughly 370,000 tokens: code, explanations,
+commands. Every request also sends the whole conversation and the relevant
+code again, which added up to about 122 million input tokens: roughly 330
+read for every one written. Nearly all of that came from a cache, which makes
+re-sending it cheap.
 
 Google's Lighthouse scores the homepage 97 for performance on a simulated slow
 phone, and 100 for accessibility, best practices and SEO.
@@ -273,17 +286,19 @@ claude   # then type /init inside it
 
 </Expand>
 
-<Expand kind="deep" title="Mistakes I made on the way" time="1 min" teaser="So you don't have to.">
+<Expand kind="deep" title="Things that bit us" time="1 min" teaser="Two of mine, one of Claude Code's, and one I avoided.">
 
-- **Keep projects out of `~/Documents`.** iCloud tries to sync it, including
-  the thousands of files in `node_modules`. Use a folder like `~/dev`.
-- **Don't paste a long list of commands at once.** One of mine deleted some
-  files and zsh asked "are you sure?". That question swallowed the rest of the
-  paste.
-- **Your commit email is public** in a public repo. GitHub gives you a
-  no-reply address to use instead.
-- **Minifiers can rewrite your CSS.** One shortened an animation rule into
-  `animation: none`. Writing it out in full fixed it.
+- **Pasting a long list of commands at once** (me). One of them deleted some
+  files, and zsh asked "are you sure?". That question swallowed the rest of
+  the paste.
+- **Resetting git history** (me). During setup I deleted the git history and
+  started again. That's only safe before you've pushed anywhere.
+- **A minifier rewrote the CSS** (Claude Code). The tool that shrinks CSS for
+  the live site turned a short animation rule into `animation: none`, and the
+  typing animation vanished. Writing the rule out in full fixed it.
+- **Projects in `~/Documents`** (avoided, thanks to the chat). iCloud tries to
+  sync that folder, including the thousands of files in `node_modules`. Use a
+  folder like `~/dev`.
 
 </Expand>
 
@@ -357,6 +372,14 @@ purpose. This site uses no cookies at all.
 
 </Expand>
 
+## What surprised me
+
+How easy it was, mostly. Claude's taste was better than I expected, and
+Claude Code was more self-sufficient: it ran the build, checked its own work
+with screenshots, and opened previews in my browser. These agents can now
+drive a good part of a Mac on their own. And the animations on the homepage
+and the interactive parts of this post came out better than I'd hoped.
+
 ## What's next
 
 A custom domain, maybe a newsletter, and posts on the other topics: running,
@@ -364,5 +387,5 @@ biking, psychology, quant trading and finance.
 
 ---
 
-*I chose what went into this post. Claude Code drafted it from my notes, the
-git history and my chats with Claude.*
+*I chose what went into this post. Claude Code drafted it from notes the two
+Claudes wrote about the project, the git history and my chats with Claude.*

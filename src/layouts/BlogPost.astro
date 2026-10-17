@@ -8,17 +8,23 @@ import Header from '../components/Header.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import CopyButtons from '../components/CopyButtons.astro';
 import TopicTag from '../components/TopicTag.astro';
+import { SITE_TITLE } from '../consts';
 
 // Post frontmatter; the date is optional so non-post pages (About) can use
 // this layout without one.
 type Props = Omit<CollectionEntry<'blog'>['data'], 'pubDate'> & { pubDate?: Date };
 
-const { title, description, pubDate, updatedDate, heroImage, topic } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, ogImage, topic } = Astro.props;
 ---
 
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead
+			title={`${title} | ${SITE_TITLE}`}
+			description={description}
+			image={ogImage ?? heroImage}
+			article={pubDate && { publishedTime: pubDate }}
+		/>
 		<style>
 			main {
 				width: calc(100% - 2em);

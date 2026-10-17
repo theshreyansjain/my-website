@@ -1,23 +1,36 @@
 ---
-// Thin bar at the top of the screen that fills as you read the post.
+// Bar at the top of the screen that fills as you read the post, with a small
+// percentage tag riding at its tip.
 // Measures the element marked data-progress-target: 0% when its top reaches
 // the top of the screen, 100% when its bottom reaches the bottom.
 ---
 
-<div class="reading-progress" aria-hidden="true"></div>
+<div class="reading-progress" aria-hidden="true">
+	<div class="bar"></div>
+	<span class="percent">0%</span>
+</div>
 
 <script>
-	const bar = document.querySelector<HTMLElement>('.reading-progress');
+	const root = document.querySelector<HTMLElement>('.reading-progress');
+	const bar = root?.querySelector<HTMLElement>('.bar');
+	const percent = root?.querySelector<HTMLElement>('.percent');
 	const target = document.querySelector<HTMLElement>('[data-progress-target]');
 
-	if (bar && target) {
+	if (root && bar && percent && target) {
 		let queued = false;
 		const update = () => {
 			queued = false;
 			const rect = target.getBoundingClientRect();
 			const scrollable = rect.height - window.innerHeight;
-			const progress = scrollable <= 0 ? 1 : -rect.top / scrollable;
-			bar.style.transform = `scaleX(${Math.min(1, Math.max(0, progress))})`;
+			const raw = scrollable <= 0 ? 1 : -rect.top / scrollable;
+			const progress = Math.min(1, Math.max(0, raw));
+			bar.style.transform = `scaleX(${progress})`;
+			// The tag sits at the bar's tip and shifts left by its own width as
+			// it goes, so it never runs off either edge.
+			percent.style.left = `${progress * 100}%`;
+			percent.style.transform = `translateX(-${progress * 100}%)`;
+			percent.textContent = `${Math.round(progress * 100)}%`;
+			root.classList.toggle('is-started', progress > 0);
 		};
 		// At most one update per frame, however many scroll events fire.
 		const queue = () => {
@@ -41,11 +54,30 @@
 		left: 0;
 		z-index: 100;
 		width: 100%;
-		height: 3px;
+		pointer-events: none;
+	}
+	.bar {
+		height: 6px;
 		background: var(--accent);
-		box-shadow: 0 0 8px var(--accent-glow);
+		box-shadow: 0 0 10px var(--accent-glow);
 		transform: scaleX(0);
 		transform-origin: left;
-		pointer-events: none;
+	}
+	.percent {
+		position: absolute;
+		top: 6px;
+		padding: 0 0.4em;
+		border-radius: 0 0 4px 4px;
+		background: var(--accent);
+		color: var(--bg);
+		font-family: var(--font-mono);
+		font-size: 11px;
+		font-weight: 700;
+		line-height: 1.6;
+		opacity: 0;
+	}
+	/* Hidden at 0% so it doesn't sit over the header before you start. */
+	.is-started .percent {
+		opacity: 1;
 	}
 </style>

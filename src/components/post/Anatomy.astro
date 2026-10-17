@@ -186,7 +186,7 @@ const label = Object.fromEntries(parts.map((p) => [p.id, p.name]));
 		</div>
 	</div>
 
-	<div class="panels" aria-live="polite">
+	<div class="panels">
 		{
 			parts.map((p) => (
 				<section class="panel" data-panel={p.id}>
@@ -281,13 +281,14 @@ const label = Object.fromEntries(parts.map((p) => [p.id, p.name]));
 	/* Every clickable part. Selected parts grow outwards: padding goes up and
 	   margin goes down by the same amount, so nothing around them moves. */
 	.part {
-		--pad: 0.6rem;
+		--pad-y: 0.6rem;
+		--pad-x: 0.6rem;
 		--grow: 0.35rem;
 		position: relative;
 		display: block;
 		width: 100%;
 		margin: 0;
-		padding: var(--pad);
+		padding: var(--pad-y) var(--pad-x);
 		border: 1px solid var(--border);
 		border-radius: 6px;
 		background: var(--bg);
@@ -315,7 +316,7 @@ const label = Object.fromEntries(parts.map((p) => [p.id, p.name]));
 	.part.is-active {
 		z-index: 1;
 		margin: calc(var(--grow) * -1);
-		padding: calc(var(--pad) + var(--grow));
+		padding: calc(var(--pad-y) + var(--grow)) calc(var(--pad-x) + var(--grow));
 		width: calc(100% + var(--grow) * 2);
 		border-color: var(--accent);
 		background: var(--surface);
@@ -354,11 +355,8 @@ const label = Object.fromEntries(parts.map((p) => [p.id, p.name]));
 		background: var(--border);
 	}
 	.part-address {
-		--pad: 0.3rem 0.6rem;
+		--pad-y: 0.3rem;
 		--grow: 0.3rem;
-	}
-	.part-address.is-active {
-		padding: calc(0.3rem + var(--grow)) calc(0.6rem + var(--grow));
 	}
 	.url {
 		color: var(--text-muted);
@@ -454,6 +452,7 @@ const label = Object.fromEntries(parts.map((p) => [p.id, p.name]));
 	}
 	dd {
 		margin: 0 0 0.75em;
+		font-family: var(--font-sans);
 	}
 	.panel details summary {
 		color: var(--text-muted);
@@ -462,7 +461,8 @@ const label = Object.fromEntries(parts.map((p) => [p.id, p.name]));
 	}
 	.panel details :global(pre) {
 		margin: 0.5em 0 0;
-		padding: 1em;
+		/* Extra room on the right for the copy button. */
+		padding: 1em 4.5em 1em 1em;
 		font-size: 0.85em;
 	}
 
@@ -472,11 +472,8 @@ const label = Object.fromEntries(parts.map((p) => [p.id, p.name]));
 		}
 		.part.is-active {
 			margin: 0;
-			padding: var(--pad);
+			padding: var(--pad-y) var(--pad-x);
 			width: 100%;
-		}
-		.part-address.is-active {
-			padding: var(--pad);
 		}
 	}
 </style>

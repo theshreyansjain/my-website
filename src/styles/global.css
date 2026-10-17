@@ -16,6 +16,9 @@
 	--accent: #39f58c;
 	--accent-glow: rgb(57 245 140 / 35%);
 	--box-shadow: 0 0 0 1px var(--border), 0 8px 24px rgb(0 0 0 / 50%);
+	/* Post text: the reader's system font (San Francisco on Apple devices,
+	   Segoe UI on Windows). Nothing to download. */
+	--font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 	/* Tells the browser to draw scrollbars and form controls dark too. */
 	color-scheme: dark;
 }
@@ -85,6 +88,16 @@ p {
 .prose p {
 	margin-bottom: 2em;
 }
+/* Long-form text reads faster in a sans font; headings, code and the
+   homepage stay mono. */
+.prose p,
+.prose li {
+	font-family: var(--font-sans);
+}
+/* Markdown wraps list items in <p> when items are spaced out; keep them tight. */
+.prose li > p {
+	margin-bottom: 0.5em;
+}
 textarea {
 	width: 100%;
 	font-size: 16px;
@@ -101,6 +114,7 @@ img {
 	border-radius: 8px;
 }
 code {
+	font-family: var(--font-mono);
 	padding: 2px 5px;
 	background-color: var(--surface);
 	border: 1px solid var(--border);
