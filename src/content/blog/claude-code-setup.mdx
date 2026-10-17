@@ -113,8 +113,9 @@ the file's push rule:
 
 </Expand>
 
-One catch: the file is read when a session starts. Edit it mid-session and
-the running session won't see the change until you restart it.
+One catch: the file is loaded when a session starts. If you change a rule
+mid-session, tell the running session too, or start a new one, rather than
+assuming it noticed.
 
 ## 2. Permissions: settings.json
 
@@ -240,7 +241,9 @@ When a turn ends with choices or next steps (push, merge, which option, what nex
 
 **Why:** he asked for buttons so he doesn't have to type commands like "push" or "merge" (2026-10-17); he often follows along from his phone via remote control.
 
-**How to apply:** keep options to 2–4, recommended first. "Push" in a button still counts as being asked to push. Skip the buttons when there's nothing to choose.
+He repeated it (2026-10-17): "Always give me options once you're done with the command." So end EVERY finished task with AskUserQuestion next-step options, not only when a choice is pending.
+
+**How to apply:** keep options to 2–4, recommended first. "Push" in a button still counts as being asked to push.
 ```
 
 (I left out a few bookkeeping lines: a session id and timestamps.)
@@ -294,9 +297,13 @@ Last, the things that let it check its own work and reach outside the repo.
 - **Screenshots.** Before showing me a layout, Claude Code opens the page in
   a <Term t="headless">headless</Term> Chrome at phone, tablet and desktop
   sizes and looks at the screenshots. That way it can catch layout problems
-  before I see them.
-- **Vercel.** A <Term t="mcp">connector</Term> to my Vercel account lets it
-  find a branch's preview link and check whether a deploy worked.
+  before I see them. (Headless Chrome won't make a window narrower than
+  about 500 px, so for phone width it loads the page inside a 390 px-wide
+  frame.)
+- **Vercel.** A <Term t="mcp">connector</Term> to my Vercel account let it
+  buy and connect my domain and open the analytics. To check whether a
+  deploy worked, it asks GitHub for the commit's status, which Vercel
+  reports there.
 - **Previews on my phone.** It pushes the branch, Vercel builds a preview, it
   opens the link, and I look at it on my phone.
 - **Following along from anywhere.** I use Claude Code in the terminal on my
@@ -306,19 +313,20 @@ Last, the things that let it check its own work and reach outside the repo.
 
 <Expand title="show a screenshot command">
 
-A command like this takes a phone-sized screenshot of the dev server, with no
-browser window opening:
+A command like this takes a laptop-sized screenshot of the dev server, with
+no browser window opening:
 
 ```sh
 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
   --headless --hide-scrollbars \
-  --window-size=390,844 \
-  --screenshot=phone.png \
+  --window-size=1440,900 \
+  --screenshot=laptop.png \
   http://localhost:4321/
 ```
 
-Change `--window-size` to `820,1180` for a tablet or `1440,900` for a
-laptop.
+Change `--window-size` to `820,1180` for a tablet. Phones are narrower than
+headless Chrome allows, so for those it screenshots a small page that shows
+the site in a 390 px-wide `<iframe>`.
 
 </Expand>
 
