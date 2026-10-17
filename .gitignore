@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # private notes and drafts (repo is public)
 drafts/
+
+# Claude Code worktrees (separate checkouts used by parallel sessions)
+.claude/worktrees/

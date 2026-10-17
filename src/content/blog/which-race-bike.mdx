@@ -1,0 +1,213 @@
+---
+title: 'Which race bike should I buy?'
+description: 'I ride a touring bike and want a carbon race bike for long rides, for €3,000–5,000. What matters, the bikes on my shortlist, and the one I lean towards.'
+pubDate: '2026-10-17'
+topic: 'biking'
+---
+
+import BikeCompare from '../../components/post/BikeCompare.astro';
+import Expand from '../../components/post/Expand.astro';
+
+I ride a touring bike. I want a race bike for long rides and gran fondos, and I've set myself
+a budget of €3,000 to €5,000 for the bike alone.
+
+This post is how I'm deciding. When I've bought one, I'll add what I picked
+and why.
+
+## What I want
+
+- **Comfort over long hours** matters most.
+- **Electronic shifting**, if the budget allows.
+- **Best value.** I don't mind whether it comes from a shop or straight from
+  the brand online.
+
+I haven't had a bike fit, so getting the size right matters (more on that below).
+
+## What actually matters
+
+### 1. Fit, before anything else
+
+Frame sizes like "54" or "M" mean different things at different brands. What
+matters are two numbers: **stack** (how high the handlebars are) and
+**reach** (how far forward). An endurance bike has more stack and less reach
+than a pure race bike, so you sit more upright. Coming from a touring bike,
+that's what I want.
+
+My plan: use Canyon's size advice for my height and inseam, and lean on its
+30-day return if the size turns out wrong.
+
+<Expand kind="deep" title="Stack and reach, explained" teaser="Why '54' on one bike isn't '54' on another" time="1 min">
+
+Stack is the vertical distance from the middle of the cranks to the top of
+the head tube. Reach is the horizontal distance between the same two points.
+Two bikes with the same stack and reach will put you in roughly the same
+position, whatever their size labels say.
+
+If you're between two sizes on an endurance bike, the larger one is usually
+the safer choice. Don't count on a long stem or a stack of spacers to fix a
+frame that's the wrong size.
+
+Source: [BikeTips on stack and reach](https://biketips.com/bike-stack-and-reach-explained/).
+
+</Expand>
+
+### 2. Endurance geometry and comfort tech
+
+Every bike on my list is an "endurance" bike: a race bike with a slightly
+taller, shorter front, longer wheelbase and room for wide tyres. Some add
+comfort tech on top:
+
+- **Specialized Roubaix:** a small suspension unit under the handlebars
+  (about 20 mm of travel).
+- **Trek Domane:** IsoSpeed, which lets the seat tube flex.
+- **Canyon Endurace:** a seatpost designed to flex, and a cockpit you can
+  adjust in width and height.
+- **Giant Defy:** a flexy seatpost and handlebar.
+
+### 3. Wide tyres (and room for mudguards)
+
+Wider tyres at lower pressure are more comfortable, and not slower: in one
+lab test, 32 mm tyres rolled at least 5% more efficiently than otherwise
+identical 30 mm ones. (The test was paid for by the tyre maker, so take the
+exact number lightly.) Every bike here comes with 32 mm tyres.
+
+The catch for Dutch winters: mudguards take up space. Check the clearance
+*with* mudguards fitted, not the headline number.
+
+### 4. Electronic shifting is the default now
+
+At this price, every bike on my list has electronic shifting: Shimano 105
+Di2 or SRAM Rival AXS, or better. Mechanical versions start around €3,000.
+So the real trade-off isn't shifting, it's **wheels**: some bikes come with
+carbon wheels, others with aluminium ones and the money spent on comfort tech
+instead.
+
+### 5. Online or a shop?
+
+Brands that sell direct (Canyon, Decathlon's Van Rysel) give you more bike
+per euro, and Canyon has a 30-day return. But you build it yourself, and
+some parts are proprietary. A shop gives you a test ride, a fitting and
+someone to fix it. Stock in the Netherlands is patchy right now, so it's worth
+checking with a shop before relying on a web price.
+
+## The shortlist
+
+Sort by price, weight or tyre clearance by clicking the green headers.
+
+<BikeCompare
+	caption="Prices checked on 17 October 2026, bike only, mostly from the brands' Dutch websites (see Sources). Weights are the brand's claims, for the size given. Max tyre = clearance without mudguards."
+	bikes={[
+		{
+			name: 'Canyon Endurace CF SLX 8 Di2',
+			href: 'https://www.canyon.com/en-nl/road-bikes/endurance-bikes/endurace/cf-slx/endurace-cf-slx-8-di2/4432.html',
+			price: 4499,
+			priceNote: '+ €79.90 shipping',
+			groupset: 'Shimano Ultegra Di2, with power meter',
+			wheels: 'carbon',
+			weight: 8.1,
+			weightNote: 'size M',
+			tyre: 38,
+			comfort: 'Flexing seatpost, adjustable cockpit',
+			pick: true,
+		},
+		{
+			name: 'Canyon Endurace CF SLX 7 Di2',
+			href: 'https://www.canyon.com/en-nl/road-bikes/endurance-bikes/endurace/cf-slx/endurace-cf-slx-7-di2/4430.html',
+			price: 3999,
+			priceNote: '+ €79.90 shipping',
+			groupset: 'Shimano 105 Di2',
+			wheels: 'carbon',
+			weight: 8.44,
+			weightNote: 'size M',
+			tyre: 38,
+			comfort: 'Flexing seatpost, adjustable cockpit',
+		},
+		{
+			name: 'Specialized Roubaix SL8 Comp',
+			href: 'https://www.specialized.com/nl/nl/roubaix-sl8-comp-sram-rival-axs/p/4263268',
+			price: 4499,
+			groupset: 'SRAM Rival AXS',
+			wheels: 'alloy',
+			weight: null,
+			tyre: 40,
+			comfort: 'Front suspension (~20 mm), flexing seatpost',
+		},
+		{
+			name: 'Trek Domane SL 6 Gen 4',
+			href: 'https://www.trekbikes.com/nl/nl_NL/fietsen/racefietsen/prestatiegerichte-racefietsen/domane/domane-sl/domane-sl-6-axs-gen-4/p/36152/',
+			price: 4299,
+			priceNote: 'German list price',
+			groupset: 'Shimano 105 Di2',
+			wheels: 'carbon',
+			weight: 8,
+			weightNote: 'Tour magazine, size not given',
+			tyre: 38,
+			comfort: 'IsoSpeed (flexing seat tube)',
+		},
+		{
+			name: 'Van Rysel EDR CF Ultra 105 Di2',
+			href: 'https://www.decathlon.nl/p/endurance-racefiets-edr-cf-ultra-shimano-105-di2-kakigroen/348765/c162m8817920',
+			price: 3700,
+			priceNote: '€3,699.99 at Decathlon',
+			groupset: 'Shimano 105 Di2',
+			wheels: 'carbon',
+			weight: null,
+			tyre: 38,
+			comfort: 'Endurance geometry',
+		},
+		{
+			name: 'Giant Defy Advanced 1',
+			href: 'https://www.giant-bicycles.com/nl/defy-advanced-1-2026',
+			price: 3599,
+			groupset: 'Shimano 105 Di2',
+			wheels: 'alloy',
+			weight: null,
+			tyre: 38,
+			comfort: 'Flexing seatpost and handlebar',
+		},
+	]}
+/>
+
+## The one I lean towards
+
+The **Canyon Endurace CF SLX 8 Di2**, because of what you get for the money.
+At €4,499 it costs the same as the Specialized Roubaix SL8 Comp, but comes
+with:
+
+- **Shimano Ultegra Di2** instead of SRAM Rival AXS, one level up;
+- **carbon wheels** (DT Swiss, 35 mm deep) instead of aluminium ones;
+- a **power meter** (4iiii) on the cranks, according to Canyon's page;
+- a claimed **8.1 kg** in size M.
+
+Compared with the SLX 7 Di2 from the same frame family, the extra €500 buys
+the Ultegra groupset, the power meter and about 340 g less weight. Same
+frame, wheels and tyre clearance.
+
+Two catches:
+
+- It's **"coming soon"** on Canyon's site: no size has a delivery date yet.
+- Its cassette is **11-34**, against 11-36 on the SLX 7, so the easiest gear
+  is a little harder. Fine for the Netherlands; worth knowing for mountains.
+
+## What's next
+
+1. Wait for the SLX 8 Di2 to be in stock.
+2. Order it online in the size Canyon recommends.
+3. Ride it, and update this post.
+
+<Expand kind="deep" title="Sources" teaser="Where every number came from (checked 17 October 2026)" time="links">
+
+- Canyon Endurace CF SLX 8 Di2 and CF SLX 7 Di2: Canyon's Dutch store
+  (linked in the table).
+- Specialized Roubaix SL8 Comp, Giant Defy Advanced 1: the brands' Dutch
+  websites. The Roubaix's 40 mm tyre clearance is from Specialized's own
+  description, not the Dutch product page.
+- Trek Domane SL 6 Gen 4: price and weight from [Tour magazine](https://www.tour-magazin.de/en/brands/trek/model/domane-sl-6-gen-4-69c2832f14a2690c039baa5b/);
+  Trek's Dutch page showed it as out of stock.
+- Van Rysel EDR CF Ultra: price from Decathlon's Dutch listings; tyre
+  clearance and mudguard mounts from [BikeRadar](https://www.bikeradar.com/news/van-rysel-edr-cf-ultra).
+- Tyre width test: [Tour magazine on Hutchinson's tests](https://www.tour-magazin.de/en/tyres/hutchinson-tests-prove-it-wide-tyres-on-road-bikes-are-faster/).
+
+Prices change often and sales are common; check before buying.
+
+</Expand>

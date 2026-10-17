@@ -1,0 +1,205 @@
+---
+// A comparison table of bikes. Click a number column's header to sort by it
+// (again to reverse). Without JavaScript it's a plain table in the order
+// given. On phones the table scrolls sideways inside its own box, so the page
+// itself never does.
+interface Bike {
+	name: string;
+	href: string;
+	/** Price in euros, or null if it couldn't be confirmed. */
+	price: number | null;
+	priceNote?: string;
+	groupset: string;
+	wheels: 'carbon' | 'alloy';
+	/** Claimed weight in kg, or null if the brand doesn't list one. */
+	weight: number | null;
+	weightNote?: string;
+	/** Max tyre clearance in mm. */
+	tyre: number | null;
+	comfort: string;
+	pick?: boolean;
+}
+
+interface Props {
+	bikes: Bike[];
+	caption: string;
+}
+
+const { bikes, caption } = Astro.props;
+const euro = (n: number) => `€${n.toLocaleString('en-GB')}`;
+---
+
+<figure class="bike-compare">
+	<div class="scroll" tabindex="0" role="region" aria-label={caption}>
+		<table>
+			<thead>
+				<tr>
+					<th scope="col">Bike</th>
+					<th scope="col" class="num" data-sort="price"><button type="button">Price</button></th>
+					<th scope="col">Shifting</th>
+					<th scope="col">Wheels</th>
+					<th scope="col" class="num" data-sort="weight"><button type="button">Weight</button></th>
+					<th scope="col" class="num" data-sort="tyre"><button type="button">Max tyre</button></th>
+					<th scope="col">Comfort</th>
+				</tr>
+			</thead>
+			<tbody>
+				{
+					bikes.map((b) => (
+						<tr
+							class:list={{ pick: b.pick }}
+							data-price={b.price ?? ''}
+							data-weight={b.weight ?? ''}
+							data-tyre={b.tyre ?? ''}
+						>
+							<th scope="row">
+								<a href={b.href}>{b.name}</a>
+								{b.pick && <span class="badge">my pick</span>}
+							</th>
+							<td class="num">
+								{b.price ? euro(b.price) : '?'}
+								{b.priceNote && <small>{b.priceNote}</small>}
+							</td>
+							<td>{b.groupset}</td>
+							<td>{b.wheels}</td>
+							<td class="num">
+								{b.weight ? `${b.weight} kg` : 'n/a'}
+								{b.weightNote && <small>{b.weightNote}</small>}
+							</td>
+							<td class="num">{b.tyre ? `${b.tyre} mm` : '?'}</td>
+							<td>{b.comfort}</td>
+						</tr>
+					))
+				}
+			</tbody>
+		</table>
+	</div>
+	<figcaption>{caption}</figcaption>
+</figure>
+
+<script>
+	for (const table of document.querySelectorAll<HTMLTableElement>('.bike-compare table')) {
+		const body = table.tBodies[0];
+		const original = [...body.rows];
+		for (const th of table.querySelectorAll<HTMLElement>('th[data-sort]')) {
+			th.querySelector('button')?.addEventListener('click', () => {
+				const key = th.dataset.sort!;
+				// First click: ascending (cheapest, lightest), then descending,
+				// then back to the original order.
+				const next = { none: 'ascending', ascending: 'descending', descending: 'none' }[
+					(th.getAttribute('aria-sort') ?? 'none') as 'none' | 'ascending' | 'descending'
+				];
+				for (const other of table.querySelectorAll('th[data-sort]')) other.removeAttribute('aria-sort');
+				if (next === 'none') return body.append(...original);
+				th.setAttribute('aria-sort', next);
+				const value = (row: HTMLTableRowElement) => row.dataset[key] || '';
+				const sorted = [...original].sort((a, b) => {
+					// Rows without a number always go last.
+					if (!value(a) || !value(b)) return Number(!value(a)) - Number(!value(b));
+					const d = Number(value(a)) - Number(value(b));
+					return next === 'ascending' ? d : -d;
+				});
+				body.append(...sorted);
+			});
+		}
+	}
+</script>
+
+<style>
+	.bike-compare {
+		margin: 1.5em 0 2em;
+	}
+	.scroll {
+		overflow-x: auto;
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		background: var(--surface);
+	}
+	.scroll:focus-visible {
+		outline: 2px solid var(--accent);
+	}
+	table {
+		width: 100%;
+		min-width: 720px;
+		border-collapse: collapse;
+		font-family: var(--font-sans);
+		font-size: 0.85em;
+		line-height: 1.35;
+	}
+	th,
+	td {
+		padding: 0.6em 0.75em;
+		border-bottom: 1px solid var(--border);
+		text-align: left;
+		vertical-align: top;
+	}
+	tbody tr:last-child > * {
+		border-bottom: none;
+	}
+	thead th {
+		color: var(--text-muted);
+		font-family: var(--font-mono);
+		font-size: 0.85em;
+		font-weight: normal;
+		white-space: nowrap;
+	}
+	tbody th {
+		min-width: 11em;
+		font-weight: 600;
+	}
+	tbody th a {
+		color: var(--text-heading);
+	}
+	.num {
+		text-align: right;
+		white-space: nowrap;
+	}
+	small {
+		display: block;
+		color: var(--text-muted);
+		font-size: 0.8em;
+		white-space: normal;
+	}
+	/* Sortable headers look like links, with an arrow showing the order. */
+	th button {
+		padding: 0;
+		border: none;
+		background: none;
+		color: var(--accent);
+		font: inherit;
+		cursor: pointer;
+	}
+	th button::after {
+		content: ' ↕';
+		opacity: 0.6;
+	}
+	th[aria-sort='ascending'] button::after {
+		content: ' ↑';
+		opacity: 1;
+	}
+	th[aria-sort='descending'] button::after {
+		content: ' ↓';
+		opacity: 1;
+	}
+	tr.pick > * {
+		background: rgb(57 245 140 / 7%);
+	}
+	.badge {
+		display: inline-block;
+		margin-left: 0.4em;
+		padding: 0 0.4em;
+		border-radius: 4px;
+		background: var(--accent);
+		color: var(--bg);
+		font-family: var(--font-mono);
+		font-size: 0.75em;
+		font-weight: normal;
+		white-space: nowrap;
+	}
+	figcaption {
+		margin-top: 0.5em;
+		color: var(--text-muted);
+		font-size: 0.75em;
+		text-align: center;
+	}
+</style>
