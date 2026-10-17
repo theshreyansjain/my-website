@@ -170,3 +170,37 @@ hr {
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
+/* A photo in a post, with a caption under it. */
+.post-photo {
+	margin: 0 0 2em;
+}
+.post-photo img {
+	display: block;
+	width: 100%;
+	border-radius: 10px;
+}
+.post-photo figcaption {
+	margin-top: 0.5em;
+	color: var(--text-muted);
+	font-size: 0.8em;
+	text-align: center;
+}
+/* Post text: colour marks the structure so long text is easy to scan.
+   Only direct children of the post body, so components keep their own look. */
+[data-progress-target] > h2 {
+	margin-top: 2.2em;
+}
+[data-progress-target] > h2::before {
+	content: '## ';
+	color: var(--accent);
+}
+[data-progress-target] > h3 {
+	margin-top: 1.6em;
+}
+[data-progress-target] strong {
+	color: var(--text-heading);
+}
+[data-progress-target] > ul > li::marker,
+[data-progress-target] > ol > li::marker {
+	color: var(--accent);
+}
