@@ -1,0 +1,450 @@
+---
+// "Build your own" race bike for the bike post. Tap a part of the drawing (or
+// its tab) to see what it does, how my touring bike does it, and the options.
+// Choices add up to a rough price estimate, shown next to the closest real
+// bike from the shortlist, since no shop sells exactly the bike you build.
+// Without JavaScript the drawing and every part's text still show (all
+// panels open, no estimate).
+import drawing from './bike-explorer.svg?raw';
+
+// Estimate = BASE + each chosen option's `delta`. The anchor is a real bike
+// (Canyon Endurace CF 7 Di2, €2,999: carbon frame, 105 Di2, alloy wheels);
+// deltas come from price gaps between real builds of the same bike (see the
+// post's "How the estimate works").
+const BASE = 3000;
+
+type Option = { id: string; label: string; delta: number; why: string };
+type Part = {
+	id: string;
+	label: string;
+	what: string;
+	koga: string;
+	choice?: { key: string; options: Option[] };
+	extra?: { key: string; label: string; delta: number; why: string };
+	note?: string;
+};
+
+const parts: Part[] = [
+	{
+		id: 'frame',
+		label: 'Frame',
+		what: 'The main triangle and the fork. It sets your position and how much road buzz reaches you.',
+		koga: 'Aluminium, built to carry racks and bags. Upright and stable, but heavy.',
+		choice: {
+			key: 'frame',
+			options: [
+				{ id: 'standard', label: 'Carbon', delta: 0, why: 'Light and stiff enough. The entry carbon frame of each range.' },
+				{ id: 'premium', label: 'Lighter carbon', delta: 500, why: 'The brand’s better frame: lighter, often with a flexing seatpost and tidier cables.' },
+				{ id: 'suspension', label: 'Carbon + suspension', delta: 1000, why: 'Specialized’s Roubaix: ~20 mm of travel under the bars. The softest ride, the highest price.' },
+			],
+		},
+	},
+	{
+		id: 'wheels',
+		label: 'Wheels & tyres',
+		what: 'Rims, hubs and tyres. The lightest place to save weight, and the tyres decide most of the comfort.',
+		koga: 'Strong touring wheels with wide tyres, made to carry luggage over bad roads.',
+		choice: {
+			key: 'wheels',
+			options: [
+				{ id: 'alloy', label: 'Aluminium', delta: 0, why: 'Cheaper and tough. Heavier, so slower to speed up and climb.' },
+				{ id: 'carbon', label: 'Carbon', delta: 500, why: 'Lighter and a little more aero. Around €700–850 more if bought separately.' },
+			],
+		},
+		note: 'Every bike here comes with 32 mm tyres and room for 35–40 mm.',
+	},
+	{
+		id: 'groupset',
+		label: 'Groupset',
+		what: 'The gears: shifters, derailleurs, chainrings, cassette and chain.',
+		koga: 'Shimano XT, a mountain-bike groupset with three chainrings, shifted from a flat bar.',
+		choice: {
+			key: 'groupset',
+			options: [
+				{ id: '105', label: 'Shimano 105 (cables)', delta: -550, why: 'Cheapest and simple: no batteries. Cables stretch and need adjusting now and then.' },
+				{ id: '105di2', label: 'Shimano 105 Di2', delta: 0, why: 'Electronic: a button press shifts perfectly every time. The battery needs charging now and then.' },
+				{ id: 'rival', label: 'SRAM Rival AXS', delta: 0, why: 'Electronic and wireless. Smaller chainrings (46/33), so easier low gears.' },
+				{ id: 'ultegra', label: 'Shimano Ultegra Di2', delta: 300, why: 'Works like 105 Di2, but lighter and better finished.' },
+			],
+		},
+		extra: {
+			key: 'power',
+			label: 'Power meter',
+			delta: 200,
+			why: 'Measures your effort in watts: useful for pacing long rides and for training.',
+		},
+	},
+	{
+		id: 'brakes',
+		label: 'Brakes',
+		what: 'Disc rotors at the hubs, squeezed by hydraulic calipers.',
+		koga: 'Hydraulic discs too, so nothing new here.',
+		note: 'All six bikes have hydraulic disc brakes, so there is nothing to choose.',
+	},
+	{
+		id: 'cockpit',
+		label: 'Handlebar',
+		what: 'Drop bars and the stem. Drops give you more hand positions and a lower, more aero position.',
+		koga: 'A flat trekking bar: upright and relaxed, with one main hand position.',
+		note: 'Canyon’s cockpit can be adjusted in width and height, which helps comfort.',
+	},
+	{
+		id: 'saddle',
+		label: 'Saddle',
+		what: 'The saddle and seatpost. Some seatposts are built to flex over bumps.',
+		koga: 'An upright touring saddle and a stiff post.',
+		note: 'Canyon, Trek and Specialized all use a seatpost or frame that flexes for comfort.',
+	},
+];
+
+// The real bikes, described with the same options, to find the closest one.
+const bikes = [
+	{ name: 'Canyon Endurace CF SLX 8 Di2', price: 4499, frame: 'premium', wheels: 'carbon', groupset: 'ultegra', power: true },
+	{ name: 'Canyon Endurace CF SLX 7 Di2', price: 3999, frame: 'premium', wheels: 'carbon', groupset: '105di2', power: false },
+	{ name: 'Specialized Roubaix SL8 Comp', price: 4499, frame: 'suspension', wheels: 'alloy', groupset: 'rival', power: false },
+	{ name: 'Trek Domane SL 6 Gen 4', price: 4299, frame: 'premium', wheels: 'carbon', groupset: '105di2', power: false },
+	{ name: 'Van Rysel EDR CF Ultra', price: 3700, frame: 'standard', wheels: 'carbon', groupset: '105di2', power: false },
+	{ name: 'Giant Defy Advanced 1', price: 3599, frame: 'standard', wheels: 'alloy', groupset: '105di2', power: false },
+];
+
+// Starts on my pick.
+const start = { frame: 'premium', wheels: 'carbon', groupset: 'ultegra', power: true };
+const euro = (n: number) => `€${n.toLocaleString('en-GB')}`;
+const signed = (n: number) => (n === 0 ? 'base' : `${n > 0 ? '+' : '−'}${euro(Math.abs(n))}`);
+const data = { base: BASE, parts, bikes };
+---
+
+<figure class="explorer" data-explorer={JSON.stringify(data)}>
+	<div class="stage">
+		<div class="drawing" set:html={drawing} />
+		<div class="tabs" role="tablist" aria-label="Bike parts">
+			{
+				parts.map((p, i) => (
+					<button type="button" role="tab" data-part={p.id} aria-selected={i === 0 ? 'true' : 'false'}>
+						{p.label}
+					</button>
+				))
+			}
+		</div>
+	</div>
+
+	<div class="panels">
+		{
+			parts.map((p, i) => (
+				<section class="panel" data-panel={p.id} role="tabpanel" aria-label={p.label}>
+					<h3>{p.label}</h3>
+					<p>{p.what}</p>
+					<p class="koga">
+						<span>On my Koga</span> {p.koga}
+					</p>
+					{p.choice && (
+						<fieldset>
+							<legend>Pick one</legend>
+							{p.choice.options.map((o) => (
+								<label class="option">
+									<input
+										type="radio"
+										name={p.choice!.key}
+										value={o.id}
+										data-delta={o.delta}
+										checked={start[p.choice!.key as keyof typeof start] === o.id}
+									/>
+									<span class="option-head">
+										<b>{o.label}</b> <span class="delta">{signed(o.delta)}</span>
+									</span>
+									<span class="why">{o.why}</span>
+								</label>
+							))}
+						</fieldset>
+					)}
+					{p.extra && (
+						<fieldset>
+							<legend>Add-on</legend>
+							<label class="option">
+								<input type="checkbox" name={p.extra.key} data-delta={p.extra.delta} checked={start.power} />
+								<span class="option-head">
+									<b>{p.extra.label}</b> <span class="delta">{signed(p.extra.delta)}</span>
+								</span>
+								<span class="why">{p.extra.why}</span>
+							</label>
+						</fieldset>
+					)}
+					{p.note && <p class="note">{p.note}</p>}
+				</section>
+			))
+		}
+	</div>
+
+	<output class="result" aria-live="polite">
+		<span class="estimate"></span>
+		<span class="closest"></span>
+	</output>
+	<figcaption>
+		Tap a part of the bike. Prices are rough estimates for a complete bike, not the cost of parts.
+	</figcaption>
+</figure>
+
+<script>
+	type Bike = { name: string; price: number; frame: string; wheels: string; groupset: string; power: boolean };
+	const euro = (n: number) => `€${n.toLocaleString('en-GB')}`;
+	const LABELS: Record<string, string> = {
+		standard: 'entry carbon frame',
+		premium: 'lighter carbon frame',
+		suspension: 'suspension frame',
+		alloy: 'aluminium wheels',
+		carbon: 'carbon wheels',
+		'105': '105 with cables',
+		'105di2': '105 Di2',
+		rival: 'Rival AXS',
+		ultegra: 'Ultegra Di2',
+	};
+
+	for (const fig of document.querySelectorAll<HTMLElement>('.explorer[data-explorer]')) {
+		const data: { base: number; bikes: Bike[] } = JSON.parse(fig.dataset.explorer ?? '{}');
+		const tabs = [...fig.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+		const panels = [...fig.querySelectorAll<HTMLElement>('[data-panel]')];
+		const groups = [...fig.querySelectorAll<SVGGElement>('svg [data-part]')];
+		const estimate = fig.querySelector('.estimate')!;
+		const closest = fig.querySelector('.closest')!;
+		fig.classList.add('is-interactive');
+
+		// The fork belongs to the frame's panel.
+		const panelFor = (part: string) => (part === 'fork' ? 'frame' : part);
+
+		const select = (part: string, focus = false) => {
+			const id = panelFor(part);
+			tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.part === id)));
+			panels.forEach((p) => (p.hidden = p.dataset.panel !== id));
+			groups.forEach((g) => g.classList.toggle('on', panelFor(g.dataset.part!) === id));
+			if (focus) tabs.find((t) => t.dataset.part === id)?.focus();
+		};
+
+		tabs.forEach((tab, i) => {
+			tab.addEventListener('click', () => select(tab.dataset.part!));
+			// Arrow keys move between tabs, like a real tab list.
+			tab.addEventListener('keydown', (e) => {
+				const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+				if (step) select(tabs[(i + step + tabs.length) % tabs.length].dataset.part!, true);
+			});
+		});
+		for (const g of groups) {
+			g.addEventListener('click', () => select(g.dataset.part!));
+			g.addEventListener('pointerenter', () => g.classList.add('hover'));
+			g.addEventListener('pointerleave', () => g.classList.remove('hover'));
+		}
+
+		const update = () => {
+			const value = (name: string) => fig.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`);
+			const picked = {
+				frame: value('frame')?.value ?? '',
+				wheels: value('wheels')?.value ?? '',
+				groupset: value('groupset')?.value ?? '',
+				power: Boolean(value('power')),
+			};
+			const total = [...fig.querySelectorAll<HTMLInputElement>('input:checked')].reduce(
+				(sum, input) => sum + Number(input.dataset.delta),
+				data.base,
+			);
+			estimate.textContent = `Your bike: about ${euro(Math.round(total / 50) * 50)}`;
+
+			// Closest real bike: most matching choices, then nearest price.
+			const differences = (b: Bike): string[] => [
+				...(['frame', 'wheels', 'groupset'] as const).filter((k) => b[k] !== picked[k]),
+				...(b.power !== picked.power ? ['power'] : []),
+			];
+			const best = [...data.bikes].sort(
+				(a, b) => differences(a).length - differences(b).length || Math.abs(a.price - total) - Math.abs(b.price - total),
+			)[0];
+			const diff = differences(best).map((k) =>
+				k === 'power' ? (best.power ? 'adds a power meter' : 'no power meter') : `has ${LABELS[best[k as 'frame' | 'wheels' | 'groupset']]}`,
+			);
+			closest.textContent = `Closest real bike: ${best.name}, ${euro(best.price)}${
+				diff.length ? ` (but ${diff.join(', ')})` : ', an exact match'
+			}.`;
+		};
+
+		fig.addEventListener('change', update);
+		select('frame');
+		update();
+	}
+</script>
+
+<style>
+	.explorer {
+		margin: 1.5em 0 2.5em;
+		padding: 1em;
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		background: var(--surface);
+	}
+	.drawing :global(svg) {
+		display: block;
+		width: 100%;
+		height: auto;
+		max-height: 360px;
+		--line: var(--text-muted);
+		--fill: var(--surface);
+	}
+	.drawing :global([data-part]) {
+		transition:
+			opacity 0.15s,
+			filter 0.15s;
+	}
+	/* The selected part turns green and glows; the rest dims. */
+	.is-interactive .drawing :global([data-part]) {
+		cursor: pointer;
+		opacity: 0.45;
+	}
+	.is-interactive .drawing :global([data-part].on) {
+		--line: var(--accent);
+		opacity: 1;
+		filter: drop-shadow(0 0 6px var(--accent-glow));
+	}
+	.is-interactive .drawing :global([data-part].hover:not(.on)) {
+		--line: var(--text-heading);
+		opacity: 1;
+	}
+	.tabs {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.4em;
+		margin: 0.75em 0 0;
+	}
+	.tabs button {
+		padding: 0.25em 0.75em;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		background: none;
+		color: var(--text-muted);
+		font-family: var(--font-mono);
+		font-size: 0.8em;
+		cursor: pointer;
+	}
+	.tabs button[aria-selected='true'] {
+		border-color: var(--accent);
+		background: var(--accent);
+		color: var(--bg);
+	}
+	/* Without JavaScript there is nothing to switch, so hide the tabs. */
+	.explorer:not(.is-interactive) .tabs,
+	.explorer:not(.is-interactive) .result {
+		display: none;
+	}
+	.panels {
+		margin-top: 1em;
+	}
+	.panel {
+		font-family: var(--font-sans);
+		font-size: 0.95em;
+	}
+	.explorer:not(.is-interactive) .panel + .panel {
+		margin-top: 1.5em;
+	}
+	.panel h3 {
+		margin: 0 0 0.3em;
+		color: var(--accent);
+		font-size: 1.1em;
+	}
+	.panel p {
+		margin: 0 0 0.6em;
+		font-family: var(--font-sans);
+	}
+	.koga span {
+		margin-right: 0.4em;
+		padding: 0 0.4em;
+		border-radius: 4px;
+		background: #f5a524;
+		color: var(--bg);
+		font-family: var(--font-mono);
+		font-size: 0.8em;
+	}
+	fieldset {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+		gap: 0.5em;
+		margin: 0.75em 0;
+		padding: 0;
+		border: none;
+	}
+	legend {
+		margin-bottom: 0.4em;
+		color: var(--text-muted);
+		font-family: var(--font-mono);
+		font-size: 0.8em;
+	}
+	.option {
+		position: relative;
+		display: block;
+		padding: 0.6em 0.75em;
+		border: 1px solid var(--border);
+		border-radius: 8px;
+		cursor: pointer;
+	}
+	.option:has(input:checked) {
+		border-color: var(--accent);
+		background: rgb(57 245 140 / 7%);
+	}
+	.option:has(input:focus-visible) {
+		outline: 2px solid var(--accent);
+	}
+	.option input {
+		position: absolute;
+		opacity: 0;
+	}
+	.option-head {
+		display: flex;
+		justify-content: space-between;
+		gap: 0.5em;
+		color: var(--text-heading);
+	}
+	.delta {
+		color: var(--accent);
+		font-family: var(--font-mono);
+		font-size: 0.85em;
+		white-space: nowrap;
+	}
+	.why {
+		display: block;
+		margin-top: 0.25em;
+		color: var(--text);
+		font-size: 0.9em;
+		line-height: 1.45;
+	}
+	.note {
+		color: var(--text-muted);
+		font-size: 0.9em;
+	}
+	.result {
+		display: block;
+		margin-top: 0.75em;
+		padding: 0.75em 1em;
+		border-radius: 8px;
+		background: var(--bg);
+		font-family: var(--font-sans);
+	}
+	.estimate {
+		display: block;
+		color: var(--accent);
+		font-family: var(--font-mono);
+		font-size: 1.2em;
+		font-weight: 700;
+	}
+	.closest {
+		display: block;
+		margin-top: 0.2em;
+		color: var(--text);
+		font-size: 0.9em;
+	}
+	figcaption {
+		margin-top: 0.6em;
+		color: var(--text-muted);
+		font-size: 0.75em;
+		text-align: center;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.drawing :global([data-part]) {
+			transition: none;
+		}
+	}
+</style>

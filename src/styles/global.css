@@ -170,3 +170,18 @@ hr {
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
+/* A photo in a post, with a caption under it. */
+.post-photo {
+	margin: 0 0 2em;
+}
+.post-photo img {
+	display: block;
+	width: 100%;
+	border-radius: 10px;
+}
+.post-photo figcaption {
+	margin-top: 0.5em;
+	color: var(--text-muted);
+	font-size: 0.8em;
+	text-align: center;
+}
