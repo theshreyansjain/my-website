@@ -59,6 +59,15 @@ not transcripts.
 ## Build notes
 What changed from the plan while building, and why. Newest first.
 
+- Step 7 (2026-10-17): Vercel Web Analytics added as a plain
+  `<script defer src="/_vercel/insights/script.js">` in `BaseHead.astro`
+  (every page), no npm package. Cookie-free, no consent banner. The owner
+  enabled it in the Vercel dashboard (project my-website → Analytics) on
+  2026-10-17; the `/_vercel/insights/` route only exists on deployments
+  made after enabling. Data appears for production
+  only. Vercel's docs now also offer a per-project `/<unique-path>/script.js`
+  (shown after enabling; harder for ad blockers to spot); switch to it later
+  if counts look low. Tick step 7 once visits show up.
 - Step 6 review: figure size now depends on width as well as height
   (tablets in portrait got the desktop size in half the width and cut the
   desk scene off; landscape phones cut the intro figure's legs off). Blog

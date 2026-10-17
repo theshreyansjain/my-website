@@ -49,3 +49,10 @@ const { title, description, image = FallbackImage } = Astro.props;
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
+
+<!-- Vercel Web Analytics: counts page views, country, referrer, device, OS
+     and browser. Cookie-free, so no consent banner is needed. Plain script
+     tag instead of the @vercel/analytics npm package. The /_vercel/insights/
+     route only exists on Vercel deployments once Web Analytics is enabled in
+     the dashboard; on localhost the script 404s harmlessly. -->
+<script defer src="/_vercel/insights/script.js"></script>
