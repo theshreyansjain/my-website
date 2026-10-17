@@ -87,7 +87,7 @@ const chart = { months: months.map(label), series: series.map((s) => ({ name: s.
 			)
 		}
 		{series.map((s) => <path d={line(s.rebased)} class="line" style={`--c: ${s.colour}`} />)}
-		<g class="cursor" hidden>
+		<g class="cursor" visibility="hidden">
 			<line y1={PAD.top} y2={H - PAD.bottom} />
 			{series.map((s) => <circle r="4" style={`--c: ${s.colour}`} />)}
 		</g>
@@ -127,7 +127,7 @@ const chart = { months: months.map(label), series: series.map((s) => ({ name: s.
 		};
 
 		const show = (i: number) => {
-			cursor.removeAttribute('hidden');
+			cursor.setAttribute('visibility', 'visible');
 			const at = paths.map((p) => point(p, i));
 			rule?.setAttribute('x1', String(at[0].x));
 			rule?.setAttribute('x2', String(at[0].x));
@@ -146,7 +146,7 @@ const chart = { months: months.map(label), series: series.map((s) => ({ name: s.
 			show(Math.round(((Math.min(last, Math.max(first, sx)) - first) / (last - first)) * (n - 1)));
 		});
 		svg.addEventListener('pointerleave', () => {
-			cursor.setAttribute('hidden', '');
+			cursor.setAttribute('visibility', 'hidden');
 			readout.textContent = initial;
 		});
 	}
@@ -219,10 +219,6 @@ const chart = { months: months.map(label), series: series.map((s) => ({ name: s.
 		stroke: var(--c);
 		stroke-width: 2;
 		stroke-linejoin: round;
-	}
-	/* SVG ignores the hidden attribute on its own, so hide it here. */
-	.cursor[hidden] {
-		display: none;
 	}
 	.cursor line {
 		stroke: var(--text-muted);
