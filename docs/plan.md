@@ -54,7 +54,7 @@ not transcripts.
   Privacy-friendly and cookie-free, so no consent banner. Likely Vercel Web
   Analytics (built into the hosting; enabled in the dashboard plus one
   script tag, no npm package needed); Plausible or Umami are alternatives.
-- [ ] 8. Later: custom domain, newsletter.
+- [ ] 8. Later: custom domain (shrey.cloud, bought 2026-10-17), newsletter.
 
 ## Build notes
 What changed from the plan while building, and why. Newest first.

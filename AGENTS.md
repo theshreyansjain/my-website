@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Personal blog (Astro 7, based on the official blog starter template), deployed at https://my-website-phi-topaz.vercel.app. Requires Node >= 22.12.0.
+Personal blog (Astro 7, based on the official blog starter template), deployed at https://shrey.cloud (also reachable at https://my-website-phi-topaz.vercel.app). Requires Node >= 22.12.0.
 
 ## Development
 
