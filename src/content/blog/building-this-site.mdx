@@ -161,6 +161,7 @@ What made the biggest difference:
 - **A second model as reviewer.** When I said the bike proportions looked
   weird, a different Claude model (Fable) reviewed them: road-bike wheel size,
   a head tube, a fork that leans forward. The bike looks like a bike now.
+  Fable also reviewed this post, and drew the map on the About page.
 - **Permissions.** A settings file lists what it can do without asking:
   build, run the dev server, read the git history, open links, and push.
   Anything else needs a yes.
@@ -294,7 +295,7 @@ claude   # then type /init inside it
    for the first year, about $24 a year after. `.cloud` leaves room to host
    other projects on subdomains later.
 
-<Expand kind="deep" title="Things that bit us" time="1 min" teaser="Two of mine, one of Claude Code's, and one I avoided.">
+<Expand kind="deep" title="Things that bit us" time="1 min" teaser="Three of mine, two of Claude Code's, and one I avoided.">
 
 - **Pasting a long list of commands at once** (me). One of them deleted some
   files, and zsh asked "are you sure?". That question swallowed the rest of
@@ -304,6 +305,12 @@ claude   # then type /init inside it
 - **A minifier rewrote the CSS** (Claude Code). The tool that shrinks CSS for
   the live site turned a short animation rule into `animation: none`, and the
   typing animation vanished. Writing the rule out in full fixed it.
+- **SVG ignores `hidden`** (Claude Code). The hover line on the About page's
+  chart stayed on screen, because the HTML `hidden` attribute does nothing
+  inside an SVG drawing. One line of CSS fixed it.
+- **The domain payment failed** (me). There was no card on my Vercel account,
+  so the first purchase of `shrey.cloud` didn't go through. Adding one fixed
+  it; nothing was charged twice.
 - **Projects in `~/Documents`** (avoided, thanks to the chat). iCloud tries to
   sync that folder, including the thousands of files in `node_modules`. Use a
   folder like `~/dev`.
@@ -379,6 +386,31 @@ No. A site can only read its own cookies; browsers block everything else on
 purpose. This site uses no cookies at all.
 
 </Expand>
+
+## Since I first published this
+
+I kept going the same day. What changed:
+
+- **A domain.** The site moved to `shrey.cloud` (step 8 above).
+- **A review of this post.** Fable and the claude.ai chat both read it. They
+  caught a quote I never said, two plan-vs-shipped rows the record didn't
+  support, a link preview that showed the template's stock picture, and a copy
+  button covering code on phones. The chat also got one thing wrong: it said
+  it had made up "seven steps, none ticked", but the git history shows the
+  8 October plan had exactly seven unticked steps.
+- **An [About page](/about/)** with an interactive terminal (type `help`), a
+  map from Mumbai to Amsterdam whose coastlines Fable drew by hand in SVG, and a
+  chart of the Dutch and Indian stock indexes since I moved, fed by a small
+  script that downloads monthly closes.
+- **Smaller things:** a green `>_` tab icon, a button on the homepage that
+  points here, empty topic pages that suggest the latest post, a 404 page, and
+  a percentage on the reading progress bar.
+- **Better scores.** After fixing a colour-contrast problem in the anatomy
+  diagram, Lighthouse gives the homepage, this post and the About page 100 in
+  all four categories.
+
+The counter kept running too: 69 commits (from 47), about 795 requests to
+Claude (from 480), roughly 198 million input tokens and 584,000 output tokens.
 
 ## What surprised me
 
