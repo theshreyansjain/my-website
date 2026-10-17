@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import IndexChart from '../components/about/IndexChart.astro';
 import Route from '../components/about/Route.astro';
 import TopicCards from '../components/about/TopicCards.astro';
 import Whoami from '../components/about/Whoami.astro';
@@ -29,6 +30,13 @@ const [latest] = (await getCollection('blog')).sort((a, b) => b.data.pubDate.val
 
 	<h2>From Mumbai to Amsterdam</h2>
 	<Route />
+
+	<h2>Markets since I moved</h2>
+	<p>
+		I trade for a living, so here's a market chart: how the main stock indexes of the Netherlands and
+		India have done since I arrived. Hover or drag across it to read any month.
+	</p>
+	<IndexChart />
 
 	<h2>Why this site</h2>
 	<p>
