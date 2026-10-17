@@ -1,27 +1,83 @@
 ---
+import { getCollection } from 'astro:content';
+import IndexChart from '../components/about/IndexChart.astro';
+import Route from '../components/about/Route.astro';
+import TopicCards from '../components/about/TopicCards.astro';
+import Whoami from '../components/about/Whoami.astro';
+import PostList from '../components/PostList.astro';
 import Layout from '../layouts/BlogPost.astro';
+
+const [latest] = (await getCollection('blog')).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<Layout
-	title="About"
-	description="Who I am and what this site is for."
->
-	<p>
-		I'm Shreyans. This site is my notebook in public: I use it to document what I'm learning, so
-		I understand it better and have something to look back on.
+<Layout title="About" description="Quant trader from Mumbai, living in Amsterdam. What I do and what this site is for.">
+	<p class="lead">
+		I'm Shreyans, a quant trader from Mumbai, living in Amsterdam. I work at an options market
+		maker. Outside work, I love learning new things, building things, and spending time outdoors
+		doing sports.
 	</p>
 
-	<p>The topics I write about:</p>
+	<Whoami
+		rows={[
+			['name', 'Shreyans'],
+			['role', 'Quant trader at an options market maker'],
+			['from', 'Mumbai'],
+			['based', 'Amsterdam'],
+			['likes', 'Learning, building, outdoor sports'],
+			['status', 'Documenting my side quests'],
+		]}
+	/>
 
-	<ul>
-		<li>Psychology</li>
-		<li>Running and biking</li>
-		<li>Programming and AI</li>
-		<li>Quant trading and finance</li>
-	</ul>
+	<h2>From Mumbai to Amsterdam</h2>
+	<Route />
 
+	<h2>Markets since I moved</h2>
 	<p>
-		I'm also building this site myself as a way to learn web development, so expect it to change
-		as I go.
+		I trade for a living, so here's a market chart: how the main stock indexes of the Netherlands and
+		India have done since I arrived. Hover or drag across it to read any month.
 	</p>
+	<IndexChart />
+
+	<h2>Why this site</h2>
+	<p>
+		Mostly to learn AI by building something with it. Making something real and watching it work
+		gives me the same eureka feeling as the first HTML file I ever wrote. It's also a home for my
+		side quests: writing things down gives what I learn some structure, and it gives friends and
+		family an easy way to keep up with what I'm doing.
+	</p>
+	<p>
+		I didn't write the code myself. Claude Code did, while I decided what the site should be and
+		how it should look. <a
+			href="/blog/building-this-site/">Here's how it was built.</a
+		>
+	</p>
+
+	<h2>What I write about</h2>
+	<TopicCards />
+
+	{
+		latest && (
+			<>
+				<h2>Latest post</h2>
+				<PostList posts={[latest]} />
+			</>
+		)
+	}
 </Layout>
+
+<style>
+	/* The page title, from the shared layout: green on this page only. */
+	:global(.title h1) {
+		color: var(--accent);
+	}
+	.lead {
+		font-size: 1.15em;
+	}
+	h2 {
+		margin-top: 1.5em;
+		font-size: 1.3em;
+	}
+	:global(.whoami) {
+		margin-bottom: 2em;
+	}
+</style>

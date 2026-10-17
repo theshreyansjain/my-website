@@ -1,0 +1,91 @@
+---
+// One card per topic, linking to its page, with how many posts it has.
+import { getCollection } from 'astro:content';
+import { TOPICS, type Topic } from '../../consts';
+
+// One line per topic, in the words the homepage scenes use.
+const blurbs: Record<Topic, string> = {
+	psychology: 'How minds work, mostly from books.',
+	running: 'Training logs, races and building endurance.',
+	biking: 'Rides, routes and gear.',
+	'programming-ai': 'Code and AI, starting with how this site was built.',
+	quant: 'What I learn about quant trading.',
+	finance: 'Personal finance.',
+};
+
+const posts = await getCollection('blog');
+const count = (topic: Topic) => posts.filter((p) => p.data.topic === topic).length;
+const topics = Object.keys(TOPICS) as Topic[];
+---
+
+<ul class="cards">
+	{
+		topics.map((topic) => (
+			<li>
+				<a href={`/topics/${topic}/`}>
+					<span class="name">#{topic}</span>
+					<span class="blurb">{blurbs[topic]}</span>
+					<span class="count">
+						{count(topic) === 0 ? 'coming soon' : `${count(topic)} post${count(topic) === 1 ? '' : 's'}`}
+					</span>
+				</a>
+			</li>
+		))
+	}
+</ul>
+
+<style>
+	.cards {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(10rem, 40%), 1fr));
+		gap: 0.75rem;
+		margin: 0 0 2em;
+		padding: 0;
+		list-style: none;
+	}
+	a {
+		display: flex;
+		flex-direction: column;
+		gap: 0.3em;
+		height: 100%;
+		box-sizing: border-box;
+		padding: 0.9em 1em;
+		border: 1px solid var(--border);
+		border-radius: 8px;
+		background: var(--surface);
+		color: var(--text);
+		text-decoration: none;
+		transition:
+			border-color 0.15s,
+			box-shadow 0.15s;
+	}
+	a:hover,
+	a:focus-visible {
+		border-color: var(--accent);
+		box-shadow: 0 0 14px var(--accent-glow);
+		color: var(--text);
+		text-shadow: none;
+	}
+	.name {
+		color: var(--accent);
+		font-family: var(--font-mono);
+		font-size: 0.9em;
+		font-weight: 700;
+	}
+	.blurb {
+		font-family: var(--font-sans);
+		font-size: 0.9em;
+		line-height: 1.5;
+	}
+	.count {
+		margin-top: auto;
+		color: var(--text-muted);
+		font-family: var(--font-mono);
+		font-size: 0.75em;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		a {
+			transition: none;
+		}
+	}
+</style>

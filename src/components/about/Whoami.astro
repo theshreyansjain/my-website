@@ -1,0 +1,306 @@
+---
+// A terminal card. It first "prints" `whoami` (pure CSS: each line fades in a
+// little later than the one before), then becomes a small interactive shell:
+// visitors can type help, ls, cd <topic>, cat latest, date, and a few more.
+// Without JavaScript it stays a static card. Typed text is only ever shown
+// with textContent, never as HTML.
+import { getCollection } from 'astro:content';
+import { TOPICS, type Topic } from '../../consts';
+
+interface Props {
+	rows: [string, string][];
+}
+
+const { rows } = Astro.props;
+
+const posts = (await getCollection('blog')).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const topics = (Object.keys(TOPICS) as Topic[]).map((topic) => ({
+	topic,
+	count: posts.filter((p) => p.data.topic === topic).length,
+}));
+const latest = posts[0] && { title: posts[0].data.title, url: `/blog/${posts[0].id}/` };
+const shell = { rows, topics, latest };
+---
+
+<figure class="whoami" data-shell={JSON.stringify(shell)}>
+	<div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+	<div class="screen">
+		<p class="prompt"><span aria-hidden="true">$ </span>whoami</p>
+		<dl>
+			{
+				rows.map(([key, value], i) => (
+					<div style={`--i: ${i}`}>
+						<dt>{key}</dt>
+						<dd>{value}</dd>
+					</div>
+				))
+			}
+		</dl>
+		<div class="output" aria-live="polite"></div>
+		<form class="input-line" style={`--i: ${rows.length}`} hidden>
+			<label>
+				<span aria-hidden="true">$ </span>
+				<span class="sr-only">Terminal: type a command, for example help</span>
+				<input
+					type="text"
+					autocomplete="off"
+					autocapitalize="off"
+					spellcheck="false"
+					enterkeyhint="go"
+					placeholder="type help"
+				/>
+			</label>
+		</form>
+	</div>
+</figure>
+
+<script>
+	interface Shell {
+		rows: [string, string][];
+		topics: { topic: string; count: number }[];
+		latest?: { title: string; url: string };
+	}
+
+	for (const card of document.querySelectorAll<HTMLElement>('.whoami[data-shell]')) {
+		const data: Shell = JSON.parse(card.dataset.shell ?? '{}');
+		const screen = card.querySelector<HTMLElement>('.screen');
+		const output = card.querySelector<HTMLElement>('.output');
+		const form = card.querySelector<HTMLFormElement>('.input-line');
+		const input = form?.querySelector('input');
+		if (!screen || !output || !form || !input) continue;
+
+		form.hidden = false;
+		const history: string[] = [];
+		let back = 0;
+
+		// One printed line. Parts are plain text or links.
+		type Part = string | { text: string; href: string };
+		const print = (...parts: Part[]) => {
+			const line = document.createElement('p');
+			for (const part of parts) {
+				if (typeof part === 'string') {
+					line.append(part);
+				} else {
+					const a = document.createElement('a');
+					a.href = part.href;
+					a.textContent = part.text;
+					line.append(a);
+				}
+			}
+			output.append(line);
+		};
+		const go = (href: string, label: string) => {
+			print(`opening ${label}…`);
+			setTimeout(() => (location.href = href), 400);
+		};
+		const time = (zone: string) =>
+			new Intl.DateTimeFormat('en-GB', { timeZone: zone, hour: '2-digit', minute: '2-digit', weekday: 'short' }).format(
+				new Date(),
+			);
+		const topicNames = data.topics.map((t) => t.topic);
+
+		const commands: Record<string, { help: string; run: (args: string[]) => void }> = {
+			help: {
+				help: 'list commands',
+				run: () => {
+					for (const [name, cmd] of Object.entries(commands)) print(name.padEnd(8), cmd.help);
+				},
+			},
+			whoami: {
+				help: 'who is this',
+				run: () => {
+					for (const [key, value] of data.rows) print(key.padEnd(8), value);
+				},
+			},
+			ls: {
+				help: 'topics + post counts',
+				run: () => {
+					for (const t of data.topics) {
+						const name = `${t.topic}/`;
+						print({ text: name, href: `/topics/${t.topic}/` }, ' '.repeat(16 - name.length), String(t.count));
+					}
+				},
+			},
+			cd: {
+				help: 'open a topic',
+				run: ([target = '~']) => {
+					const dir = target.replace(/\/$/, '');
+					if (dir === '~' || dir === '/' || dir === '..') return go('/', 'home');
+					if (dir === 'blog') return go('/blog/', 'blog');
+					if (topicNames.includes(dir)) return go(`/topics/${dir}/`, dir);
+					print(`cd: no such topic: ${dir}. Try ls.`);
+				},
+			},
+			cat: {
+				help: 'cat latest',
+				run: ([what]) => {
+					if (what === 'latest' && data.latest) return go(data.latest.url, `"${data.latest.title}"`);
+					print('cat: try cat latest');
+				},
+			},
+			date: {
+				help: 'time in both cities',
+				run: () => {
+					print('Amsterdam  ', time('Europe/Amsterdam'));
+					print('Mumbai     ', time('Asia/Kolkata'));
+				},
+			},
+			echo: {
+				help: 'say something',
+				run: (args) => print(args.join(' ')),
+			},
+			clear: {
+				help: 'clear the screen',
+				run: () => output.replaceChildren(),
+			},
+		};
+
+		const run = (line: string) => {
+			const [name = '', ...args] = line.trim().split(/\s+/);
+			print('$ ', line);
+			if (!name) return;
+			if (name === 'sudo') return print('Nice try. This incident will be reported.');
+			if (name === 'exit') return print('There is no escape. Try cd ~ instead.');
+			const cmd = commands[name.toLowerCase()];
+			if (cmd) cmd.run(args);
+			else print(`command not found: ${name}. Try help.`);
+		};
+
+		form.addEventListener('submit', (event) => {
+			event.preventDefault();
+			const line = input.value;
+			input.value = '';
+			if (line.trim()) history.push(line);
+			back = 0;
+			run(line);
+			// Keep the prompt in view as the output grows.
+			form.scrollIntoView({ block: 'nearest' });
+		});
+
+		input.addEventListener('keydown', (event) => {
+			// Up/down: walk through earlier commands.
+			if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+				if (!history.length) return;
+				event.preventDefault();
+				back = Math.max(0, Math.min(history.length, back + (event.key === 'ArrowUp' ? 1 : -1)));
+				input.value = back ? history[history.length - back] : '';
+			}
+			// Tab: complete a command name, or a topic after cd.
+			if (event.key === 'Tab') {
+				const [first = '', second] = input.value.split(/\s+/);
+				const pool = second === undefined ? Object.keys(commands) : first === 'cd' ? topicNames : [];
+				const word = second ?? first;
+				const matches = pool.filter((option) => option.startsWith(word));
+				if (word && matches.length === 1) {
+					event.preventDefault();
+					input.value = second === undefined ? `${matches[0]} ` : `${first} ${matches[0]}`;
+				}
+			}
+		});
+
+		// Clicking anywhere on the screen focuses the prompt, like a real terminal.
+		screen.addEventListener('click', (event) => {
+			if (!(event.target instanceof HTMLAnchorElement) && !getSelection()?.toString()) input.focus();
+		});
+	}
+</script>
+
+<style>
+	.whoami {
+		margin: 0;
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		background: var(--surface);
+		overflow: hidden;
+		font-family: var(--font-mono);
+		font-size: 0.9em;
+	}
+	.bar {
+		display: flex;
+		gap: 5px;
+		padding: 0.6em 0.8em;
+		border-bottom: 1px solid var(--border);
+	}
+	.bar i {
+		width: 9px;
+		height: 9px;
+		border-radius: 50%;
+		background: var(--border);
+	}
+	.screen {
+		padding: 1em 1.2em;
+		cursor: text;
+	}
+	.prompt {
+		margin: 0;
+		font-family: var(--font-mono);
+		color: var(--text-heading);
+	}
+	.prompt span,
+	.input-line span {
+		color: var(--accent);
+	}
+	dl {
+		margin: 0.5em 0;
+	}
+	dl div,
+	.input-line {
+		animation: print 0.3s calc(0.25s + var(--i) * 0.18s) both;
+	}
+	dl div {
+		display: flex;
+		gap: 1em;
+	}
+	dt {
+		flex: none;
+		width: 6.5em;
+		color: var(--text-muted);
+	}
+	dd {
+		margin: 0;
+		color: var(--text);
+	}
+	.output :global(p) {
+		margin: 0;
+		font-family: var(--font-mono);
+		color: var(--text);
+		white-space: pre-wrap;
+	}
+	.input-line label {
+		display: flex;
+		align-items: baseline;
+		color: var(--text-heading);
+	}
+	.input-line span[aria-hidden] {
+		white-space: pre;
+	}
+	input {
+		flex: 1;
+		min-width: 0;
+		padding: 0;
+		border: none;
+		outline: none;
+		background: none;
+		color: var(--text-heading);
+		caret-color: var(--accent);
+		font-family: var(--font-mono);
+		/* 16px stops iPhones zooming in when the field is tapped. */
+		font-size: max(16px, 1em);
+	}
+	input::placeholder {
+		color: var(--text-muted);
+		opacity: 0.6;
+	}
+	@keyframes print {
+		from {
+			opacity: 0;
+			transform: translateY(4px);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		dl div,
+		.input-line {
+			animation: none;
+		}
+	}
+</style>
