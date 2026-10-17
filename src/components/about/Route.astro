@@ -1,19 +1,33 @@
 ---
-// Mumbai → Amsterdam: two dots joined by a dashed arc, with the distance
-// (great-circle, ~6,850 km) and the time difference.
+// Mumbai → Amsterdam: two dots joined by a dashed arc over a rough map, with
+// the distance (great-circle, ~6,850 km) and the time difference.
+//
+// The map is a hand-drawn, low-detail outline of Europe, the Middle East,
+// North-East Africa and South Asia (longitude -12° to 80°, latitude 5° to
+// 62°). It uses a plain equirectangular projection into the viewBox:
+//   x = (lon + 12) * 3.6     y = (62 - lat) * 4
+// Inland seas (Black, Marmara, Caspian, Aral, Balkhash) are extra rings in
+// the same path and become holes through fill-rule="evenodd". Both cities
+// sit at their projected positions: Amsterdam 52.37°N 4.90°E, Mumbai
+// 19.08°N 72.88°E.
 ---
 
 <figure class="route">
-	<svg viewBox="0 0 320 120" role="img" aria-label="From Mumbai to Amsterdam, about 6,850 kilometres.">
-		<path d="M260 92 Q160 -10 60 40" class="arc"></path>
-		<circle cx="260" cy="92" r="5" class="dot"></circle>
-		<circle cx="60" cy="40" r="5" class="dot home"></circle>
-		<circle cx="60" cy="40" r="11" class="pulse"></circle>
-		<text x="260" y="114" class="city">Mumbai</text>
-		<text x="60" y="66" class="city">Amsterdam</text>
-		<text x="160" y="58" class="km">~6,850 km</text>
+	<svg viewBox="0 0 331 228" role="img" aria-label="Map of the route from Mumbai to Amsterdam, about 6,850 kilometres.">
+		<path
+			class="land"
+			fill-rule="evenodd"
+			d="M338.4 -8L120.2 -8L120.2 0L120.6 4L120.2 5.6L123.5 6.4L126 8.4L133.2 7.6L140.4 6L146.5 5.2L151.9 8.4L144 10.4L132.1 10L127.8 11.2L127.8 14L131 14.4L130 19.6L124.6 17.2L118.8 21.6L119.2 25.2L116.3 28.4L113 30.4L110.5 30L102.6 30L93.6 32L88.2 30.4L82.4 32.4L79.6 30.4L77.4 28.8L79.9 23.2L82.4 22.4L81.4 17.2L78.8 17.6L72.4 21.2L73.4 26L74.2 28.4L75.2 32.4L73.8 34L68.4 34.4L65.5 34.4L60.1 36L59.8 38L58 40L55.8 42L52.2 43.6L50 44.2L49 46.4L43.9 49.2L38.5 49.6L37.4 49.2L36.4 53.2L32.4 52.8L25.9 54L27.7 56.4L34.2 58.8L37.8 62L38.9 66L38.5 70L36.7 74.4L29.5 74L22.7 73.6L13.3 74.4L9.7 76L11.5 79.2L11.9 83.2L11.2 88L9.4 93.2L10.8 100L14.8 100L20.5 102L23 103.8L27.4 101.2L35.6 101L40.3 97.6L42.1 90L45 85.6L51.1 82.4L55.1 78.8L54.4 75.6L59.4 74.4L62.6 75.2L65.5 75.6L69.8 73.2L75.2 70.4L79.2 72L80.3 74.8L82.8 78.4L87.5 81.2L91.4 82.8L94.3 84.8L97.2 86.8L99.7 88.8L100.8 92.4L99.5 95.6L101.2 96.4L103 94L105.1 92L103 89.2L105.5 86.4L109.4 88.8L109.8 87.2L107.6 85.2L104 83.6L100.8 80.4L97.9 80.4L94.3 78L91.8 73.6L88.6 71.6L87.8 68L87.5 66L92.9 65.2L92.2 67.2L93.6 68.8L95 66.8L98.3 72L102.2 74L106.9 76.4L109.8 78.4L112.7 80.4L113.4 83.6L113 86.4L115.2 89.2L117.7 92.4L119.9 94.8L121 97.6L121.3 100.8L123.8 102.4L126 102L126 98L128.5 96.4L130 94.4L126.7 91.2L124.6 87.6L125.6 85.6L128.2 87.2L129.6 86L131 84.4L136.4 84.8L137.9 86.4L138.6 87.6L137.5 90L139.7 94.4L141.1 96.8L141.8 100L145.1 100.8L148 101.6L153.4 100.4L156.6 101.2L160.6 103.6L165.6 102L167.8 100.8L173.5 101.6L172.1 106L171 112.4L168.8 116.8L167.4 121.6L163.8 123.6L159.5 122.8L154.8 122L150.8 123.2L140.4 124L133.2 120.4L126.4 117.6L115.2 119.2L113.4 126L106.2 124.4L99.7 122L97.6 118.4L90.7 116.4L84.6 115.2L79.6 112.4L82.1 109.2L82.8 105.6L83.2 99.6L79.9 100.8L78.5 98.8L73.8 100.4L69.5 100L61.2 101.2L54 100.8L43.2 104.4L37.8 106.8L32.4 106.8L24.1 104.4L22 104.8L18.7 112L15.8 113.6L9.7 118L7.9 126L8.3 132.8L3.6 134L-3.6 138L-3.6 212L-4.3 214L1.8 219.6L5.4 222.4L10.8 226.8L12.6 229.6L16.2 230.4L28.8 227.6L35.6 229.2L42.5 226L48.6 223.2L55.4 222.4L61.2 226L64.8 230.8L73.8 230L77.4 232.4L77.4 236L210.6 236L214.2 230.4L217.8 226.8L221.4 218.8L226.1 206.8L227.9 200.8L223.2 201.6L219.6 202.8L212.4 203.6L205.2 206.4L199.8 202.4L198.4 200.8L196.9 196L193.3 192.4L185.4 185.6L182.2 176.8L177.1 169.6L174.6 160L171 154L167.4 148L165.6 142L164.5 138L162 134L160.2 128.4L163.1 130L164.9 135.6L166.7 137.2L167.8 133.6L168.8 130.4L169.6 134L171.7 138.8L175 144.8L177.5 148.8L180 152L182.5 158L184.3 162.4L187.6 167.2L190.8 174L194.4 178L196.9 184L197.6 188.8L199.1 195.2L199.8 197.2L201.6 197.6L205.2 196.8L212.4 194.4L220 190L230.4 182L237.6 180L244.8 172.8L251.3 166.8L257.4 158.8L258.5 157.6L254.9 154L251.3 152L246.2 142.8L245.2 143.2L244.4 145.6L242.3 146.8L239 150L232.2 150.8L229 150L228.6 146L227.5 143.6L226.1 145.6L226.1 148.8L223.9 142.8L221.4 138.8L217.8 134.4L216 130.4L216.4 128L218.2 128L221.4 128L226.1 132.4L229 136.8L232.6 138L237.6 141.2L243 140.8L245.9 139.6L248.4 140.8L250.2 145.2L254.9 146L261.4 146.8L264.6 147.6L267.5 147.6L275.4 146.8L282.6 146.4L284.4 148.8L286.2 152.4L289.1 153.6L291.2 154L289.8 155.2L291.6 156.8L292 158.8L295.2 164L298.8 165.2L303.5 162.4L304.6 160L305.3 162.8L305.3 168L305.6 172L306.7 178L307.8 184L310.3 190L312.5 196.4L315 202L317.5 208L319 212.4L322.2 215.6L324.7 212.8L328.7 210.8L329 206.8L330.8 200.4L332.3 195.6L332.3 186L334.8 184L338.4 180ZM61.9 -8L61.9 0L60.8 2.8L61.9 6.4L63.7 12L72 15.6L81 12L81.7 8.4L83.5 12L86 17.2L88.9 23.6L90 25.6L92.9 26.4L99.4 23.2L102.2 21.2L103 16.8L102.6 13.6L109.1 10.8L105.1 5.2L105.5 -1.6L105.8 -8ZM22.7 47.6L24.5 48.2L28.4 46.8L34.6 45.6L38.5 45.6L42.8 44.8L48.2 43.6L46.4 42L49.3 38L49.3 36.4L44.3 36.4L43.2 33.6L42.8 31.6L38.9 29.6L38.2 28L36 24.8L32.4 24L34.2 22L35.6 19.2L36.7 17.6L30.6 17.2L32 14.4L32 13.6L25.2 13.6L23.4 16L22.3 18.8L21.6 20.8L22.7 23.2L22.7 26.8L25.9 24.8L27.4 29.2L30.6 28.8L32.4 31.6L32.4 34.4L27 34.8L26.3 36.8L28.4 38L24.1 40.4L28.8 41.6L31.7 42.4L33.8 42L30.6 43.2L27 44L25.2 46ZM21.6 39.2L20.5 34.4L21.6 31.6L23.4 30L22.7 27.2L17.3 26.8L13.3 27.2L12.6 30L7.2 31.2L9 34.8L6.5 39.6L8.6 42L13 41.6L18 40ZM74.2 76L77 76L77.4 82.4L74.9 82.4ZM72.7 83.2L77.8 83.2L78.1 91.2L74.2 92L72.7 88ZM87.8 96L99.4 94.8L97.6 101.2L88.2 97.6ZM127.8 106.8L137.9 106.8L137.5 108L128.2 107.2ZM159.5 107.6L167.8 105.2L165.6 108.4L159.5 109.2ZM51.8 89.6L55.8 88.4L54.4 90.8ZM83.9 26.8L86.8 27.6L88.6 25.6L86.8 23.6L83.9 24.4ZM330.1 215.2L331.6 208.8L333 210L335.5 213.6L338 219.2L337 223.2L333 224.4L330.8 222ZM148 83.2L154.8 83.6L158.4 80.4L169.6 80L173.9 82.8L186.1 84L193 81.6L193 79.2L190.8 76L186.1 73.6L179.3 69.2L176.4 67.2L183.2 59.2L174.6 60.4L169.9 61.6L169.6 65.6L175 66.4L174.2 68L170.6 68.4L166.3 70.4L163.8 69.6L160.6 66.4L163.1 64L160.2 62L153.7 62L150.1 66.8L146.2 71.2L143.6 75.2L142.2 78L144.4 80.4ZM139.7 86.4L148.3 86.4L148.3 84.4L142.2 84.2L139.7 86ZM213.5 64L221.4 61.6L228.6 60L234.7 62L232.6 66.4L227.5 66.8L224.3 70L227.5 75.6L233.3 78.8L232.9 82.8L233.6 84.4L234 88L237.2 90.8L237.2 96L237.2 98.8L236.2 100.4L232.2 101.2L226.8 101.2L223.2 98.4L221 98L219.2 94.4L221 90.4L222.5 86.8L224.6 86.4L222.1 85.6L221 82.8L217.1 79.6L214.2 76L213.8 71.2L212 67.6ZM253.1 62L261 60.8L264.6 66L261.7 72L255.6 72.8L252 68ZM307.8 62L315 60.4L322.2 62L327.6 60.8L327.6 64.8L320.4 66L313.2 63.2L309.6 64Z"
+		></path>
+		<path d="M305.6 171.7 Q192 60 60.8 38.5" class="arc"></path>
+		<circle cx="305.6" cy="171.7" r="4" class="dot"></circle>
+		<circle cx="60.8" cy="38.5" r="4" class="dot home"></circle>
+		<circle cx="60.8" cy="38.5" r="9" class="pulse"></circle>
+		<text x="297" y="176" class="city end">Mumbai</text>
+		<text x="60.8" y="58" class="city">Amsterdam</text>
+		<text x="184" y="113" class="km">~6,850 km</text>
 	</svg>
-	<figcaption>From Mumbai to Amsterdam. Home is 3½ hours ahead (4½ in winter).</figcaption>
+	<figcaption>About 6,850 km as the crow flies. Home is 3½ hours ahead (4½ in winter).</figcaption>
 </figure>
 
 <style>
@@ -27,8 +41,19 @@
 	svg {
 		display: block;
 		width: 100%;
-		max-width: 26rem;
+		max-width: 30rem;
 		margin: 0 auto;
+		overflow: hidden; /* coastlines run past the viewBox edges */
+		background: var(--bg); /* the sea */
+		border: 1px solid var(--border);
+		border-radius: 8px;
+	}
+	/* Land sits a little lighter than the sea; the coastline is a thin border. */
+	.land {
+		fill: color-mix(in srgb, var(--surface), var(--border) 50%);
+		stroke: var(--border);
+		stroke-width: 0.6;
+		stroke-linejoin: round;
 	}
 	.arc {
 		fill: none;
@@ -52,14 +77,22 @@
 	text {
 		font-family: var(--font-mono);
 		text-anchor: middle;
+		/* A halo in the sea colour keeps labels readable over land. */
+		paint-order: stroke;
+		stroke: var(--bg);
+		stroke-width: 3;
+		stroke-linejoin: round;
+	}
+	.end {
+		text-anchor: end;
 	}
 	.city {
 		fill: var(--text-heading);
-		font-size: 12px;
+		font-size: 11px;
 	}
 	.km {
 		fill: var(--text-muted);
-		font-size: 11px;
+		font-size: 10px;
 	}
 	figcaption {
 		margin-top: 0.5em;
