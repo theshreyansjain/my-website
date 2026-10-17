@@ -51,6 +51,15 @@ const { title, kind = 'code', teaser, time } = Astro.props;
 		color: var(--accent);
 	}
 
+	/* Under a numbered step: line up with the step's text. */
+	:global(ol) + .expand-code {
+		margin-left: 2.5rem;
+	}
+	/* Room before the next section's heading. */
+	.expand:has(+ :global(h2)) {
+		margin-bottom: 2em;
+	}
+
 	.expand-code summary {
 		display: inline-block;
 		color: var(--text-muted);

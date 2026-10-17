@@ -1,0 +1,80 @@
+---
+// Commits per day, 6–17 October 2026, from `git log`.
+const days = [
+	{ day: 6, commits: 0 },
+	{ day: 7, commits: 2 },
+	{ day: 8, commits: 2 },
+	{ day: 9, commits: 0 },
+	{ day: 10, commits: 0 },
+	{ day: 11, commits: 0 },
+	{ day: 12, commits: 0 },
+	{ day: 13, commits: 0 },
+	{ day: 14, commits: 0 },
+	{ day: 15, commits: 0 },
+	{ day: 16, commits: 34 },
+	{ day: 17, commits: 9 },
+];
+const max = Math.max(...days.map((d) => d.commits));
+const W = 24;
+const H = 100;
+---
+
+<figure class="chart">
+	<svg viewBox={`0 0 ${days.length * W} ${H + 30}`} role="img" aria-label="Commits per day: 2 on 7 October, 2 on 8 October, 34 on 16 October, 9 on 17 October, none on the other days.">
+		{
+			days.map((d, i) => {
+				const h = (d.commits / max) * H;
+				return (
+					<g>
+						<rect x={i * W + 4} y={H - h + 12} width={W - 8} height={Math.max(h, 1)} class={d.commits ? 'bar' : 'bar empty'} />
+						{d.commits > 0 && (
+							<text x={i * W + W / 2} y={H - h + 8} class="count">
+								{d.commits}
+							</text>
+						)}
+						<text x={i * W + W / 2} y={H + 26} class="day">
+							{d.day}
+						</text>
+					</g>
+				);
+			})
+		}
+	</svg>
+	<figcaption>Commits per day, October 2026</figcaption>
+</figure>
+
+<style>
+	.chart {
+		margin: 0 0 2em;
+	}
+	svg {
+		display: block;
+		width: 100%;
+		max-width: 28rem;
+		margin: 0 auto;
+	}
+	.bar {
+		fill: var(--accent);
+	}
+	.bar.empty {
+		fill: var(--border);
+	}
+	text {
+		text-anchor: middle;
+		font-family: var(--font-mono);
+	}
+	.count {
+		fill: var(--text-heading);
+		font-size: 9px;
+	}
+	.day {
+		fill: var(--text-muted);
+		font-size: 8px;
+	}
+	figcaption {
+		margin-top: 0.5em;
+		color: var(--text-muted);
+		font-size: 0.8em;
+		text-align: center;
+	}
+</style>
