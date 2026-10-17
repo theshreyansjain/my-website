@@ -20,9 +20,9 @@ const parts: Part[] = [
 		id: 'address',
 		name: 'Address',
 		what: 'The name you type to reach a site. It points your browser to the servers that hold it.',
-		picked: 'my-website-phi-topaz.vercel.app, a free address from Vercel.',
-		why: 'Free and worked straight away. A custom domain is on the list for later.',
-		alternatives: 'Your own domain from a registrar such as Cloudflare or Namecheap, around €10 a year.',
+		picked: 'shrey.cloud, bought through Vercel. Until then it was a free my-website-phi-topaz.vercel.app address.',
+		why: 'Short, and .cloud leaves room for other projects on subdomains later (like quant.shrey.cloud). Buying it through Vercel meant no DNS settings to touch.',
+		alternatives: 'Cloudflare or Namecheap. shreyans.page cost half as much per year; shrey.gg was $130 a year.',
 	},
 	{
 		id: 'style',
@@ -140,7 +140,7 @@ const label = Object.fromEntries(parts.map((p) => [p.id, p.name]));
 				<span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
 				<button type="button" class="part part-address" data-part="address">
 					<span class="tag">address</span>
-					<span class="url">my-website…vercel.app</span>
+					<span class="url">shrey.cloud</span>
 				</button>
 			</div>
 			<button type="button" class="part part-style" data-part="style">

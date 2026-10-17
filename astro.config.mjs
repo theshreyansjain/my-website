@@ -6,7 +6,7 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://my-website-phi-topaz.vercel.app',
+	site: 'https://shrey.cloud',
 	integrations: [mdx(), sitemap()],
 	fonts: [
 		{
