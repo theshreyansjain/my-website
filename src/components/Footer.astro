@@ -5,6 +5,11 @@ const today = new Date();
 ---
 
 <footer>
+	<nav aria-label="Elsewhere">
+		<a href="/about/">About</a>
+		<a href="/rss.xml">RSS</a>
+		<a href="https://github.com/theshreyansjain/my-website">Source on GitHub</a>
+	</nav>
 	&copy; {today.getFullYear()} {SITE_TITLE}
 </footer>
 <style>
@@ -13,5 +18,19 @@ const today = new Date();
 		border-top: 1px solid var(--border);
 		color: var(--text-muted);
 		text-align: center;
+	}
+	nav {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.5em 1.5em;
+		margin-bottom: 1em;
+		font-size: 0.9em;
+	}
+	nav a {
+		color: var(--text-muted);
+	}
+	nav a:hover {
+		color: var(--accent);
 	}
 </style>

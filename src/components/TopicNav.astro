@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import { TOPICS, type Topic } from '../consts';
 
 interface Props {
@@ -7,20 +8,26 @@ interface Props {
 }
 
 const { current } = Astro.props;
-const topics = Object.keys(TOPICS) as Topic[];
+const posts = await getCollection('blog');
+// Each chip shows its post count; empty topics get a dashed border so they
+// read as "coming soon" (still clickable: the page suggests the latest post).
+const topics = (Object.keys(TOPICS) as Topic[]).map((topic) => ({
+	topic,
+	count: posts.filter((p) => p.data.topic === topic).length,
+}));
 ---
 
 <nav class="topic-nav" aria-label="Topics">
 	<a href="/blog/" class:list={{ active: !current }} aria-current={!current ? 'page' : undefined}>
-		all
+		all <span class="count">{posts.length}</span>
 	</a>
-	{topics.map((topic) => (
+	{topics.map(({ topic, count }) => (
 		<a
 			href={`/topics/${topic}/`}
-			class:list={{ active: topic === current }}
+			class:list={{ active: topic === current, empty: count === 0 }}
 			aria-current={topic === current ? 'page' : undefined}
 		>
-			#{topic}
+			#{topic} <span class="count">{count}<span class="sr-only"> {count === 1 ? 'post' : 'posts'}</span></span>
 		</a>
 	))}
 </nav>
@@ -43,6 +50,14 @@ const topics = Object.keys(TOPICS) as Topic[];
 		border-color: var(--accent);
 		color: var(--accent);
 		text-shadow: none;
+	}
+	a.empty:not(.active) {
+		border-style: dashed;
+	}
+	.count {
+		margin-left: 0.15em;
+		font-size: 0.85em;
+		opacity: 0.8;
 	}
 	a.active {
 		border-color: var(--accent);
