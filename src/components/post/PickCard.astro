@@ -1,0 +1,98 @@
+---
+// A card linking to a product page: name, price, a few key specs and a "see
+// it" link. The whole card is clickable. Used instead of copying the shop's
+// photo, which belongs to the shop.
+interface Props {
+	label: string;
+	name: string;
+	price: string;
+	specs: string[];
+	href: string;
+	cta: string;
+}
+
+const { label, name, price, specs, href, cta } = Astro.props;
+---
+
+<a class="pick-card" href={href}>
+	<span class="label">{label}</span>
+	<span class="name">{name}</span>
+	<span class="price">{price}</span>
+	<span class="specs">{specs.map((s) => <span>{s}</span>)}</span>
+	<span class="cta">
+		{cta} <span aria-hidden="true">→</span>
+	</span>
+</a>
+
+<style>
+	.pick-card {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5em;
+		margin: 1.5em 0 2.5em;
+		padding: 1.25em 1.5em;
+		border: 1px solid var(--accent);
+		border-radius: 12px;
+		background: linear-gradient(135deg, rgb(57 245 140 / 10%), var(--surface) 60%);
+		color: var(--text);
+		text-decoration: none;
+		transition: transform 0.15s;
+	}
+	.pick-card:hover {
+		transform: translateY(-2px);
+		text-shadow: none;
+	}
+	.label {
+		color: var(--accent);
+		font-family: var(--font-mono);
+		font-size: 0.8em;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+	}
+	.name {
+		color: var(--text-heading);
+		font-size: 1.4em;
+		font-weight: 700;
+		line-height: 1.2;
+	}
+	.price {
+		color: var(--accent-2);
+		font-family: var(--font-mono);
+		font-size: 1.1em;
+	}
+	.specs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4em;
+		margin: 0.25em 0;
+	}
+	.specs span {
+		padding: 0.15em 0.6em;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		background: var(--bg);
+		font-family: var(--font-sans);
+		font-size: 0.85em;
+	}
+	.cta {
+		color: var(--accent);
+		font-family: var(--font-mono);
+		font-size: 0.9em;
+	}
+	.cta span {
+		display: inline-block;
+		transition: transform 0.15s;
+	}
+	.pick-card:hover .cta span {
+		transform: translateX(4px);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.pick-card,
+		.cta span {
+			transition: none;
+		}
+		.pick-card:hover {
+			transform: none;
+		}
+	}
+</style>
