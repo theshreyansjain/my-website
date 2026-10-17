@@ -49,7 +49,7 @@ not transcripts.
 - [x] 5. Figure prototype at /lab/figure: stand + run, then desk, bike, read.
   Done, then rejected: the 2D homepage figure is the final figure.
 - [ ] 6. Polish: portrait layout, performance, reduced motion.
-- [ ] 7. Analytics: see where visitors come from (country, referring site),
+- [x] 7. Analytics: see where visitors come from (country, referring site),
   what device, OS and browser they use, and which pages they read.
   Privacy-friendly and cookie-free, so no consent banner. Likely Vercel Web
   Analytics (built into the hosting; enabled in the dashboard plus one
@@ -67,7 +67,7 @@ What changed from the plan while building, and why. Newest first.
   made after enabling. Data appears for production
   only. Vercel's docs now also offer a per-project `/<unique-path>/script.js`
   (shown after enabling; harder for ad blockers to spot); switch to it later
-  if counts look low. Tick step 7 once visits show up.
+  if counts look low. Visits showed up the same day; step 7 done.
 - Step 6 review: figure size now depends on width as well as height
   (tablets in portrait got the desktop size in half the width and cut the
   desk scene off; landscape phones cut the intro figure's legs off). Blog
